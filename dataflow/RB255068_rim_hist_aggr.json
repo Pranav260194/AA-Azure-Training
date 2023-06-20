@@ -1,0 +1,32 @@
+{
+	"name": "RB255068_rim_hist_aggr",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "RB255068_demo_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "rimSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "RIMDataflowOutput",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedColumnSalesReason"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> rimSource\nrimSource derive(NoSalesReason_Other = locate(NoSalesReason, 'Other')) ~> DerivedColumnSalesReason\nDerivedColumnSalesReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

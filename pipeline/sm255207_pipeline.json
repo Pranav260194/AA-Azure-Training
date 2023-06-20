@@ -1,0 +1,124 @@
+{
+	"name": "sm255207_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "extracting csv file name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_FILE_NAME",
+					"value": {
+						"value": "@substring(pipeline().parameters.File_Name,0,lastindexof(pipeline().parameters.File_Name,'.'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "extracting CTL file name",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "extracting csv file name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CTL_File_Name",
+					"value": {
+						"value": "@concat(substring(variables('CSV_FILE_NAME'),0,lastindexof(variables('CSV_FILE_NAME'),'.')),'.ctl')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "check CTL file if exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "extracting CTL file name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "CTL_File_Source1",
+						"type": "DatasetReference",
+						"parameters": {
+							"CTL_File_Name": {
+								"value": "@variables('CTL_File_Name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "abc.csv.gz"
+			},
+			"Container_Name": {
+				"type": "string"
+			},
+			"Input_Directory": {
+				"type": "string"
+			},
+			"Inbound_directory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"CSV_FILE_NAME": {
+				"type": "String"
+			},
+			"CTL_File_Name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "sm255207"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-09T09:29:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

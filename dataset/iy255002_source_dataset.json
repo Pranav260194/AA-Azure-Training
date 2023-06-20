@@ -1,0 +1,61 @@
+{
+	"name": "iy255002_source_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "iy255002"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				},
+				"folderPath": "input",
+				"container": "iy255002"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Flight#",
+				"type": "String"
+			},
+			{
+				"name": "Origin",
+				"type": "String"
+			},
+			{
+				"name": "Dest",
+				"type": "String"
+			},
+			{
+				"name": "FlightDate",
+				"type": "String"
+			},
+			{
+				"name": "NoSalesReason",
+				"type": "String"
+			},
+			{
+				"name": "TransmittingFlightAttd",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

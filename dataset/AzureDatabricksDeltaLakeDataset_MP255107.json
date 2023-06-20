@@ -1,0 +1,31 @@
+{
+	"name": "AzureDatabricksDeltaLakeDataset_MP255107",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDatabricksDeltaLake_MP255107",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Database_Name": {
+				"type": "string"
+			},
+			"Table_Name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "mp255107"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"typeProperties": {
+			"database": "mp255107",
+			"table": {
+				"value": "@dataset().Table_Name",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

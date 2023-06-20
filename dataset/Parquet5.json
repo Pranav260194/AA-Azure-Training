@@ -1,0 +1,42 @@
+{
+	"name": "Parquet5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"targetContainer": {
+				"type": "string"
+			},
+			"targetDirectory": {
+				"type": "string"
+			},
+			"targetFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().targetFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().targetDirectory",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().targetContainer",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

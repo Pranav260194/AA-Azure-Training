@@ -1,0 +1,187 @@
+{
+	"name": "Copy_data_pipeline_parameters",
+	"properties": {
+		"activities": [
+			{
+				"name": "take_backup_of_output_file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "output_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"outputFileName": {
+								"value": "@pipeline().parameters.outputFile",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "output_file_backup",
+						"type": "DatasetReference",
+						"parameters": {
+							"backupFileNamePrefix": {
+								"value": "@pipeline().parameters.bkpFilePrefix",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy_from_csv_to_csv",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "take_backup_of_output_file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "Timestamp",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "input_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"inputFileName": {
+								"value": "@pipeline().parameters.inputFile",
+								"type": "Expression"
+							},
+							"delimeter": {
+								"value": "@pipeline().parameters.Delimiter",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "output_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"outputFileName": {
+								"value": "@pipeline().parameters.outputFile",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"inputFile": {
+				"type": "string"
+			},
+			"outputFile": {
+				"type": "string"
+			},
+			"bkpFilePrefix": {
+				"type": "string"
+			},
+			"Delimiter": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DN255032"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-02-06T10:43:04Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

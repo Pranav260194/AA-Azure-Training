@@ -1,0 +1,28 @@
+{
+	"name": "Delete_Inbound",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"CSv_file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().CSv_file",
+					"type": "Expression"
+				},
+				"folderPath": "inbound",
+				"fileSystem": "yp255010"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

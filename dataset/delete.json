@@ -1,0 +1,22 @@
+{
+	"name": "delete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ss255307"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "input",
+				"fileSystem": "ss255307"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

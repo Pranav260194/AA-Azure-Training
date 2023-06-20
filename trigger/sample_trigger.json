@@ -1,0 +1,34 @@
+{
+	"name": "sample_trigger",
+	"properties": {
+		"description": "TO unzip the file and load on target source",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "single_file_unzip",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-06-01T07:45:00Z",
+				"endTime": "2023-06-02T02:12:15Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						23
+					],
+					"hours": [
+						0
+					]
+				}
+			}
+		}
+	}
+}

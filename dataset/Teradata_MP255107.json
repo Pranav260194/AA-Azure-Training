@@ -1,0 +1,34 @@
+{
+	"name": "Teradata_MP255107",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Teradata_MP255107",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Schema": {
+				"type": "string"
+			},
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "mp255107"
+		},
+		"annotations": [],
+		"type": "TeradataTable",
+		"schema": [],
+		"typeProperties": {
+			"database": {
+				"value": "@dataset().Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

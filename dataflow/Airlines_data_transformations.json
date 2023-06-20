@@ -1,0 +1,48 @@
+{
+	"name": "Airlines_data_transformations",
+	"properties": {
+		"folder": {
+			"name": "DN255032"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Airline_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "AirlineData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Airline_Output",
+						"type": "DatasetReference"
+					},
+					"name": "StoreResult"
+				},
+				{
+					"dataset": {
+						"referenceName": "AirlineFilteredRecords",
+						"type": "DatasetReference"
+					},
+					"name": "StoreFilteredRecords"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CountByResons"
+				},
+				{
+					"name": "SortByCount"
+				},
+				{
+					"name": "FilterRecordsByYearAndReason"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> AirlineData\nAirlineData aggregate(groupBy(NoSalesReason),\n\tResonCount = count(NoSalesReason),\n\tpartitionBy('hash', 1)) ~> CountByResons\nCountByResons sort(desc(ResonCount, true),\n\tpartitionBy('hash', 1)) ~> SortByCount\nAirlineData filter(year(toDate(FlightDate))==2018 && NoSalesReason==\"Other\") ~> FilterRecordsByYearAndReason\nSortByCount sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StoreResult\nFilterRecordsByYearAndReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StoreFilteredRecords"
+		}
+	}
+}

@@ -1,0 +1,171 @@
+{
+	"name": "pb25086_lookup",
+	"properties": {
+		"activities": [
+			{
+				"name": "lookup_parameter",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "pb255086_cargoF",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "lookup_parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "pb255086_flat_file_sourse_ds_for_parameter",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceDirectory",
+								"type": "Expression"
+							},
+							"sourceContainer": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceContainer\n",
+								"type": "Expression"
+							},
+							"sourceFileName": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "pb255086_Parquet2",
+						"type": "DatasetReference",
+						"parameters": {
+							"destContainer": {
+								"value": "@activity('lookup_parameter').output.firstRow.destContainer",
+								"type": "Expression"
+							},
+							"destDirectory": {
+								"value": "@activity('lookup_parameter').output.firstRow.destDirectory   ",
+								"type": "Expression"
+							},
+							"destFileName": {
+								"value": "@activity('lookup_parameter').output.firstRow.destFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pb255086delimeted",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"columnCount"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "PB255086"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-13T05:46:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

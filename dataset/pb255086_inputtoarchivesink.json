@@ -1,0 +1,30 @@
+{
+	"name": "pb255086_inputtoarchivesink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"destFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@activity('lookup_parameter').output.firstRow.destFileName",
+					"type": "Expression"
+				},
+				"folderPath": "archive",
+				"fileSystem": "pb255086"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

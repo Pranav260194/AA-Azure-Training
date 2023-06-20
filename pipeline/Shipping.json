@@ -1,0 +1,407 @@
+{
+	"name": "Shipping",
+	"properties": {
+		"activities": [
+			{
+				"name": "csv files",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_File_data",
+					"value": {
+						"value": "@createArray(pipeline().parameters.File_1,pipeline().parameters.File_2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lookup csv files",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "csv files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('CSV_File_data')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"dataset": {
+									"referenceName": "df_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"csv_files": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get_Files_List_inbound",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "lookup csv files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "sm255207_list_inbound",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Error_Mail_Notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "lookup csv files",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-91.eastus.logic.azure.com:443/workflows/5c6ee5f98803419c94d3c4830be37908/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vzyfUibJvi1cjqLbDl97OzhTB1QPK1uHouk_eKTrZ10",
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{\n       \"EmailTo\"  :  \"',pipeline().parameters.Email_To,'\",\n       \"Subject\" :   \"An Error has occured in the ',pipeline().Pipeline,'-pipline for file-\n        ',pipeline().parameters.File_1,'\",\n        \"DataFactoryName\":  \"',pipeline().DataFactory,'\",\n        \"PipelineName\" :\"',pipeline().Pipeline,'\",\n        \"Activity\": \"',pipeline().Pipeline,'\",\n        \"ErrorMessage\": \"',pipeline().parameters.ErrorMessage,'\",\n        \"FileName\": \"',pipeline().parameters.File_1,'\"\n\t}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "COPY_Inbound_input",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get_Files_List_inbound",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get_Files_List_inbound').output.ChildItems",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"wildcardFolderPath": "Azure project/inbound",
+										"wildcardFileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "list_inbound_dataset",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "df_output_ds",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Delete1",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "del_inbound_ds",
+									"type": "DatasetReference"
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.csv",
+									"enablePartitionDiscovery": false
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "COPY_Inbound_input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/sm255207/project/shipping_stage",
+					"baseParameters": {
+						"File_1": {
+							"value": "@pipeline().parameters.File_1",
+							"type": "Expression"
+						},
+						"File_2": {
+							"value": "@pipeline().parameters.File_2",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Success_Mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-91.eastus.logic.azure.com:443/workflows/5c6ee5f98803419c94d3c4830be37908/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vzyfUibJvi1cjqLbDl97OzhTB1QPK1uHouk_eKTrZ10",
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{\n       \"EmailTo\"  :  \"',pipeline().parameters.Email_To,'\",\n       \"Subject\" :   \"Successfully execution of ',pipeline().Pipeline,'-pipeline''\",\n        \"DataFactoryName\":  \"',pipeline().DataFactory,'\",\n        \"PipelineName\" :\"',pipeline().Pipeline,'\",\n\t}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ErrorMessage2",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "COPY_Inbound_input",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-91.eastus.logic.azure.com:443/workflows/5c6ee5f98803419c94d3c4830be37908/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vzyfUibJvi1cjqLbDl97OzhTB1QPK1uHouk_eKTrZ10",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n       \"EmailTo\"  :  \"',pipeline().parameters.Email_To,'\",\n       \"Subject\" :   \"An Error has occured in the ',pipeline().Pipeline,'-pipline for file-\n        ',pipeline().parameters.File_1,'\",\n        \"DataFactoryName\":  \"',pipeline().DataFactory,'\",\n        \"PipelineName\" :\"',pipeline().Pipeline,'\",\n        \"Activity\": \"',pipeline().Pipeline,'\",\n        \"ErrorMessage\": \"',pipeline().parameters.ErrorMessage,'\",\n        \"FileName\": \"',pipeline().parameters.File_1,'\"\n\t}')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_1": {
+				"type": "string",
+				"defaultValue": "shipping_cust.csv"
+			},
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "sana.mulani@teradata.com"
+			},
+			"Activity": {
+				"type": "string",
+				"defaultValue": "Lookup"
+			},
+			"ErrorMessage": {
+				"type": "string",
+				"defaultValue": "CSV File Not Recevice"
+			},
+			"File_2": {
+				"type": "string",
+				"defaultValue": "shipping_product.csv"
+			},
+			"Success_Message": {
+				"type": "string",
+				"defaultValue": "Pipeline Completed Successfully"
+			},
+			"ErrorMessage2": {
+				"type": "string",
+				"defaultValue": "Notebook Not Run"
+			}
+		},
+		"variables": {
+			"CSV_File_data": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "sm255207"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-14T05:27:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

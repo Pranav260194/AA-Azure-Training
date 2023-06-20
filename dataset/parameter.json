@@ -1,0 +1,51 @@
+{
+	"name": "parameter",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ss255307"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "parameter.json",
+				"fileSystem": "ss255307"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"container": {
+					"type": "string"
+				},
+				"inbound": {
+					"type": "string"
+				},
+				"input": {
+					"type": "string"
+				},
+				"output": {
+					"type": "string"
+				},
+				"book": {
+					"type": "string"
+				},
+				"user": {
+					"type": "string"
+				},
+				"library": {
+					"type": "string"
+				},
+				"mail": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

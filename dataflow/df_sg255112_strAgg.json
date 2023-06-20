@@ -1,0 +1,31 @@
+{
+	"name": "df_sg255112_strAgg",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "adls_ls",
+						"type": "LinkedServiceReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Sort"
+				},
+				{
+					"name": "Aggregate"
+				}
+			],
+			"script": "source(output(\n\t\tCOMPANY as string,\n\t\tLOCATION as string\n\t),\n\tuseSchema: false,\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tfileSystem: 'td255024',\n\tfolderPath: 'Input',\n\tfileName: 'CompLoc.txt',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true) ~> source\nsource sort(asc(COMPANY, true),\n\tcaseInsensitive: true) ~> Sort\nSort aggregate(groupBy(COMPANY),\n\tStrAgg = collect(LOCATION),\n\t\tcount = count(LOCATION)) ~> Aggregate\nAggregate sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tkeys:['COMPANY','StrAgg','count'],\n\tstore: 'cache',\n\tformat: 'inline',\n\toutput: false,\n\tsaveOrder: 1,\n\tmapColumn(\n\t\tCOMPANY,\n\t\tStrAgg,\n\t\tcount\n\t)) ~> sink1"
+		}
+	}
+}

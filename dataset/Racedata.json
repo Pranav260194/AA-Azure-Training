@@ -1,0 +1,19 @@
+{
+	"name": "Racedata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Erghast",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp255107"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "results.json"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

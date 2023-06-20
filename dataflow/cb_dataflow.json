@@ -1,0 +1,32 @@
+{
+	"name": "cb_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CB255052_demo_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "Source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText19_cb",
+						"type": "DatasetReference"
+					},
+					"name": "RIMoutputcb"
+				}
+			],
+			"transformations": [
+				{
+					"name": "GenericReason"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Source\nSource derive(GenericReason = locate(NoSalesReason ,'Others')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RIMoutputcb"
+		}
+	}
+}

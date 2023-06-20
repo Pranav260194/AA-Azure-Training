@@ -1,0 +1,25 @@
+{
+	"name": "Deletefromstage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "FileName",
+				"folderPath": "stage1",
+				"fileSystem": "pk255065"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

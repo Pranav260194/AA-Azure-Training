@@ -1,0 +1,203 @@
+{
+	"name": "Demo_f",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data and merge",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "inbound",
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "MergeFiles"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference",
+						"parameters": {
+							"nj255009_demo": "Name"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference",
+						"parameters": {
+							"nj255009_demo": "Name"
+						}
+					}
+				]
+			},
+			{
+				"name": "Get from input",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Copy data and merge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference",
+						"parameters": {
+							"nj255009_demo": "Name"
+						}
+					}
+				}
+			},
+			{
+				"name": "Transformation",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Get from input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/nj255009/Demo_f",
+					"baseParameters": {
+						"File_1": {
+							"value": "@pipeline().parameters.File_1",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fail Mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get from input",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-91.eastus.logic.azure.com:443/workflows/5c6ee5f98803419c94d3c4830be37908/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vzyfUibJvi1cjqLbDl97OzhTB1QPK1uHouk_eKTrZ10",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_1,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity1,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage1,'\",\n    \"FileName\":\"',pipeline().parameters.File_1,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_1": {
+				"type": "string",
+				"defaultValue": "merge.csv"
+			},
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "Neha.Jawale@TERADATA.COM"
+			},
+			"Pipe_line_Name": {
+				"type": "string",
+				"defaultValue": "Demo_f"
+			},
+			"Activity1": {
+				"type": "string",
+				"defaultValue": "inbound to input"
+			},
+			"ErrorMessage1": {
+				"type": "string",
+				"defaultValue": "Not in input"
+			}
+		},
+		"folder": {
+			"name": "nj255009"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-13T19:25:33Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

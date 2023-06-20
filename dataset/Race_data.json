@@ -1,0 +1,24 @@
+{
+	"name": "Race_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp255107/Azure Blob"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Race_Data.Json",
+				"folderPath": "input",
+				"container": "mp255107"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

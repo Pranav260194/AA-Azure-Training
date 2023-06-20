@@ -1,0 +1,121 @@
+{
+	"name": "mm255199_demo_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extracting CSV File Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_File_Name",
+					"value": {
+						"value": "@substring(pipeline().parameters.File_Name,0, lastIndexOf(pipeline().parameters.File_Name,'.' ))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Extracting CTL File Nmae",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Extracting CSV File Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CTL_File_Name",
+					"value": {
+						"value": "@concat(substring(variables('CSV_File_Name'),0 ,lastIndexOf(variables('CSV_File_Name'), '.') ),'.ctl')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check CTL File if Exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Extracting CTL File Nmae",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "mm255199_CTL_File_Src",
+						"type": "DatasetReference",
+						"parameters": {
+							"CTL_File_Name": {
+								"value": "@variables('CTL_File_Name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "abc.csv.gz"
+			},
+			"Container_Name": {
+				"type": "string"
+			},
+			"Input_Directory": {
+				"type": "string"
+			},
+			"Inbound_Directory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"CSV_File_Name": {
+				"type": "String"
+			},
+			"CTL_File_Name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-07-18T12:36:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

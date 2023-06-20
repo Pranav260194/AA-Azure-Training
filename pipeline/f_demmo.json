@@ -1,0 +1,182 @@
+{
+	"name": "f_demmo",
+	"properties": {
+		"activities": [
+			{
+				"name": "checking two files are present",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "hosp_files",
+					"value": {
+						"value": "@createArray(pipeline().parameters.Gov_hosp,pipeline().parameters.pri_hos)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "checking two files are present",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('hosp_files')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "checking two files present",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"dataset": {
+									"referenceName": "hosp_file_name",
+									"type": "DatasetReference",
+									"parameters": {
+										"file_name": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/sk255196/fdemo_pipeline",
+					"baseParameters": {
+						"Gov_hosp": {
+							"value": "@pipeline().parameters.Gov_hosp",
+							"type": "Expression"
+						},
+						"pri_hos": {
+							"value": "@pipeline().parameters.pri_hos",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-91.eastus.logic.azure.com:443/workflows/5c6ee5f98803419c94d3c4830be37908/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vzyfUibJvi1cjqLbDl97OzhTB1QPK1uHouk_eKTrZ10",
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"Activity\" : \"Demo\",\n    \"DataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"EmailTo\" : \"@{pipeline().parameters.email}\",\n     \"ErrorMessage\" : \"One of the file is missing\",\n    \"FileName\":\"Hospital Files\",\n     \"PipelineName\" : \"@{pipeline().Pipeline}\", \n    \"Subject\":\"Failed\"\n   }",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Gov_hosp": {
+				"type": "string",
+				"defaultValue": "Government hospital.csv"
+			},
+			"pri_hos": {
+				"type": "string",
+				"defaultValue": "Private hospitals.csv"
+			},
+			"email": {
+				"type": "string",
+				"defaultValue": "saichand.komaravelly@teradata.com"
+			}
+		},
+		"variables": {
+			"hosp_files": {
+				"type": "Array"
+			},
+			"Gov_hosp": {
+				"type": "String",
+				"defaultValue": "Government hospital.csv"
+			},
+			"pri_hos": {
+				"type": "String",
+				"defaultValue": "Private hospitals.csv"
+			}
+		},
+		"folder": {
+			"name": "sk255196"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-12-14T04:37:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

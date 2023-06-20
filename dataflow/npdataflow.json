@@ -1,0 +1,53 @@
+{
+	"name": "npdataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Source_File",
+						"type": "DatasetReference"
+					},
+					"name": "InputFile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "generic_reason_new_col",
+						"type": "DatasetReference"
+					},
+					"name": "genericreason"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ReasonGeneric",
+					"description": "derived column"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> InputFile",
+				"InputFile derive({No_Sales_Generic_Reason } = locate(NoSalesReason,'Other')) ~> ReasonGeneric",
+				"ReasonGeneric sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> genericreason"
+			]
+		}
+	}
+}

@@ -1,0 +1,86 @@
+{
+	"name": "DelimitedText55",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "fuel.csv",
+				"folderPath": "input",
+				"fileSystem": "mb255121"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Year",
+				"type": "String"
+			},
+			{
+				"name": "Entity",
+				"type": "String"
+			},
+			{
+				"name": "Gas production",
+				"type": "String"
+			},
+			{
+				"name": "Gas consumption",
+				"type": "String"
+			},
+			{
+				"name": "Coal production",
+				"type": "String"
+			},
+			{
+				"name": "Coal consumption",
+				"type": "String"
+			},
+			{
+				"name": "Oil production",
+				"type": "String"
+			},
+			{
+				"name": "Oil consumption",
+				"type": "String"
+			},
+			{
+				"name": "Gas production per capita",
+				"type": "String"
+			},
+			{
+				"name": "Gas consumption per capita",
+				"type": "String"
+			},
+			{
+				"name": "Coal production per capita",
+				"type": "String"
+			},
+			{
+				"name": "Coal consumption per capita",
+				"type": "String"
+			},
+			{
+				"name": "Oil production per capita",
+				"type": "String"
+			},
+			{
+				"name": "Oil consumption per capita",
+				"type": "String"
+			},
+			{
+				"name": "Population",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

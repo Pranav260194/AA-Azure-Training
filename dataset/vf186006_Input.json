@@ -1,0 +1,28 @@
+{
+	"name": "vf186006_Input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "vf186006_test_accesskey",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "input/GDD",
+				"fileSystem": "vf186006"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

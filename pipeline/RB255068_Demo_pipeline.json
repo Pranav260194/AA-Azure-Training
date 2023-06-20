@@ -1,0 +1,168 @@
+{
+	"name": "RB255068_Demo_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extracting CSV File Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_file_name",
+					"value": {
+						"value": "@substring(pipeline().parameters.file_name, 0, lastindexof(pipeline().parameters.file_name,'.'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Extracting CTL File Name",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Extracting CSV File Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CTL_file_name",
+					"value": {
+						"value": "@concat(substring(variables('CSV_file_name'), 0, lastindexof(variables('CSV_file_name'), '.')), '.ctl')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check if CTL file exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Extracting CTL File Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "RB255068_CTL_file_source",
+						"type": "DatasetReference",
+						"parameters": {
+							"CTL_File_Name": {
+								"value": "@variables('CTL_file_name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "Loading data in Staging Table",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Check if CTL file exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/RB255068/RB255068_test_stg"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Check if CTL file exists",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Pipeline execution failed",
+					"errorCode": "1"
+				}
+			}
+		],
+		"parameters": {
+			"file_name": {
+				"type": "string",
+				"defaultValue": "abc.csv.gz"
+			},
+			"container_name": {
+				"type": "string"
+			},
+			"input_directory": {
+				"type": "string"
+			},
+			"inbound_directory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"CSV_file_name": {
+				"type": "String"
+			},
+			"CTL_file_name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "RB255068"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-24T11:45:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

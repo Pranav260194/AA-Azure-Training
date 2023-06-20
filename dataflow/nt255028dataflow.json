@@ -1,0 +1,32 @@
+{
+	"name": "nt255028dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "nt255028_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "Source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "nt255028dataset",
+						"type": "DatasetReference"
+					},
+					"name": "outputrim"
+				}
+			],
+			"transformations": [
+				{
+					"name": "NewCol"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Source\nSource derive(NewCol = locate(NoSalesReason, 'Other')) ~> NewCol\nNewCol sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> outputrim"
+		}
+	}
+}

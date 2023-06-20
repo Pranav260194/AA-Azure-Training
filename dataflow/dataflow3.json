@@ -1,0 +1,32 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText5",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sh186013_RIM_DF_Output",
+						"type": "DatasetReference"
+					},
+					"name": "DataFlowSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedColumn"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(NoSalesindicator = locate(NoSalesReason,'Other')) ~> DerivedColumn\nDerivedColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['sh186013_rim_Dataflow_output'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> DataFlowSink"
+		}
+	}
+}

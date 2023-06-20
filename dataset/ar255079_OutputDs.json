@@ -1,0 +1,28 @@
+{
+	"name": "ar255079_OutputDs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ar255079"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "output",
+				"fileSystem": "ar255079"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "",
+			"firstRowAsHeader": true,
+			"nullValue": "''",
+			"quoteChar": ""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

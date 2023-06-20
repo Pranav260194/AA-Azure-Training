@@ -1,0 +1,17 @@
+{
+	"name": "deletepk",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

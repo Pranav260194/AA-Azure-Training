@@ -1,0 +1,20 @@
+{
+	"name": "TD_Src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Teradata_Src_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Vantage"
+		},
+		"annotations": [],
+		"type": "TeradataTable",
+		"schema": [],
+		"typeProperties": {
+			"database": "ss250236",
+			"table": "PS_ASSET_OWN_TBL"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

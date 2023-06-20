@@ -1,0 +1,55 @@
+{
+	"name": "tp186029_prep1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "tp186029_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "Rim"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "outputdata",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Rim",
+				"Rim derive({Generic reason} = locate(NoSalesReason,'Other')) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd} as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

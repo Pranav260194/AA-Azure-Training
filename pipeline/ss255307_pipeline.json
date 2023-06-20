@@ -1,0 +1,78 @@
+{
+	"name": "ss255307_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow10",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "check CTL file if exist",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "CTL_File_Sours",
+						"type": "DatasetReference",
+						"parameters": {
+							"CTL_File_Name": {
+								"value": "@variables('CTL_File_Name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"variables": {
+			"CTL_File_Name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ss255307"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-10T12:56:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

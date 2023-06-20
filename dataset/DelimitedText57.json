@@ -1,0 +1,74 @@
+{
+	"name": "DelimitedText57",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SourceContainer": {
+				"type": "string"
+			},
+			"SourceDirectory": {
+				"type": "string"
+			},
+			"SourceFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().SourceFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().SourceDirectory",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().SourceContainer",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Airport_Code",
+				"type": "String"
+			},
+			{
+				"name": "Duration",
+				"type": "String"
+			},
+			{
+				"name": "Domestic_Passengers",
+				"type": "String"
+			},
+			{
+				"name": "International_Passengers",
+				"type": "String"
+			},
+			{
+				"name": "Total_Passengers",
+				"type": "String"
+			},
+			{
+				"name": "Food_orderedby",
+				"type": "String"
+			},
+			{
+				"name": "cost_generated",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,124 @@
+{
+	"name": "vu255001_notification",
+	"properties": {
+		"activities": [
+			{
+				"name": "extracting_csv_file_name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "csv_file_name",
+					"value": {
+						"value": "@substring(pipeline().parameters.File_Name,0,lastindexof(pipeline().parameters.File_Name,'.'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "extracting_ctl_file_name",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "extracting_csv_file_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "ctl_file_name",
+					"value": {
+						"value": "@concat(substring(variables('csv_file_name'),0,lastindexof(variables('csv_file_name'),'.')),'.ctl')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check_CTL_file_if_exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "extracting_ctl_file_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "CTL_File_Src_vu",
+						"type": "DatasetReference",
+						"parameters": {
+							"ctl": {
+								"value": "@variables('ctl_file_name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"file_name": {
+				"type": "string",
+				"defaultValue": "Table1.csv"
+			},
+			"container_name": {
+				"type": "string"
+			},
+			"input_dir": {
+				"type": "string"
+			},
+			"inbound_dir": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"csv_file_name": {
+				"type": "String"
+			},
+			"ctl_file_name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "vu255001"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-10T14:24:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

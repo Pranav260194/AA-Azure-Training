@@ -1,0 +1,38 @@
+{
+	"name": "df_Third_Lowest_Sal",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_salary_csv",
+						"type": "DatasetReference"
+					},
+					"name": "SrcEmployeeSalary"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_output_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Sort"
+				},
+				{
+					"name": "Window"
+				},
+				{
+					"name": "Filter"
+				}
+			],
+			"script": "source(output(\n\t\tname as string,\n\t\tsalary as string,\n\t\t{department } as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SrcEmployeeSalary\nSrcEmployeeSalary sort(asc({department }, true),\n\tcaseInsensitive: true) ~> Sort\nSort window(over({department }),\n\tasc(salary, true),\n\tRNK = denseRank()) ~> Window\nWindow filter(RNK == 3) ~> Filter\nFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tname,\n\t\tsalary,\n\t\t{department }\n\t)) ~> sink"
+		}
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"name": "dc186053_TransformMovies",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "moviesDB",
+						"type": "DatasetReference"
+					},
+					"name": "moviesDB"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dc186053_MoviesSink",
+						"type": "DatasetReference"
+					},
+					"name": "MoviesSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "FilterYears"
+				},
+				{
+					"name": "AggregateComedyRating"
+				}
+			],
+			"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> moviesDB\nmoviesDB filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy'),\n\tpartitionBy('hash', 1)) ~> FilterYears\nFilterYears aggregate(groupBy(year),\n\tAverageComedyRating = avg(toInteger(Rating)),\n\tpartitionBy('hash', 1)) ~> AggregateComedyRating\nAggregateComedyRating sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> MoviesSink"
+		}
+	}
+}

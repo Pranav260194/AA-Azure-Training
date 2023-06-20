@@ -1,0 +1,55 @@
+{
+	"name": "df_dup_split",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_csv",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDuplicateFile"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_csv",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDuplicateFile2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_out_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_out_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Aggregator"
+				},
+				{
+					"name": "Joiner"
+				},
+				{
+					"name": "SelectTransformation"
+				},
+				{
+					"name": "ConditionalSplit"
+				}
+			],
+			"script": "source(output(\n\t\tCol1 as string,\n\t\tCol2 as string,\n\t\tCol3 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SrcDuplicateFile\nsource(output(\n\t\tCol1 as string,\n\t\tCol2 as string,\n\t\tCol3 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SrcDuplicateFile2\nSrcDuplicateFile aggregate(groupBy(Col1,\n\t\tCol2,\n\t\tCol3),\n\tAgg_Col = count(Col1)) ~> Aggregator\nAggregator, SrcDuplicateFile2 join(Aggregator@Col1 == SrcDuplicateFile2@Col1,\n\tjoinType:'right',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> Joiner\nJoiner select(mapColumn(\n\t\tCol1 = Aggregator@Col1,\n\t\tCol2 = Aggregator@Col2,\n\t\tCol3 = Aggregator@Col3,\n\t\tAgg_Col,\n\t\tCol1 = SrcDuplicateFile2@Col1,\n\t\tCol2 = SrcDuplicateFile2@Col2,\n\t\tCol3 = SrcDuplicateFile2@Col3\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectTransformation\nSelectTransformation split(Agg_Col == 1,\n\tdisjoint: false) ~> ConditionalSplit@(NonDups, Dups)\nConditionalSplit@NonDups sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1\nConditionalSplit@Dups sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink2"
+		}
+	}
+}

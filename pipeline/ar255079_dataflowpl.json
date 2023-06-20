@@ -1,0 +1,56 @@
+{
+	"name": "ar255079_dataflowpl",
+	"properties": {
+		"activities": [
+			{
+				"name": "DataflowTransf",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "ar255079_srcdatatxrf",
+						"type": "DataFlowReference",
+						"parameters": {
+							"FileName": {
+								"value": "'@{pipeline().parameters.InputFileName}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"SourceData": {
+								"File_Name": {
+									"value": "@pipeline().parameters.InputFileName",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"InputFileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ar255079"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-12-02T05:36:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,36 @@
+{
+	"name": "iy255002_destination_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"targetFileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "iy255002"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().targetFileName,utcNow(),'.txt')",
+					"type": "Expression"
+				},
+				"folderPath": "output",
+				"fileSystem": "iy255002"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

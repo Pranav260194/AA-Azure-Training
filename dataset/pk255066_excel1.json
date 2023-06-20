@@ -1,0 +1,52 @@
+{
+	"name": "pk255066_excel1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Airline_Accidents.xlsx",
+				"folderPath": "inbound",
+				"fileSystem": "pk255066"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "airline",
+				"type": "String"
+			},
+			{
+				"name": "incidents_85_99",
+				"type": "String"
+			},
+			{
+				"name": "fatal_accidents_85_99",
+				"type": "String"
+			},
+			{
+				"name": "fatalities_85_99",
+				"type": "String"
+			},
+			{
+				"name": "incidents_00_14",
+				"type": "String"
+			},
+			{
+				"name": "fatal_accidents_00_14",
+				"type": "String"
+			},
+			{
+				"name": "fatalities_00_14",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

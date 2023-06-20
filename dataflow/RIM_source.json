@@ -1,0 +1,52 @@
+{
+	"name": "RIM_source",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sm255207_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "genreasoninput"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "genreasonoutput",
+						"type": "DatasetReference"
+					},
+					"name": "genreasonoutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedCol1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> genreasoninput",
+				"genreasoninput derive(genreason = locate(NoSalesReason,'other')) ~> derivedCol1",
+				"derivedCol1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> genreasonoutput"
+			]
+		}
+	}
+}

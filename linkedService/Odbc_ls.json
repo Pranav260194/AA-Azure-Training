@@ -1,0 +1,21 @@
+{
+	"name": "Odbc_ls",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "sj186068",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjNGJmOTkyOC1mMGU1LTQzODctOThlNi1jY2ZlNDY4YjNkNGYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "td-aa-trng-ir",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,36 @@
+{
+	"name": "output_file_backup_pipeline_param",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"backupFileNamePrefix": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "dn255032"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().backupFileNamePrefix,'_output_backup_',utcnow(),'.csv')",
+					"type": "Expression"
+				},
+				"folderPath": "work",
+				"container": "dn255032"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

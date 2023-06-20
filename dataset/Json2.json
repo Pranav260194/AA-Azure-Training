@@ -1,0 +1,49 @@
+{
+	"name": "Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ADF_parameters.json",
+				"folderPath": "Azure Demo/Config",
+				"fileSystem": "np255046"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"emailURL": {
+					"type": "string"
+				},
+				"EmailId": {
+					"type": "string"
+				},
+				"sourceFileName": {
+					"type": "string"
+				},
+				"sourceDirectory": {
+					"type": "string"
+				},
+				"sourceContainer": {
+					"type": "string"
+				},
+				"destFileName": {
+					"type": "string"
+				},
+				"destDirectory": {
+					"type": "string"
+				},
+				"destContainer": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

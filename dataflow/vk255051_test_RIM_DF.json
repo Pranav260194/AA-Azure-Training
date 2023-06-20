@@ -1,0 +1,32 @@
+{
+	"name": "vk255051_test_RIM_DF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "vk255051_Input_Dataset",
+						"type": "DatasetReference"
+					},
+					"name": "vk255051InputDataset"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "vk255051_Output_File_ds",
+						"type": "DatasetReference"
+					},
+					"name": "vk255051DFFinalOp"
+				}
+			],
+			"transformations": [
+				{
+					"name": "vk255051DerviceColOp"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> vk255051InputDataset\nvk255051InputDataset derive(ReasonFlag = locate(NoSalesReason, 'Other')) ~> vk255051DerviceColOp\nvk255051DerviceColOp sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> vk255051DFFinalOp"
+		}
+	}
+}

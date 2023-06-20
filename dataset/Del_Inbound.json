@@ -1,0 +1,19 @@
+{
+	"name": "Del_Inbound",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "inbound",
+				"fileSystem": "yp255010"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

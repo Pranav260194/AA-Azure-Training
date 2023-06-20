@@ -1,0 +1,32 @@
+{
+	"name": "ar255079_srcdatatxrf",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ar255079_Input_Ds",
+						"type": "DatasetReference"
+					},
+					"name": "SourceData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ar255079_OutputDs",
+						"type": "DatasetReference"
+					},
+					"name": "OutputData"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedReasonCode"
+				}
+			],
+			"script": "parameters{\n\tFileName as string\n}\nsource(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SourceData\nSourceData derive(DerviedReasonCode = locate(NoSalesReason,'OTHER')) ~> DerivedReasonCode\nDerivedReasonCode sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1) ~> OutputData"
+		}
+	}
+}

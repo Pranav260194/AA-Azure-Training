@@ -1,0 +1,52 @@
+{
+	"name": "mm255199_rim_hist_aggr",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "mm255199_rim_input",
+						"type": "DatasetReference"
+					},
+					"name": "Riminput"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "mm255199_Rim_Output",
+						"type": "DatasetReference"
+					},
+					"name": "mm255199rimoutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "GenericReason"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Riminput",
+				"Riminput derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason",
+				"GenericReason sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> mm255199rimoutput"
+			]
+		}
+	}
+}

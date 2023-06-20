@@ -1,0 +1,626 @@
+{
+	"name": "pk255065_foodcostanalysis",
+	"properties": {
+		"activities": [
+			{
+				"name": "lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Json6",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ToParquet",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Airport_Code",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Airport_Code",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Duration",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Duration",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Domestic_Passengers",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Domestic_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "International_Passengers",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "International_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Total_Passengers",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Total_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Food_orderedby",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Food_orderedby",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "cost_generated",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cost_generated",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DelimitedText57",
+						"type": "DatasetReference",
+						"parameters": {
+							"SourceContainer": {
+								"value": "@activity('lookup').output.firstRow.SourceContainer",
+								"type": "Expression"
+							},
+							"SourceDirectory": {
+								"value": "@activity('lookup').output.firstRow.SourceDirectory",
+								"type": "Expression"
+							},
+							"SourceFileName": {
+								"value": "@activity('lookup').output.firstRow.SourceFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet5",
+						"type": "DatasetReference",
+						"parameters": {
+							"targetContainer": {
+								"value": "@activity('lookup').output.firstRow.destContainer",
+								"type": "Expression"
+							},
+							"targetDirectory": {
+								"value": "@activity('lookup').output.firstRow.destDirectory",
+								"type": "Expression"
+							},
+							"targetFileName": {
+								"value": "@activity('lookup').output.firstRow.destFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Notebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "ToParquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/pk255065/DEMOPRJCT"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Delete from Inbound",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "ToParquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "deleteinbound",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceContainer": "@activity('lookup').output.firstRow.sourceContainer",
+							"sourceDirectory": "@activity('lookup').output.firstRow.sourceDirectory",
+							"sourceFileName": "@activity('lookup').output.firstRow.sourceFileName"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "pk255065/raw"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Error Email_not converted",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ToParquet",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error is in ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity1,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage1,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Successful pipeline execution",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Notebook",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-33.eastus.logic.azure.com:443/workflows/42efd8cd5ece47b189f701dbbcd92f05/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sH7Y_BKWriojC25z39Uo9578G0LDk4HyOIam5ItFk3U",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subjects\":\" execution successful',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Error Email_not executed",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Notebook",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error is in ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity1,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage2,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "input to archives",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Notebook",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Airport_Code",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Airport_Code",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Duration",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Duration",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Domestic_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Domestic_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "International_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "International_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Total_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Total_Passengers",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Food_orderedby",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Food_orderedby",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "cost_generated",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "cost_generated",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Parquet6",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet7",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Delete from input",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "input to archives",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Binary4",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "pk255065/input"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Error Email_not executed_copy1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "input to archives",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error is in ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity1,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage3,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "prasad.kamthe@teradata.com"
+			},
+			"Pipe_line_Name": {
+				"type": "string",
+				"defaultValue": "FoodcostAnalysis"
+			},
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "food_data"
+			},
+			"DataFactory": {
+				"type": "string",
+				"defaultValue": "td-aa-trng-adf"
+			},
+			"Activity1": {
+				"type": "string",
+				"defaultValue": "csv to parque"
+			},
+			"ErrorMessage1": {
+				"type": "string",
+				"defaultValue": "File doesn't exist"
+			},
+			"Activity2": {
+				"type": "string",
+				"defaultValue": "delta_export"
+			},
+			"ErrorMessage2": {
+				"type": "string",
+				"defaultValue": "Notebook Error"
+			},
+			"ErrorMessage3": {
+				"type": "string",
+				"defaultValue": "Error while archieving"
+			}
+		},
+		"folder": {
+			"name": "pk255065"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-14T07:37:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

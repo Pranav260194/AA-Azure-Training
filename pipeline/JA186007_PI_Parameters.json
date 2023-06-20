@@ -1,0 +1,119 @@
+{
+	"name": "JA186007_PI_Parameters",
+	"properties": {
+		"activities": [
+			{
+				"name": "ParameterLookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "JA186007_DS_Parameters",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ParameterCopydata1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ParameterLookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "JA186007_DS_InputDS",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceContainer": {
+								"value": "@activity('ParameterLookup1').output.firstrow.sourceContainer",
+								"type": "Expression"
+							},
+							"sourceDirectory": {
+								"value": "@activity('ParameterLookup1').output.firstrow.sourceDirectory",
+								"type": "Expression"
+							},
+							"sourceFileName": {
+								"value": "@activity('ParameterLookup1').output.firstrow.sourceFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "JA186007_DS_Parameter_Parq",
+						"type": "DatasetReference",
+						"parameters": {
+							"destContainer": {
+								"value": "@activity('ParameterLookup1').output.firstrow.destContainer",
+								"type": "Expression"
+							},
+							"destDirectory": {
+								"value": "@activity('ParameterLookup1').output.firstrow.destDirectory",
+								"type": "Expression"
+							},
+							"destFileName": {
+								"value": "@activity('ParameterLookup1').output.firstrow.destFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-01-14T12:01:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

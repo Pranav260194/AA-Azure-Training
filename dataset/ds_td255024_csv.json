@@ -1,0 +1,38 @@
+{
+	"name": "ds_td255024_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "InputFile.txt",
+				"folderPath": "Input",
+				"fileSystem": "td255024"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Col1",
+				"type": "String"
+			},
+			{
+				"name": "Col2",
+				"type": "String"
+			},
+			{
+				"name": "Col3",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,513 @@
+{
+	"name": "pb255086_cargo_prj_CF",
+	"properties": {
+		"activities": [
+			{
+				"name": "Delete from Inbound",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "inbound csv to input parquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pb255086_delete",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceContainer": "@activity('lookup_parameter').output.firstRow.sourceContainer",
+							"sourceDirectory": "@activity('lookup_parameter').output.firstRow.sourceDirectory",
+							"sourceFileName": "@activity('lookup_parameter').output.firstRow.sourceFileName"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "pb255086/stage"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "inbound csv to input parquet",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "lookup_parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Cargo_ID",
+									"type": "Int64",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cargo_ID",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ActivityPeriod",
+									"type": "Int64",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ActivityPeriod",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "OperatingAirline",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OperatingAirline",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "OperatingAirlineIATACode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OperatingAirlineIATACode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "PublishedAirline",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PublishedAirline",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "PublishedAirlineIATACode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PublishedAirlineIATACode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "GEOSummary",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GEOSummary",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "GEORegion",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "GEORegion",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ActivityTypeCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ActivityTypeCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CargoTypeCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CargoTypeCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CargoAircraftType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CargoAircraftType",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CargoWeightLBS",
+									"type": "Int64",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CargoWeightLBS",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CargoMetricTONS",
+									"type": "Double",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CargoMetricTONS",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "DateOfDeparture",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DateOfDeparture",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "DateOfShipment",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DateOfShipment",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Category",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Category",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "pb255086_flat_file_sourse_ds_for_parameter",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceDirectory",
+								"type": "Expression"
+							},
+							"sourceContainer": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceContainer",
+								"type": "Expression"
+							},
+							"sourceFileName": {
+								"value": "@activity('lookup_parameter').output.firstRow.sourceFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "pb255086_Parquet2",
+						"type": "DatasetReference",
+						"parameters": {
+							"destContainer": {
+								"value": "@activity('lookup_parameter').output.firstRow.destContainer",
+								"type": "Expression"
+							},
+							"destDirectory": {
+								"value": "@activity('lookup_parameter').output.firstRow.destDirectory   ",
+								"type": "Expression"
+							},
+							"destFileName": {
+								"value": "@activity('lookup_parameter').output.firstRow.destFileName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "export to delta",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Delete from Inbound",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/pb255086/pb255086_ex"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "failur email",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "inbound csv to input parquet",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity1,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage1,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "failur email at databricks",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "export to delta",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity2,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage1,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SuccessEmail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "export to delta",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-33.eastus.logic.azure.com:443/workflows/42efd8cd5ece47b189f701dbbcd92f05/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sH7Y_BKWriojC25z39Uo9578G0LDk4HyOIam5ItFk3U",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subjects\":\" successful pipeline execution',pipeline().Pipeline,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lookup_parameter",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "pb255086_cargoF",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "punit.bandal@teradata.com"
+			},
+			"Pipe_line_Name": {
+				"type": "string",
+				"defaultValue": "pb255086_cargo_prj"
+			},
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "cargo10csv"
+			},
+			"DataFactory": {
+				"type": "string",
+				"defaultValue": "td-aa-trng-adf"
+			},
+			"Activity1": {
+				"type": "string",
+				"defaultValue": "inbound csv to input parquet"
+			},
+			"ErrorMessage1": {
+				"type": "string",
+				"defaultValue": "file in inbound"
+			},
+			"Activity2": {
+				"type": "string",
+				"defaultValue": "export to delta"
+			}
+		},
+		"folder": {
+			"name": "PB255086"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-13T06:35:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

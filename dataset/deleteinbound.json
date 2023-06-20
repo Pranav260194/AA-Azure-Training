@@ -1,0 +1,34 @@
+{
+	"name": "deleteinbound",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourceContainer": {
+				"type": "string"
+			},
+			"sourceDirectory": {
+				"type": "string"
+			},
+			"sourceFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().sourceFileName",
+					"type": "Expression"
+				},
+				"folderPath": "inbound",
+				"fileSystem": "pk255065"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,42 @@
+{
+	"name": "AzureBlob_CSV_Unzip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Container": {
+				"type": "string",
+				"defaultValue": "mp255107"
+			},
+			"Directory": {
+				"type": "string",
+				"defaultValue": "input"
+			}
+		},
+		"folder": {
+			"name": "mp255107/Azure Blob"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

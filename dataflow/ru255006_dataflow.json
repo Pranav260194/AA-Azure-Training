@@ -1,0 +1,60 @@
+{
+	"name": "ru255006_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ru255006_src_data",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ru255006_New_tgt_data",
+						"type": "DatasetReference"
+					},
+					"name": "output1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SalChk"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          NAME as string,",
+				"          DEPARTMENT as string,",
+				"          DESIGNATION as string,",
+				"          SALARY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(Valid_Sal = locate(SALARY, '500')) ~> SalChk",
+				"SalChk sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['AA_Test_New_Target1_30May.txt'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     mapColumn(",
+				"          NAME,",
+				"          DEPARTMENT,",
+				"          DESIGNATION,",
+				"          SALARY,",
+				"          Valid_Sal",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> output1"
+			]
+		}
+	}
+}

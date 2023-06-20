@@ -1,0 +1,58 @@
+{
+	"name": "DelimitedText22_par_cb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().Filename",
+					"type": "Expression"
+				},
+				"folderPath": "input",
+				"fileSystem": "cb255052"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Flight#",
+				"type": "String"
+			},
+			{
+				"name": "Origin",
+				"type": "String"
+			},
+			{
+				"name": "Dest",
+				"type": "String"
+			},
+			{
+				"name": "FlightDate",
+				"type": "String"
+			},
+			{
+				"name": "NoSalesReason",
+				"type": "String"
+			},
+			{
+				"name": "TransmittingFlightAttd",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,45 @@
+{
+	"name": "df_dup_split_keep_orig_rec",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_csv",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDuplicateFile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_out_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_td255024_out_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ConditionalSplit"
+				},
+				{
+					"name": "Sort"
+				},
+				{
+					"name": "Window"
+				}
+			],
+			"script": "source(output(\n\t\tCol1 as string,\n\t\tCol2 as string,\n\t\tCol3 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SrcDuplicateFile\nWindow split(ROW_NUM == 1,\n\tdisjoint: false) ~> ConditionalSplit@(NonDups, Dups)\nSrcDuplicateFile sort(asc(Col1, true),\n\tcaseInsensitive: true) ~> Sort\nSort window(over(Col1),\n\tasc(Col1, true),\n\tROW_NUM = rowNumber()) ~> Window\nConditionalSplit@NonDups sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1\nConditionalSplit@Dups sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink2"
+		}
+	}
+}

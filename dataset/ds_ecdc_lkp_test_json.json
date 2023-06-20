@@ -1,0 +1,34 @@
+{
+	"name": "ds_ecdc_lkp_test_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "sg255112"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ecdc_file_list_for_2_files.json",
+				"folderPath": "Configs",
+				"fileSystem": "sg255112"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"sourceRelativeURL": {
+					"type": "string"
+				},
+				"sinkFileName": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

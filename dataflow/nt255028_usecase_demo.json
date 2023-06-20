@@ -1,0 +1,45 @@
+{
+	"name": "nt255028_usecase_demo",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "usecase_demo_dataset_ip",
+						"type": "DatasetReference"
+					},
+					"name": "EmpSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "usecase_demo_dataset2",
+						"type": "DatasetReference"
+					},
+					"name": "EmpNewSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "usecase_Demo_op",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Union1"
+				},
+				{
+					"name": "RemoveDuplicates"
+				},
+				{
+					"name": "Sort1"
+				}
+			],
+			"script": "source(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpSource\nsource(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpNewSource\nEmpSource, EmpNewSource union(byName: true)~> Union1\nUnion1 aggregate(groupBy(Emp_ID),\n\teach(match(name!=\"Emp_ID\"), $$ = first($$))) ~> RemoveDuplicates\nRemoveDuplicates sort(asc(Emp_ID, true)) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['usecase_demo_result.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+		}
+	}
+}

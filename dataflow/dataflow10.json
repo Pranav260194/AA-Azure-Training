@@ -1,0 +1,53 @@
+{
+	"name": "dataflow10",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ss255307_rim_input",
+						"type": "DatasetReference"
+					},
+					"name": "input"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ss255307_rim_output",
+						"type": "DatasetReference"
+					},
+					"name": "output"
+				}
+			],
+			"transformations": [
+				{
+					"name": "addcolumn",
+					"description": "adding a column"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> input",
+				"input derive(othercolumn = locate(NoSalesReason, 'Other')) ~> addcolumn",
+				"addcolumn sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> output"
+			]
+		}
+	}
+}

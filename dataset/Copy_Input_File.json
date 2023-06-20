@@ -1,0 +1,45 @@
+{
+	"name": "Copy_Input_File",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"destFileName": {
+				"type": "string"
+			},
+			"destDirectory": {
+				"type": "string"
+			},
+			"destContainer": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().destFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().destDirectory",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().destContainer",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

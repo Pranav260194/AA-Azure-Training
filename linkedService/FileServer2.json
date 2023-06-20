@@ -1,0 +1,13 @@
+{
+	"name": "FileServer2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\Users\\ru255006\\OneDrive - Teradata\\Documents\\American_Airlines",
+			"userId": "RU255006",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQERCNUQ5MEY0LTdGMkEtNEQ3Ny05NTc5LUUzMTI5NEE0NzBBMF82YjkwMDYxNS02ODczLTQ4MTgtYjBjNy05ODczZWExOWEwYzEiDQp9"
+		}
+	}
+}

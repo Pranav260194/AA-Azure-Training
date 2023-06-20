@@ -1,0 +1,19 @@
+{
+	"name": "Odbc_Vantage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Odbc_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Vantage"
+		},
+		"annotations": [],
+		"type": "OdbcTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "\"sj186068\".\"lineitem\""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

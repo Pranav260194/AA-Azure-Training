@@ -1,0 +1,165 @@
+{
+	"name": "Demo_Pipeline_String_func",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extracting the File Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_File_Name",
+					"value": {
+						"value": "@substring(pipeline().parameters.File_Name,0,lastindexof(pipeline().parameters.File_Name,'.'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Extracting Cntl File",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Extracting the File Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CNTL_File_Name",
+					"value": {
+						"value": "@concat(substring(variables('CSV_File_Name'),0,lastindexof(variables('CSV_File_Name'),'.')),'.cntl')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check if the file exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Extracting Cntl File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DelimitedText12",
+						"type": "DatasetReference",
+						"parameters": {
+							"Cntl_FILE_Name": {
+								"value": "@variables('CNTL_File_Name')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "Check if the file exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DelimitedText15",
+						"type": "DatasetReference",
+						"parameters": {
+							"Csv_File_name_Mod": {
+								"value": "@concat(variables('CSV_File_Name'),'.gz')",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"exists",
+						"columnCount"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "Employee.csv.gz"
+			},
+			"Container_Name": {
+				"type": "string"
+			},
+			"Input_DIrectory": {
+				"type": "string"
+			},
+			"Inbound_Directory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"CSV_File_Name": {
+				"type": "String"
+			},
+			"CNTL_File_Name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-10T13:29:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

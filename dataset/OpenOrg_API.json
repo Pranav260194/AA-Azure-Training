@@ -1,0 +1,16 @@
+{
+	"name": "OpenOrg_API",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OpenOrg_API",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp255107"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

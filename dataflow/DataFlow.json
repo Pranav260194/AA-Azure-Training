@@ -1,0 +1,59 @@
+{
+	"name": "DataFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference"
+					},
+					"name": "RIMsource1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference"
+					},
+					"name": "RIMsourceOutput",
+					"rejectedDataLinkedService": {
+						"referenceName": "adls_ls",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "GenericReason"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     parameter1 as timestamp (currentTimestamp())",
+				"}",
+				"source(output(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> RIMsource1",
+				"RIMsource1 derive(GnericReason = locate(NoSalesReason, 'Other')) ~> GenericReason",
+				"GenericReason sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RIMsourceOutput"
+			]
+		}
+	}
+}

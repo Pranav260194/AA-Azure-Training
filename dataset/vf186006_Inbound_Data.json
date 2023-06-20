@@ -1,0 +1,46 @@
+{
+	"name": "vf186006_Inbound_Data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "vf186006_test_accesskey",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Data_Inbound_FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().Data_Inbound_FileName",
+					"type": "Expression"
+				},
+				"folderPath": "inbound",
+				"fileSystem": "vf186006"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

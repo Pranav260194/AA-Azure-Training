@@ -1,0 +1,37 @@
+{
+	"name": "cb255052_adf_dataflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "cb255052_dataflow_rimhist_aggr",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "cb_dataflow",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "cb255052"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-22T09:12:49Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

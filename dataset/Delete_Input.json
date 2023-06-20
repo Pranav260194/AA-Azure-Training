@@ -1,0 +1,19 @@
+{
+	"name": "Delete_Input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "input",
+				"fileSystem": "ha255041"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

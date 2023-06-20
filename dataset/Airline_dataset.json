@@ -1,0 +1,53 @@
+{
+	"name": "Airline_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "dn255032"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "RIM_V1.2_HistoryData.csv",
+				"folderPath": "input",
+				"container": "dn255032"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Flight#",
+				"type": "String"
+			},
+			{
+				"name": "Origin",
+				"type": "String"
+			},
+			{
+				"name": "Dest",
+				"type": "String"
+			},
+			{
+				"name": "FlightDate",
+				"type": "String"
+			},
+			{
+				"name": "NoSalesReason",
+				"type": "String"
+			},
+			{
+				"name": "TransmittingFlightAttd",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

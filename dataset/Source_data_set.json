@@ -1,0 +1,32 @@
+{
+	"name": "Source_data_set",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "f1db_csv.zip",
+				"folderPath": "input",
+				"container": "am255188"
+			},
+			"columnDelimiter": ",",
+			"compressionCodec": "ZipDeflate",
+			"compressionLevel": "Optimal",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000���V����\u0011\u000e\u0000\u0000x'\u0000\u0000\f\u0000\u001c\u0000circuits.csvUT\t\u0000\u0003QQYd͎Xdux\u000b\u0000\u0001\u0004�\u0003\u0000\u0000\u0004�\u0003\u0000\u0000�ZKs�\u0011��W���\u001b�\u0011�dn~�x^�x�I�V�X�\bK\u001cS�\u0002����MjO9�r�kn�c�\u001a|\b�G\u000b�$����@��_7��Ţ͛w���F7��*ٚ[E�`M^�֢j�Fl��5VQ.-V4V+",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

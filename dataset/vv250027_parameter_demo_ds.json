@@ -1,0 +1,42 @@
+{
+	"name": "vv250027_parameter_demo_ds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"destContainer": {
+				"type": "string"
+			},
+			"destDirectory": {
+				"type": "string"
+			},
+			"destFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().destFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().destDirectory",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().destContainer",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

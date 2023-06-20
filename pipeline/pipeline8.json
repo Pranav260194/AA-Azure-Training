@@ -1,0 +1,33 @@
+{
+	"name": "pipeline8",
+	"properties": {
+		"activities": [
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/mp255107/Merge Data from Staging to Target Tables"
+				},
+				"linkedServiceName": {
+					"referenceName": "ADB_mp255107",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "mp255107"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-12T09:21:33Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,52 @@
+{
+	"name": "demo_ar255088",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CSV_FILENAME",
+					"value": {
+						"value": "@substring(pipeline().parameters.File_Name,0,lastindexof(pipeline().parameters.File_Name,'.'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "abc.csv.gz"
+			},
+			"Container_Name": {
+				"type": "string"
+			},
+			"Input_Directory": {
+				"type": "string"
+			},
+			"Inbound_Directory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"CSV_FILENAME": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ar255088"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-12-05T06:28:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

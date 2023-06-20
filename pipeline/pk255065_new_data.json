@@ -1,0 +1,145 @@
+{
+	"name": "pk255065_new_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "pk255065_copy_data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Flight#",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Flight#",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Origin",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Origin",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Dest",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dest",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FlightDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FlightDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NoSalesReason",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NoSalesReason",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TransmittingFlightAttd",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TransmittingFlightAttd",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "pk255065_input",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "pk255065_output",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "pk255065"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-07T10:16:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

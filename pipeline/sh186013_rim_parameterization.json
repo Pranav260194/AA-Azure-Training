@@ -1,0 +1,134 @@
+{
+	"name": "sh186013_rim_parameterization",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup Parameter",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup Parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sh186013_paramater_source_ds",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceFileName": {
+								"value": "@activity('Lookup Parameter').output.firstRow.sourceFileName",
+								"type": "Expression"
+							},
+							"sourceDirectory": {
+								"value": "@activity('Lookup Parameter').output.firstRow.sourceDirectory",
+								"type": "Expression"
+							},
+							"sourceContainer": {
+								"value": "@activity('Lookup Parameter').output.firstRow.sourceContainer",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sh186013_parameter_sink_ds",
+						"type": "DatasetReference",
+						"parameters": {
+							"destFileName": {
+								"value": "@activity('Lookup Parameter').output.firstRow.destFileName",
+								"type": "Expression"
+							},
+							"destDirectory": {
+								"value": "@activity('Lookup Parameter').output.firstRow.destDirectory",
+								"type": "Expression"
+							},
+							"destContainer": {
+								"value": "@activity('Lookup Parameter').output.firstRow.destContainer",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "sh186013"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-06-24T04:44:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

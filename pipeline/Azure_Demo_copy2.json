@@ -1,0 +1,382 @@
+{
+	"name": "Azure_Demo_copy2",
+	"properties": {
+		"activities": [
+			{
+				"name": "get data from config",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "ADF*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy_inbound_input",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+							"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+							"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Copy_Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"destFileName": "@activity('get data from config').output.firstRow.destFileName",
+							"destDirectory": "@activity('get data from config').output.firstRow.destDirectory",
+							"destContainer": "@activity('get data from config').output.firstRow.destContainer"
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete_Inbound",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy_inbound_input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+							"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+							"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.csv",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Transform_Stage",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Delete_Inbound",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/np255046/Azure DB"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "get Schema of file",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "get data from config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": {
+								"value": "@activity('get data from config').output.firstRow.sourceDirectory",
+								"type": "Expression"
+							},
+							"sourceContainer": {
+								"value": "@activity('get data from config').output.firstRow.sourceContainer",
+								"type": "Expression"
+							},
+							"sourceFileName": {
+								"value": "@activity('get data from config').output.firstRow.sourceFileName",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"structure"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Get scehma from ref file",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "get data from config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Ref_Schema",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"structure"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "get Schema of file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get scehma from ref file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('get Schema of file').output,activity('Get scehma from ref file').output.structure)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Copy data",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"wildcardFileName": "*.csv",
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Input_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+										"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+										"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Copy_Input_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"destFileName": "@activity('get data from config').output.firstRow.destFileName",
+										"destDirectory": {
+											"value": "@activity('get data from config').output.firstRow.destFileName",
+											"type": "Expression"
+										},
+										"destContainer": "@activity('get data from config').output.firstRow.destContainer"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "np255046"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-13T07:54:01Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

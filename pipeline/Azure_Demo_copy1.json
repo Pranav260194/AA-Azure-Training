@@ -1,0 +1,279 @@
+{
+	"name": "Azure_Demo_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "get data from config",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "ADF*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy_inbound_input",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "get data from config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+							"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+							"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Copy_Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"destFileName": "@activity('get data from config').output.firstRow.destFileName",
+							"destDirectory": "@activity('get data from config').output.firstRow.destDirectory",
+							"destContainer": "@activity('get data from config').output.firstRow.destContainer"
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete_Inbound",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy_inbound_input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+							"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+							"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.csv",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Transform_Stage",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/np255046/Azure DB"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "Delete_Inbound",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Data_In_Input",
+						"type": "DatasetReference",
+						"parameters": {
+							"destFileName": "@activity('get data from config').output.firstRow.destFileName",
+							"destDirectory": "@activity('get data from config').output.firstRow.destDirectory",
+							"destContainer": "@activity('get data from config').output.firstRow.destContainer"
+						}
+					},
+					"fieldList": [
+						"exists"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "On Failure",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"body": {
+						"value": "{\n\n    \"DataFactoryName\" : \"@{pipeline().DataFactory}\",\n\n    \"PipelineName\" : \"@{pipeline().Pipeline}\",\n\n    \"EmailTo\" : \"@{pipeline().parameters.EmailTo}\",\n\n    \"FileName\":\"Airline.csv\",\n\n    \"Subject\":\"Successfull\"\n\n   }",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "Azure DB"
+			},
+			"DataFactoryName": {
+				"type": "string",
+				"defaultValue": "adls"
+			},
+			"EmailTo": {
+				"type": "string",
+				"defaultValue": "Nisha.Pedsangi@teradata.com"
+			},
+			"PipelineName": {
+				"type": "string",
+				"defaultValue": "Azure Demo"
+			}
+		},
+		"folder": {
+			"name": "np255046"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-13T11:33:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

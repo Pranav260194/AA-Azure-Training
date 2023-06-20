@@ -1,0 +1,32 @@
+{
+	"name": "is255014_xfm_1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "input_testFile",
+						"type": "DatasetReference"
+					},
+					"name": "RIMsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "output_testFile",
+						"type": "DatasetReference"
+					},
+					"name": "dataflowoutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "GenericReason"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> RIMsource\nRIMsource derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd^addedcol} as string\n\t),\n\tpartitionFileNames:['RIM'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> dataflowoutput"
+		}
+	}
+}

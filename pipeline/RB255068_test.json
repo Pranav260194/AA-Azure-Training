@@ -1,0 +1,257 @@
+{
+	"name": "RB255068_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extract Month from the Date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Check if file exists in Inbound folder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "MONTH",
+					"value": {
+						"value": "@substring(pipeline().parameters.FILE_NAME, add(indexof(pipeline().parameters.FILE_NAME, '_'), 1), 3)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Extract Year from the Date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Extract Month from the Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "YEAR",
+					"value": {
+						"value": "@substring(pipeline().parameters.FILE_NAME, add(indexof(pipeline().parameters.FILE_NAME, '_'), 4), 4)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check if file exists in Inbound folder",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "RB255068_file_check",
+						"type": "DatasetReference",
+						"parameters": {
+							"FILE_NAME": {
+								"value": "@pipeline().parameters.FILE_NAME",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "Check if Date is in the Past",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Extract Year from the Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greaterOrEquals(utcnow(), formatDateTime(concat(variables('MONTH'), ' ', variables('YEAR'))))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Date is in future",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IS_PAST_DATE",
+								"value": "false"
+							}
+						},
+						{
+							"name": "Invalid Data",
+							"type": "Fail",
+							"dependsOn": [
+								{
+									"activity": "Date is in future",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Date cannot be in future; indicates invalid or incorrect data",
+								"errorCode": "400"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Date is in Past",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IS_PAST_DATE",
+								"value": "true"
+							}
+						},
+						{
+							"name": "Run Transformations Notebook",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Date is in Past",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/RB255068/RB255068_Transformation",
+								"baseParameters": {
+									"FILE_NAME": {
+										"value": "@pipeline().parameters.FILE_NAME",
+										"type": "Expression"
+									},
+									"MONTH": {
+										"value": "@variables('MONTH')",
+										"type": "Expression"
+									},
+									"YEAR": {
+										"value": "@variables('YEAR')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "adb_ls",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Run the Dashboard",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Check if Date is in the Past",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/RB255068/RB255068_Dashboard"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"FILE_NAME": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"MONTH": {
+				"type": "String"
+			},
+			"YEAR": {
+				"type": "String"
+			},
+			"IS_PAST_DATE": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "RB255068"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-29T10:18:49Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

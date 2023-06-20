@@ -1,0 +1,533 @@
+{
+	"name": "demo_pipeline13231",
+	"properties": {
+		"activities": [
+			{
+				"name": "copy_book",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - book",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "books",
+						"type": "DatasetReference",
+						"parameters": {
+							"book": "@activity('parameter').output.firstRow.book"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "book",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "copy_user",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - user",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "users",
+						"type": "DatasetReference",
+						"parameters": {
+							"user": "@activity('parameter').output.firstRow.user"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "user",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "parameter",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "parameter",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Lookup for filename - book",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "books",
+						"type": "DatasetReference",
+						"parameters": {
+							"book": "@activity('parameter').output.firstRow.book"
+						}
+					}
+				}
+			},
+			{
+				"name": "Lookup for filename - user",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "users",
+						"type": "DatasetReference",
+						"parameters": {
+							"user": {
+								"value": "@activity('parameter').output.firstRow.user",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "Lookup for filename - library",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "parameter",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "librarys",
+						"type": "DatasetReference",
+						"parameters": {
+							"library": {
+								"value": "@activity('parameter').output.firstRow.library",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "copy_library",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - library",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "librarys",
+						"type": "DatasetReference",
+						"parameters": {
+							"library": "@activity('parameter').output.firstRow.library"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "library",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Mail if book file is missing",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - book",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',activity('parameter').output.firstRow.mail,'\",\n    \"Subject\":\"An error has occured in the {',pipeline().Pipeline, '} -pipeline for file- {',variables('filename'),'}\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Activity\":\"Unable to copy files from inbound to input directory\",\n    \"ErrorMessage\":\"File Missing from inbound directory\",\n    \"FileName\":\"',activity('parameter').output.firstRow.book ,'\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Mail if user file is missing",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - user",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',activity('parameter').output.firstRow.mail,'\",\n    \"Subject\":\"An error has occured in the {',pipeline().Pipeline, '} -pipeline for file- {',variables('filename'),'}\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Activity\":\"Unable to copy files from inbound to input directory\",\n    \"ErrorMessage\":\"File Missing from inbound directory\",\n    \"FileName\":\"',activity('parameter').output.firstRow.user ,'\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Mail if library file is missing",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Lookup for filename - library",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-48.eastus.logic.azure.com:443/workflows/27b0503ec47a4951aa8d0a747c7ccd25/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=b2-jmvnjIJK5gSU40VFp8FnBJs5Qh8VOg1fWGj43G7Y",
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{\n    \"EmailTo\":\"',activity('parameter').output.firstRow.mail,'\",\n    \"Subject\":\"An error has occured in the {',pipeline().Pipeline, '} -pipeline for file- {',variables('filename'),'}\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Activity\":\"Unable to copy files from inbound to input directory\",\n    \"ErrorMessage\":\"File Missing from inbound directory\",\n    \"FileName\":\"',activity('parameter').output.firstRow.library ,'\"}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Transformation",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "copy_book",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "copy_user",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "copy_library",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/ss255307/ss255307_library",
+					"baseParameters": {
+						"book": {
+							"value": "@activity('parameter').output.firstRow.book",
+							"type": "Expression"
+						},
+						"user": {
+							"value": "@activity('parameter').output.firstRow.user",
+							"type": "Expression"
+						},
+						"library": {
+							"value": "@activity('parameter').output.firstRow.library",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"container": {
+				"type": "String"
+			},
+			"book": {
+				"type": "String"
+			},
+			"filename": {
+				"type": "String"
+			},
+			"filemissing": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ss255307"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-11T13:44:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

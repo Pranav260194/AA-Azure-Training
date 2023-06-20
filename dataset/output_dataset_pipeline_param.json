@@ -1,0 +1,36 @@
+{
+	"name": "output_dataset_pipeline_param",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"outputFileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "dn255032"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().outputFileName",
+					"type": "Expression"
+				},
+				"folderPath": "output",
+				"container": "dn255032"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

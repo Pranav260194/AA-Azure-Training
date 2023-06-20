@@ -1,0 +1,98 @@
+{
+	"name": "nj255009",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "nj255009/input/RIM_V1.2_HistoryData.csv"
+					},
+					{
+						"name": "Destination",
+						"value": "nj255009/input/RIM_V1.2_HistoryData.csv"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "Filename",
+								"value": "$$FILEPATH"
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference",
+						"parameters": {
+							"nj255009_demo": "Filename"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "nj255009_demo",
+						"type": "DatasetReference",
+						"parameters": {
+							"nj255009_demo": "Filename"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"nj255009Demo": {
+				"type": "string",
+				"defaultValue": "Filename"
+			}
+		},
+		"folder": {
+			"name": "nj255009"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-12T11:08:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

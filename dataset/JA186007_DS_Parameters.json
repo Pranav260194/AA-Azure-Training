@@ -1,0 +1,21 @@
+{
+	"name": "JA186007_DS_Parameters",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ADF_parameters_2.json",
+				"folderPath": "config",
+				"fileSystem": "ja186007"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

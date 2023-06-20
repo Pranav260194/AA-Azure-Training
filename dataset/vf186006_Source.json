@@ -1,0 +1,29 @@
+{
+	"name": "vf186006_Source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "vf186006_test_accesskey",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "RIM_V1.2_HistoryData.csv",
+				"folderPath": "input",
+				"fileSystem": "vf186006"
+			},
+			"columnDelimiter": "^",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

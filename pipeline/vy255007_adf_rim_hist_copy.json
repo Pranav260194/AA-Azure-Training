@@ -1,0 +1,37 @@
+{
+	"name": "vy255007_adf_rim_hist_copy",
+	"properties": {
+		"activities": [
+			{
+				"name": "vy255007_RIM_hist_df",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "vy255007_RIM_hist_df",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "vy255007"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-10-25T06:38:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

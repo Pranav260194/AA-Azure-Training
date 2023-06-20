@@ -1,0 +1,38 @@
+{
+	"name": "ak255194_src_loan_info",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "loan info.csv",
+				"folderPath": "inbound",
+				"fileSystem": "ak255194"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "loan_id",
+				"type": "String"
+			},
+			{
+				"name": "loan_plan ",
+				"type": "String"
+			},
+			{
+				"name": "loan_duration_(months)",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

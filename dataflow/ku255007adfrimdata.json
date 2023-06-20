@@ -1,0 +1,32 @@
+{
+	"name": "ku255007adfrimdata",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ku255007source",
+						"type": "DatasetReference"
+					},
+					"name": "sourcerim"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ku255007output",
+						"type": "DatasetReference"
+					},
+					"name": "sinkoutputdata"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Flag"
+				}
+			],
+			"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> sourcerim\nsourcerim derive(Flagfornosales = locate(NoSalesReason,'Other')) ~> Flag\nFlag sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string,\n\t\t{Flag for No sales } as string\n\t),\n\tpartitionFileNames:['output_rim_dataflow.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\t{Flight#},\n\t\tOrigin,\n\t\tDest,\n\t\tFlightDate,\n\t\tNoSalesReason,\n\t\tTransmittingFlightAttd,\n\t\t{Flag for No sales } = Flagfornosales\n\t),\n\tpartitionBy('hash', 1)) ~> sinkoutputdata"
+		}
+	}
+}

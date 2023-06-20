@@ -1,0 +1,36 @@
+{
+	"name": "DF_Input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"CSV_Files": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "YP255010"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().CSV_Files",
+					"type": "Expression"
+				},
+				"folderPath": "inbound",
+				"fileSystem": "yp255010"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": ""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

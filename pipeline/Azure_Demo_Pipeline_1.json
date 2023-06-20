@@ -1,0 +1,120 @@
+{
+	"name": "Azure_Demo_Pipeline_1",
+	"properties": {
+		"activities": [
+			{
+				"name": "get data from config",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "ADF*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "get data from config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceDirectory": "@activity('get data from config').output.firstRow.sourceDirectory",
+							"sourceContainer": "@activity('get data from config').output.firstRow.sourceContainer",
+							"sourceFileName": "@activity('get data from config').output.firstRow.sourceFileName"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Copy_Input_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"destFileName": "@activity('get data from config').output.firstRow.destFileName",
+							"destDirectory": "@activity('get data from config').output.firstRow.destDirectory",
+							"destContainer": "@activity('get data from config').output.firstRow.destContainer"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "np255046"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-09T17:49:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
