@@ -5,12 +5,6 @@
 			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"circumflex": {
-				"type": "String",
-				"defaultValue": "^"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
@@ -27,7 +21,27 @@
 		},
 		"schema": [
 			{
-				"name": "Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd",
+				"name": "Flight#",
+				"type": "String"
+			},
+			{
+				"name": "Origin",
+				"type": "String"
+			},
+			{
+				"name": "Dest",
+				"type": "String"
+			},
+			{
+				"name": "FlightDate",
+				"type": "String"
+			},
+			{
+				"name": "NoSalesReason",
+				"type": "String"
+			},
+			{
+				"name": "TransmittingFlightAttd",
 				"type": "String"
 			}
 		]
