@@ -27,12 +27,14 @@
 						}
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "DelimitedTextSink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
-							"type": "ParquetWriteSettings"
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
 						}
 					},
 					"enableStaging": false,
@@ -48,7 +50,7 @@
 								"sink": {
 									"name": "Flight#",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -60,7 +62,7 @@
 								"sink": {
 									"name": "Origin",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -72,7 +74,7 @@
 								"sink": {
 									"name": "Dest",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -84,7 +86,7 @@
 								"sink": {
 									"name": "FlightDate",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -96,7 +98,7 @@
 								"sink": {
 									"name": "NoSalesReason",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							},
 							{
@@ -108,7 +110,7 @@
 								"sink": {
 									"name": "TransmittingFlightAttd",
 									"type": "String",
-									"physicalType": "UTF8"
+									"physicalType": "String"
 								}
 							}
 						],
@@ -127,7 +129,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet10_demoOP",
+						"referenceName": "DelimitedText63_demoOP",
 						"type": "DatasetReference"
 					}
 				]
