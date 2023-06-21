@@ -1,0 +1,53 @@
+{
+	"name": "Parquet10_demoOP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "target",
+				"fileSystem": "pk255066"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "airline",
+				"type": "UTF8"
+			},
+			{
+				"name": "incidents_85_99",
+				"type": "INT32"
+			},
+			{
+				"name": "fatal_accidents_85_99",
+				"type": "INT32"
+			},
+			{
+				"name": "fatalities_85_99",
+				"type": "INT32"
+			},
+			{
+				"name": "incidents_00_14",
+				"type": "INT32"
+			},
+			{
+				"name": "fatal_accidents_00_14",
+				"type": "INT32"
+			},
+			{
+				"name": "fatalities_00_14",
+				"type": "INT32"
+			},
+			{
+				"name": "current_date",
+				"type": "DATE"
+			}
+		]
+	}
+}
