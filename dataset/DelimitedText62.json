@@ -5,6 +5,12 @@
 			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"circumflex": {
+				"type": "String",
+				"defaultValue": "^"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
@@ -14,10 +20,7 @@
 				"folderPath": "input",
 				"fileSystem": "pk255066"
 			},
-			"columnDelimiter": {
-				"value": "^",
-				"type": "Expression"
-			},
+			"columnDelimiter": "^",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
