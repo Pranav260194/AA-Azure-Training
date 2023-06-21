@@ -1,5 +1,5 @@
 {
-	"name": "PK255066_demo",
+	"name": "PK255066_demo1",
 	"properties": {
 		"activities": [
 			{
@@ -31,7 +31,10 @@
 				"inputs": [
 					{
 						"referenceName": "DelimitedText62",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"circumflex": "^"
+						}
 					}
 				]
 			}
