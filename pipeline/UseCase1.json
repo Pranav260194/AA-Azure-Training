@@ -291,17 +291,11 @@
 				]
 			},
 			{
-				"name": "Lookup File Check",
+				"name": "Lookup Customer File Check",
 				"type": "Lookup",
 				"dependsOn": [
 					{
 						"activity": "Copy Customer File",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Copy Sales File",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -338,7 +332,13 @@
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Lookup File Check",
+						"activity": "Lookup Customer File Check",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Lookup Sales File Check",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -358,6 +358,43 @@
 				"linkedServiceName": {
 					"referenceName": "vf186006_Db_Connection",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Lookup Sales File Check",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Copy Sales File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "pa186030_sales_lookup",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
