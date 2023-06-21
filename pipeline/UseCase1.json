@@ -363,7 +363,7 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "Check if both Metadata exists",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
@@ -385,6 +385,14 @@
 						"value": "@and(activity('Get Metadata Customer').output.exists,activity('Get Metadata Sales').output.exists)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Fail1",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": []
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Databricks Notebook",
