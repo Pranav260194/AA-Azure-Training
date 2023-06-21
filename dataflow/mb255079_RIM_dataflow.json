@@ -12,10 +12,24 @@
 					"name": "customer"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DistinctCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "DistinctCustomer"
+				}
+			],
 			"transformations": [
 				{
-					"name": "aggregate1"
+					"name": "selectcust1"
+				},
+				{
+					"name": "windowRowNum"
+				},
+				{
+					"name": "filterDistinct"
 				}
 			],
 			"scriptLines": [
@@ -31,9 +45,34 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> customer",
-				"customer aggregate(groupBy(CustomerID),",
-				"     count = count(),",
-				"          each(match(), ERROR_FUNCTION('') = ERROR_FUNCTION(''))) ~> aggregate1"
+				"customer select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectcust1",
+				"selectcust1 window(over(CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country),",
+				"     asc(CustomerID, true),",
+				"     rownum = rowNumber()) ~> windowRowNum",
+				"windowRowNum filter(rownum==1) ~> filterDistinct",
+				"filterDistinct sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DistinctCustomer"
 			]
 		}
 	}
