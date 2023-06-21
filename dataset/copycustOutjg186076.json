@@ -2,7 +2,7 @@
 	"name": "copycustOutjg186076",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "copycust",
+			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
