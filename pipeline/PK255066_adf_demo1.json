@@ -123,13 +123,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText62",
+						"referenceName": "pk255066_DelimitedText62",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DelimitedText63_demoOP",
+						"referenceName": "pk255066_DelimitedText63_demoOP",
 						"type": "DatasetReference"
 					}
 				]
