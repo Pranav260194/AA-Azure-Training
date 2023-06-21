@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "customer"
+				},
+				{
+					"dataset": {
+						"referenceName": "mb255079_src_sales",
+						"type": "DatasetReference"
+					},
+					"name": "Sales"
 				}
 			],
 			"sinks": [],
@@ -40,6 +47,18 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> customer",
+				"source(output(",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Sales",
 				"customer select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
