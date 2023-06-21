@@ -32,6 +32,12 @@
 				},
 				{
 					"name": "DataCleaning"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -84,7 +90,21 @@
 				"          LastName = initCap(lower(LastName)),",
 				"          Email = trim(Email),",
 				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
-				"          Address = toString(Address)) ~> DataCleaning"
+				"          Address = ERROR_FUNCTION('toString(regexReplace(Address, __SINGLE_QUOTE__[^a-zA-Z0-9\\s]__SINGLE_QUOTE__, __SINGLE_QUOTE____SINGLE_QUOTE__))')) ~> DataCleaning",
+				"select1 aggregate(groupBy(ProductID,",
+				"          Region),",
+				"     Sum_Price = sum(toInteger(Price))) ~> aggregate1",
+				"Sales select(mapColumn(",
+				"          OrderID,",
+				"          CustomerID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}

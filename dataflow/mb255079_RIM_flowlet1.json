@@ -1,0 +1,32 @@
+{
+	"name": "mb255079_RIM_flowlet1",
+	"properties": {
+		"type": "Flowlet",
+		"typeProperties": {
+			"sources": [],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "customer"
+				},
+				{
+					"name": "DistinctCustomer"
+				}
+			],
+			"scriptLines": [
+				"input(output(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     order: 0,",
+				"     allowSchemaDrift: true) ~> customer",
+				"customer output() ~> DistinctCustomer"
+			]
+		}
+	}
+}
