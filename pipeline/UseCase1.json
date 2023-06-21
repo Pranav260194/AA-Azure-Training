@@ -61,7 +61,34 @@
 				]
 			},
 			{
-				"name": "saleslk",
+				"name": "Usecase1_jg186076",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "salesLK",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/jg186076/UC1_Jg186076"
+				},
+				"linkedServiceName": {
+					"referenceName": "vf186006_Db_Connection",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "salesLK",
 				"type": "Lookup",
 				"dependsOn": [
 					{
