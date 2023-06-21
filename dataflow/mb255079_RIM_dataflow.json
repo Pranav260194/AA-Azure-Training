@@ -12,15 +12,7 @@
 					"name": "customer"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "DistinctCustomer",
-						"type": "DatasetReference"
-					},
-					"name": "DistinctCustomer"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "selectcust1"
@@ -30,6 +22,9 @@
 				},
 				{
 					"name": "filterDistinct"
+				},
+				{
+					"name": "LowerCase"
 				}
 			],
 			"scriptLines": [
@@ -66,13 +61,10 @@
 				"     asc(CustomerID, true),",
 				"     rownum = rowNumber()) ~> windowRowNum",
 				"windowRowNum filter(rownum==1) ~> filterDistinct",
-				"filterDistinct sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DistinctCustomer"
+				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
+				"          LastName = initCap(lower(LastName)),",
+				"          Email = trim(Email),",
+				"          FullName = FirstName+\" \"+LastName) ~> LowerCase"
 			]
 		}
 	}
