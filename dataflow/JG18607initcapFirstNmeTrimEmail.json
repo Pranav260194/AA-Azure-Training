@@ -35,6 +35,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> CamelCaseFisrtNameCust",
 				"CamelCaseFisrtNameCust derive(FirstName = initCap(FirstName),",
+				"          LastName = initCap(LastName),",
 				"          Email = trim(Email,' ')) ~> derivedColumn1"
 			]
 		}
