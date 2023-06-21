@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "PK255066_demo",
+						"referenceName": "pk255066_DelimitedText63_demoOP",
 						"type": "DatasetReference"
 					},
 					"name": "DataflowOP"
