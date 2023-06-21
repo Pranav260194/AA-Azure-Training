@@ -36,7 +36,8 @@
 				"     ignoreNoFilesFound: false) ~> CamelCaseFisrtNameCust",
 				"CamelCaseFisrtNameCust derive(FirstName = initCap(FirstName),",
 				"          LastName = initCap(LastName),",
-				"          Email = trim(Email,' ')) ~> derivedColumn1"
+				"          Email = trim(Email,' '),",
+				"          Address = regexReplace(Address,\"[$,*,%]\",\"\")) ~> derivedColumn1"
 			]
 		}
 	}
