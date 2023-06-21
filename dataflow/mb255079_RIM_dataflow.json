@@ -24,7 +24,7 @@
 					"name": "filterDistinct"
 				},
 				{
-					"name": "LowerCase"
+					"name": "DataCleaning"
 				}
 			],
 			"scriptLines": [
@@ -64,7 +64,8 @@
 				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          Email = trim(Email),",
-				"          FullName = FirstName+\" \"+LastName) ~> LowerCase"
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+				"          Address = toString(Address)) ~> DataCleaning"
 			]
 		}
 	}
