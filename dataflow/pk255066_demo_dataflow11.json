@@ -41,7 +41,6 @@
 				"Rawdata derive({Generic Reason} = locate(NoSalesReason,'Other')) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['Derivedcolumn.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
