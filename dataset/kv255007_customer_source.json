@@ -1,5 +1,5 @@
 {
-	"name": "kv255007_customer",
+	"name": "kv255007_customer_source",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
