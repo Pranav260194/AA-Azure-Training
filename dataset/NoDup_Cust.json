@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "NoDupCust.csv",
 				"folderPath": "output",
 				"fileSystem": "jg186076"
 			},
