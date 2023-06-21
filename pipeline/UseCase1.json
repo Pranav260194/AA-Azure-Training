@@ -363,8 +363,8 @@
 				}
 			},
 			{
-				"name": "Notebook1",
-				"type": "DatabricksNotebook",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Get Metadata Customer",
@@ -379,20 +379,12 @@
 						]
 					}
 				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/pa186030/Use_Case1"
-				},
-				"linkedServiceName": {
-					"referenceName": "vf186006_Db_Connection",
-					"type": "LinkedServiceReference"
+					"expression": {
+						"value": "@and(activity('Get Metadata Customer').output.exists,activity('Get Metadata Sales').output.exists)",
+						"type": "Expression"
+					}
 				}
 			}
 		],
