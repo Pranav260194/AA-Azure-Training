@@ -365,7 +365,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "usecase11Notebook",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -388,7 +388,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/jg186076/UC1_Jg186076"
+				},
+				"linkedServiceName": {
+					"referenceName": "vf186006_Db_Connection",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
