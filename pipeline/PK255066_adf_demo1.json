@@ -31,10 +31,7 @@
 				"inputs": [
 					{
 						"referenceName": "DelimitedText62",
-						"type": "DatasetReference",
-						"parameters": {
-							"circumflex": "^"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}
