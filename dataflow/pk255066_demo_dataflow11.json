@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "pk255066_DelimitedText63_demoOP",
+						"referenceName": "pk255066_DelimitedText62",
 						"type": "DatasetReference"
 					},
 					"name": "DataflowOP"
@@ -41,6 +41,14 @@
 				"Rawdata derive({Generic Reason} = locate(NoSalesReason,'Other')) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          {Flight#} as string,",
+				"          Origin as string,",
+				"          Dest as string,",
+				"          FlightDate as string,",
+				"          NoSalesReason as string,",
+				"          TransmittingFlightAttd as string",
+				"     ),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
