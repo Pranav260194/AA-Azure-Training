@@ -1,0 +1,42 @@
+{
+	"name": "JG18607initcapFirstNmeTrimEmail",
+	"properties": {
+		"folder": {
+			"name": "JG186076"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "NoDup_Cust",
+						"type": "DatasetReference"
+					},
+					"name": "CamelCaseFisrtNameCust"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CamelCaseFisrtNameCust",
+				"CamelCaseFisrtNameCust derive(FirstName = initCap(FirstName),",
+				"          Email = trim(Email,' ')) ~> derivedColumn1"
+			]
+		}
+	}
+}
