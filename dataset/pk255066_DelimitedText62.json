@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText62",
+	"name": "pk255066_DelimitedText62",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
