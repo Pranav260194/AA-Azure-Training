@@ -37,7 +37,8 @@
 				"CamelCaseFisrtNameCust derive(FirstName = initCap(FirstName),",
 				"          LastName = initCap(LastName),",
 				"          Email = trim(Email,' '),",
-				"          Address = regexReplace(Address,\"[$,*,%]\",\"\")) ~> derivedColumn1"
+				"          Address = regexReplace(Address,\"[$,*,%]\",\"\"),",
+				"          FullName = concat(initCap(FirstName),initCap(LastName))) ~> derivedColumn1"
 			]
 		}
 	}
