@@ -2,17 +2,17 @@
 	"name": "CustCopyINjg186076",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage5",
+			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": "customer.csv",
 				"folderPath": "input",
-				"container": "jg186076"
+				"fileSystem": "jg186076"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
