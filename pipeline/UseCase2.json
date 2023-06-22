@@ -137,7 +137,7 @@
 								"notebookPath": "/pa186030/Use_Case2"
 							},
 							"linkedServiceName": {
-								"referenceName": "adb_ls",
+								"referenceName": "ADB_mp255107",
 								"type": "LinkedServiceReference"
 							}
 						}
