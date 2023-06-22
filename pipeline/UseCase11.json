@@ -365,7 +365,7 @@
 				}
 			},
 			{
-				"name": "usecase11Notebook",
+				"name": "UseCase11",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
