@@ -319,6 +319,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -355,6 +356,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -387,10 +389,31 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Fail1",
-							"type": "Fail",
+							"name": "Web1",
+							"type": "WebActivity",
 							"dependsOn": [],
-							"userProperties": []
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "https://prod-03.eastus.logic.azure.com:443/workflows/a7b63c7c6bc8404e988f8e59f85eec3b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-sh46Sz2oePKsX8FuGSRUhD9Q_cs5AXvS2JfrSNBfc",
+									"type": "Expression"
+								},
+								"method": "POST",
+								"headers": {
+									"Content-type": "application/json"
+								},
+								"body": {
+									"value": "@concat('{ \n\t\"EmailTo\" : \"pranav.ayare@teradata.com\", \n\t\"Subject\" : \"Data File in the ',pipeline().Pipeline,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t}')",
+									"type": "Expression"
+								}
+							}
 						}
 					],
 					"ifTrueActivities": [
