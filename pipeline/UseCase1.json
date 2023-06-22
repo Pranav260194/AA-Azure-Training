@@ -311,7 +311,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "pa186030_customer_lookup",
+						"referenceName": "pa186030_customer_check",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -348,7 +348,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "pa186030_sales_lookup",
+						"referenceName": "pa186030_sales_check",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
