@@ -58,11 +58,13 @@
 				"          City as string,",
 				"          Country as string",
 				"     ),",
+				"     partitionFileNames:['InitCapTrimConcat'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> JG186076InitcapRMspcharConFNLN"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> JG186076InitcapRMspcharConFNLN"
 			]
 		}
 	}
