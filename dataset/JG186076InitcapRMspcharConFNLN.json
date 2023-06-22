@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "JG186076InCap",
 				"folderPath": "output",
 				"fileSystem": "jg186076"
 			},
