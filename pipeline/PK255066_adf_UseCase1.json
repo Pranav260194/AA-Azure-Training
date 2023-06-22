@@ -135,7 +135,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "pk255066_CustomerDataset",
+						"referenceName": "pk255066_Customer_input",
 						"type": "DatasetReference"
 					}
 				],
@@ -279,13 +279,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "pk255066_SaleDataset",
+						"referenceName": "pk255066_Sale_input",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "pk255066_sale_stage",
+						"referenceName": "pk255066_Sale_stage",
 						"type": "DatasetReference"
 					}
 				]
