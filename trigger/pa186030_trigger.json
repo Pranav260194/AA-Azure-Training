@@ -9,6 +9,11 @@
 				"pipelineReference": {
 					"referenceName": "UseCase1",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "pranav.ayare@teradata.com",
+					"Subject": "Email Notification for Data Factory Pipeline",
+					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure"
 				}
 			}
 		],
@@ -21,10 +26,10 @@
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
-						0
+						43
 					],
 					"hours": [
-						2
+						11
 					]
 				}
 			}
