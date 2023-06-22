@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "SortonCustID"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -48,7 +51,12 @@
 				"RmDupCust aggregate(groupBy(CustomerID),",
 				"     each(match(name!='CustomerID'), $$ = last($$))) ~> aggregate1",
 				"aggregate1 sort(asc(CustomerID, true)) ~> SortonCustID",
-				"SortonCustID sink(allowSchemaDrift: true,",
+				"SortonCustID derive(FirstName = initCap(FirstName),",
+				"          LastName = initCap(LastName),",
+				"          Email = trim('Email',''),",
+				"          Address = regexReplace(Address,\"[$,*,%]\",\"\"),",
+				"          FullName = concat(initCap(FirstName),initCap(LastName))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          CustomerID as string,",
