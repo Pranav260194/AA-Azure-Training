@@ -34,10 +34,31 @@
 					"name": "DataCleaning"
 				},
 				{
-					"name": "select1"
+					"name": "selectSales1"
 				},
 				{
 					"name": "window1"
+				},
+				{
+					"name": "UniqueOrderID"
+				},
+				{
+					"name": "selectNonDupes"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "castSales"
+				},
+				{
+					"name": "castCustomer"
+				},
+				{
+					"name": "castAddress"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -76,7 +97,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectcust1",
-				"selectcust1 window(over(CustomerID,",
+				"castCustomer window(over(CustomerID,",
 				"          FirstName,",
 				"          LastName,",
 				"          Email,",
@@ -89,8 +110,7 @@
 				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          Email = trim(Email),",
-				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
-				"          Address = ERROR_FUNCTION('toString(regexReplace(Address, __SINGLE_QUOTE__[^a-zA-Z0-9\\s]__SINGLE_QUOTE__, __SINGLE_QUOTE____SINGLE_QUOTE__))')) ~> DataCleaning",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName))) ~> DataCleaning",
 				"Sales select(mapColumn(",
 				"          OrderID,",
 				"          CustomerID,",
@@ -101,9 +121,53 @@
 				"          Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 window(asc(ProductID, true),",
-				"     rownum = rowNumber()) ~> window1"
+				"     skipDuplicateMapOutputs: true) ~> selectSales1",
+				"castSales window(over(OrderID,",
+				"          CustomerID),",
+				"     asc(CustomerID, true),",
+				"     rownum = rowNumber()) ~> window1",
+				"window1 filter(rownum==1) ~> UniqueOrderID",
+				"UniqueOrderID select(mapColumn(",
+				"          OrderID,",
+				"          CustomerID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectNonDupes",
+				"selectNonDupes aggregate(groupBy(ProductID,",
+				"          Region),",
+				"     TotalQuantity = sum(Quantity),",
+				"          TotalPrice = sum(Price),",
+				"          min_sales_price = min(Price)) ~> aggregate1",
+				"selectSales1 cast(output(",
+				"          OrderID as integer,",
+				"          CustomerID as integer,",
+				"          ProductID as integer,",
+				"          Quantity as integer,",
+				"          Price as float,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     errors: true) ~> castSales",
+				"selectcust1 cast(output(",
+				"          CustomerID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     errors: true) ~> castCustomer",
+				"DataCleaning cast(output(",
+				"          Address as string",
+				"     ),",
+				"     errors: true) ~> castAddress",
+				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1"
 			]
 		}
 	}
