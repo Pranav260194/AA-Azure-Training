@@ -137,7 +137,7 @@
 								"notebookPath": "/pa186030/Use_Case2"
 							},
 							"linkedServiceName": {
-								"referenceName": "ADB_mp255107",
+								"referenceName": "adb_ls",
 								"type": "LinkedServiceReference"
 							}
 						}
@@ -172,6 +172,40 @@
 						"type": "JsonReadSettings"
 					}
 				}
+			},
+			{
+				"name": "Web Mail Failure",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Check if all Metadata exists",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://pa186030-mail-notification.azurewebsites.net:443/api/Mail_Notification/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=BuEJhy7XT2rxEMCkrtia9bKfGbqe6zHGHec4iHnt6a8",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-type": "application/json"
+					},
+					"body": {
+						"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -182,6 +216,10 @@
 			"Subject": {
 				"type": "string",
 				"defaultValue": "Email Notification for Data Factory Pipeline"
+			},
+			"Failure_Subject": {
+				"type": "string",
+				"defaultValue": "Email Notification for Data Factory Pipeline Failure"
 			}
 		},
 		"folder": {
