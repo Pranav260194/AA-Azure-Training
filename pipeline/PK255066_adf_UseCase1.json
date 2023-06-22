@@ -289,6 +289,80 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Check if Customers file exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Copy Customer Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "pk255066_Customer_stage",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Check if Sales file exists",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Copy Sale Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "pk255066_Sale_stage",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"folder": {
