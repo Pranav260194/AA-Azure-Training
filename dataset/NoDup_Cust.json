@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "NoDupCust",
 				"folderPath": "output",
 				"fileSystem": "jg186076"
 			},
