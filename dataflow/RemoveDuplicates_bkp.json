@@ -53,7 +53,7 @@
 				"aggregate1 sort(asc(CustomerID, true)) ~> SortonCustID",
 				"SortonCustID derive(FirstName = initCap(FirstName),",
 				"          LastName = initCap(LastName),",
-				"          Email = trim('Email',''),",
+				"          Email = trim(Email,''),",
 				"          Address = regexReplace(Address,\"[$,*,%]\",\"\"),",
 				"          FullName = concat(initCap(FirstName),initCap(LastName))) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
