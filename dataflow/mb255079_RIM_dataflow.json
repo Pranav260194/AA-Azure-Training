@@ -62,6 +62,9 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -171,7 +174,9 @@
 				"     ),",
 				"     errors: true) ~> castAddress",
 				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"castSales filter(Quantity>10) ~> filter1"
+				"castSales filter(Quantity>10) ~> filter1",
+				"castSales split(Price>10.0,",
+				"     disjoint: true) ~> split1@(PriceMoreThan10, PriceLessThan10)"
 			]
 		}
 	}
