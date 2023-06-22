@@ -1,0 +1,190 @@
+{
+	"name": "UseCase2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata Customer Json",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pa186030_customer_json_check",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"exists"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Get Metadata Loan",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pa186030_loan_check",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"exists"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Check if all Metadata exists",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata Customer Json",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get Metadata Loan",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get Metadata Loan Repayment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(and(equals(activity('Get Metadata Customer Json').output.exists,true),equals(activity('Get Metadata Loan').output.exists,true)),equals(activity('Get Metadata Loan Repayment').output.exists,true))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Web Mail",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "https://pa186030-mail-notification.azurewebsites.net:443/api/Mail_Notification/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=BuEJhy7XT2rxEMCkrtia9bKfGbqe6zHGHec4iHnt6a8",
+									"type": "Expression"
+								},
+								"method": "POST",
+								"headers": {
+									"Content-type": "application/json"
+								},
+								"body": {
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Databricks Notebook",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/pa186030/Use_Case2"
+							},
+							"linkedServiceName": {
+								"referenceName": "ADB_mp255107",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get Metadata Loan Repayment",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pa186030_loan_repayment_check",
+						"type": "DatasetReference"
+					},
+					"fieldList": [],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "pranav.ayare@teradata.com"
+			},
+			"Subject": {
+				"type": "string",
+				"defaultValue": "Email Notification for Data Factory Pipeline"
+			}
+		},
+		"folder": {
+			"name": "pa186030"
+		},
+		"annotations": []
+	}
+}
