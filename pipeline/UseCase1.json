@@ -441,6 +441,16 @@
 				}
 			}
 		],
+		"parameters": {
+			"Email_To": {
+				"type": "string",
+				"defaultValue": "pranav.ayare@teradata.com"
+			},
+			"Subject": {
+				"type": "string",
+				"defaultValue": "Email Notification for Data Factory Pipeline"
+			}
+		},
 		"folder": {
 			"name": "pa186030"
 		},
