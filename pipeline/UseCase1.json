@@ -389,7 +389,7 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Web1",
+							"name": "Web Mail",
 							"type": "WebActivity",
 							"dependsOn": [],
 							"policy": {
