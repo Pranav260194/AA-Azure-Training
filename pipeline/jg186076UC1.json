@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "RemoveDuplicates",
+						"referenceName": "RemoveDuplicates_bkp",
 						"type": "DataFlowReference"
 					},
 					"compute": {
