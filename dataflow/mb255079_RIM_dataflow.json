@@ -35,6 +35,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "window1"
 				}
 			],
 			"scriptLines": [
@@ -98,7 +101,9 @@
 				"          Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 window(asc(ProductID, true),",
+				"     rownum = rowNumber()) ~> window1"
 			]
 		}
 	}
