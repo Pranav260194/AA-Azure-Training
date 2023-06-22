@@ -410,7 +410,7 @@
 									"Content-type": "application/json"
 								},
 								"body": {
-									"value": "@concat('{ \n\t\"EmailTo\" : \"pranav.ayare@teradata.com\", \n\t\"Subject\" : \"Data File in the ',pipeline().Pipeline,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
 									"type": "Expression"
 								}
 							}
