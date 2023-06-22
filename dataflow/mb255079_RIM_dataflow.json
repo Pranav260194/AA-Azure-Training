@@ -59,6 +59,9 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -167,7 +170,8 @@
 				"          Address as string",
 				"     ),",
 				"     errors: true) ~> castAddress",
-				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1"
+				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1",
+				"castSales filter(Quantity>10) ~> filter1"
 			]
 		}
 	}
