@@ -1,5 +1,5 @@
 {
-	"name": "pa186030_customer_lookup",
+	"name": "pa186030_customer_check",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
