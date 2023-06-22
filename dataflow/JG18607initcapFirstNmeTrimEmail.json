@@ -15,7 +15,15 @@
 					"name": "CamelCaseFisrtNameCust"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "JG186076InitcapRMspcharConFNLN",
+						"type": "DatasetReference"
+					},
+					"name": "JG186076InitcapRMspcharConFNLN"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -38,7 +46,23 @@
 				"          LastName = initCap(LastName),",
 				"          Email = trim(Email,' '),",
 				"          Address = regexReplace(Address,\"[$,*,%]\",\"\"),",
-				"          FullName = concat(initCap(FirstName),initCap(LastName))) ~> derivedColumn1"
+				"          FullName = concat(initCap(FirstName),initCap(LastName))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> JG186076InitcapRMspcharConFNLN"
 			]
 		}
 	}
