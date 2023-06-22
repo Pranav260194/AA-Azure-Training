@@ -142,7 +142,7 @@
 				"          Region),",
 				"     TotalQuantity = sum(Quantity),",
 				"          TotalPrice = sum(Price),",
-				"          min_sales_price = min(Price)) ~> aggregate1",
+				"          avg_sales_price = avg(Price)) ~> aggregate1",
 				"selectSales1 cast(output(",
 				"          OrderID as integer,",
 				"          CustomerID as integer,",
