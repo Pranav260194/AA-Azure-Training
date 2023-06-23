@@ -12,13 +12,19 @@
 						"referenceName": "kv255007_customer_source",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "Customer"
 				}
 			],
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "selectcust"
+				},
+				{
+					"name": "castcustomer"
+				},
+				{
+					"name": "windowRowNum"
 				}
 			],
 			"scriptLines": [
@@ -33,8 +39,31 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive() ~> derivedColumn1"
+				"     ignoreNoFilesFound: false) ~> Customer",
+				"Customer select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectcust",
+				"selectcust cast(output(",
+				"          CustomerID as integer",
+				"     ),",
+				"     errors: true) ~> castcustomer",
+				"castcustomer window(over(CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country),",
+				"     asc(CustomerID, true),",
+				"     rownum = rowNumber()) ~> windowRowNum"
 			]
 		}
 	}
