@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"fileListPath": "[     \"/stage/customer.csv\",     \"/stage/sales.csv\" ]",
+							"fileListPath": "pk255066/stage/files.txt",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
