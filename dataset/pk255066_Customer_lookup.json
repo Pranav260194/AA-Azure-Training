@@ -13,7 +13,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "customer.csv",
 				"folderPath": "stage",
 				"fileSystem": "pk255066"
 			},
