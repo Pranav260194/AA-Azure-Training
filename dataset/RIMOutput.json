@@ -1,0 +1,19 @@
+{
+	"name": "RIMOutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "mb255079/output",
+				"fileSystem": "mb255079"
+			}
+		},
+		"schema": []
+	}
+}
