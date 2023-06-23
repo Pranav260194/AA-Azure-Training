@@ -1,0 +1,20 @@
+{
+	"name": "JG186076_CustomerUC2_check",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Customer.json",
+				"folderPath": "input/UC2",
+				"fileSystem": "jg186076"
+			}
+		},
+		"schema": {}
+	}
+}
