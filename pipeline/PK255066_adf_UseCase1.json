@@ -5,7 +5,14 @@
 			{
 				"name": "Copy Customer Data",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Check if Customers file exists ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -149,7 +156,14 @@
 			{
 				"name": "Copy Sale Data",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Check if Sales file exists ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -315,7 +329,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "pk255066_Customer_lookup",
+						"referenceName": "pk255066_Customer_input",
 						"type": "DatasetReference"
 					}
 				}
@@ -323,14 +337,7 @@
 			{
 				"name": "Check if Sales file exists",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Copy Sale Data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -352,7 +359,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "pk255066_Sale_lookup",
+						"referenceName": "pk255066_Sale_input",
 						"type": "DatasetReference"
 					}
 				}
