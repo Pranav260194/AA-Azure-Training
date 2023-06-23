@@ -323,7 +323,10 @@
 					},
 					"dataset": {
 						"referenceName": "pk255066_Customer_lookup",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Cust_FileName": "customer.csv"
+						}
 					}
 				}
 			},
@@ -385,6 +388,25 @@
 				}
 			}
 		],
+		"parameters": {
+			"Cust_file": {
+				"type": "string"
+			},
+			"Sale_File": {
+				"type": "string"
+			},
+			"Container_dir": {
+				"type": "string"
+			},
+			"Stage_dir": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Cust_FileName": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "pk255066"
 		},
