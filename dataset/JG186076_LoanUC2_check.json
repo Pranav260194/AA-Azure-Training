@@ -1,0 +1,65 @@
+{
+	"name": "JG186076_LoanUC2_check",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Loan.json",
+				"folderPath": "input/UC2",
+				"fileSystem": "jg186076"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"LoanData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"LoanID": {
+								"type": "string"
+							},
+							"BorrowerID": {
+								"type": "string"
+							},
+							"LoanAccountNumber": {
+								"type": "string"
+							},
+							"LoanAmount": {
+								"type": "integer"
+							},
+							"InterestRate": {
+								"type": "number"
+							},
+							"LoanTerm": {
+								"type": "integer"
+							},
+							"LoanType": {
+								"type": "string"
+							},
+							"LoanStatus": {
+								"type": "string"
+							},
+							"OriginationDate": {
+								"type": "string"
+							},
+							"MonthlyPaymentDay": {
+								"type": "integer"
+							},
+							"EMIAmount": {
+								"type": "number"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
