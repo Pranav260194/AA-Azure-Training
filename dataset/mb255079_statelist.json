@@ -1,0 +1,31 @@
+{
+	"name": "mb255079_statelist",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Statelist.xlsx",
+				"folderPath": "mb255079/input",
+				"fileSystem": "mb255079"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "State",
+				"type": "String"
+			},
+			{
+				"name": "abbreviations ",
+				"type": "String"
+			}
+		]
+	}
+}
