@@ -20,6 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -27,7 +28,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "pk255066_Customer_lookup",
+						"referenceName": "pk255066_Sale_stage",
 						"type": "DatasetReference"
 					}
 				}
