@@ -27,7 +27,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "pk255066_Sale_stage",
+						"referenceName": "pk255066_Customer_lookup",
 						"type": "DatasetReference"
 					}
 				}
