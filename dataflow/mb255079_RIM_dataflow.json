@@ -32,7 +32,7 @@
 						"referenceName": "mb255079rimoutput",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
+					"name": "OutputDS",
 					"rejectedDataLinkedService": {
 						"referenceName": "adls_ls",
 						"type": "LinkedServiceReference"
@@ -95,13 +95,13 @@
 					"name": "join1"
 				},
 				{
-					"name": "aggregate2"
+					"name": "aggregateCustomerID"
 				},
 				{
-					"name": "join2"
+					"name": "joinCustSales"
 				},
 				{
-					"name": "select2"
+					"name": "RemoveExtras"
 				}
 			],
 			"scriptLines": [
@@ -245,14 +245,14 @@
 				"     broadcast: 'auto')~> join1",
 				"join1 aggregate(groupBy(Customerid = select1@CustomerID),",
 				"     TotalQuantity = sum(Quantity),",
-				"          TotalPrice = sum(Price)) ~> aggregate2",
-				"aggregate2, join1 join(aggregate2@Customerid == select1@CustomerID,",
+				"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
+				"aggregateCustomerID, join1 join(aggregateCustomerID@Customerid == select1@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join2",
-				"join2 select(mapColumn(",
-				"          Customerid = aggregate2@Customerid,",
+				"     broadcast: 'auto')~> joinCustSales",
+				"joinCustSales select(mapColumn(",
+				"          Customerid = aggregateCustomerID@Customerid,",
 				"          FullName,",
 				"          TotalQuantity,",
 				"          TotalPrice,",
@@ -271,12 +271,12 @@
 				"          {abbreviations }",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> RemoveExtras",
+				"RemoveExtras sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     umask: 0022,",
 				"     preCommands: [],",
-				"     postCommands: []) ~> sink1"
+				"     postCommands: []) ~> OutputDS"
 			]
 		}
 	}
