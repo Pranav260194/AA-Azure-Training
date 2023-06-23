@@ -402,11 +402,6 @@
 				"type": "string"
 			}
 		},
-		"variables": {
-			"Cust_FileName": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "pk255066"
 		},
