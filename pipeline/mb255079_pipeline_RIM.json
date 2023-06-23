@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "mb255079_dataflow_rim",
+				"name": "mb255079_dataflow_rim1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
