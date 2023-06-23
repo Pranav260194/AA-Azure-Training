@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "Checking Customers file exists",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -158,7 +158,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup2",
+						"activity": "Checking Sales file exists",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -307,7 +307,20 @@
 			{
 				"name": "Use Case 1",
 				"type": "DatabricksNotebook",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy Customer Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy Sale Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -325,7 +338,7 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "Checking Customers file exists",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -355,7 +368,7 @@
 				}
 			},
 			{
-				"name": "Lookup2",
+				"name": "Checking Sales file exists",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
