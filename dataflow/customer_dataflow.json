@@ -13,9 +13,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "Customer"
+				},
+				{
+					"dataset": {
+						"referenceName": "kv255007_sales",
+						"type": "DatasetReference"
+					},
+					"name": "Sales"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectcust"
@@ -25,6 +36,37 @@
 				},
 				{
 					"name": "windowRowNum"
+				},
+				{
+					"name": "filterDistinct"
+				},
+				{
+					"name": "DataCleaning"
+				},
+				{
+					"name": "Address"
+				},
+				{
+					"name": "selectsales"
+				},
+				{
+					"name": "cast1"
+				},
+				{
+					"name": "window1"
+				},
+				{
+					"name": "UniqueorderId"
+				},
+				{
+					"name": "selectNonduplicate"
+				},
+				{
+					"name": "aggregate1",
+					"description": "Aggregating data by 'ProductID, Region' producing columns 'TotalQuantity, TotalPrice, avg_sales_price'"
+				},
+				{
+					"name": "quantity"
 				}
 			],
 			"scriptLines": [
@@ -40,6 +82,18 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Customer",
+				"source(output(",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Sales",
 				"Customer select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
@@ -63,7 +117,57 @@
 				"          City,",
 				"          Country),",
 				"     asc(CustomerID, true),",
-				"     rownum = rowNumber()) ~> windowRowNum"
+				"     rownum = rowNumber()) ~> windowRowNum",
+				"windowRowNum filter(rownum==1) ~> filterDistinct",
+				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
+				"          LastName = initCap(lower(LastName)),",
+				"          Email = trim(Email),",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName))) ~> DataCleaning",
+				"DataCleaning derive(Address = replace(Address , '$','')) ~> Address",
+				"Sales select(mapColumn(",
+				"          OrderID,",
+				"          CustomerID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectsales",
+				"selectsales cast(output(",
+				"          OrderID as integer,",
+				"          CustomerID as integer,",
+				"          ProductID as integer,",
+				"          Quantity as integer,",
+				"          Price as float,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 window(over(OrderID,",
+				"          CustomerID),",
+				"     rownum = rowNumber()) ~> window1",
+				"window1 filter(rownum==1) ~> UniqueorderId",
+				"UniqueorderId select(mapColumn(",
+				"          OrderID,",
+				"          CustomerID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region,",
+				"          rownum",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectNonduplicate",
+				"selectNonduplicate aggregate(groupBy(ProductID,",
+				"          Region)) ~> aggregate1",
+				"aggregate1 filter(quantity<10) ~> quantity",
+				"Address sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
