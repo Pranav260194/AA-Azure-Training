@@ -61,10 +61,7 @@
 					"name": "derivedColumn1"
 				},
 				{
-					"name": "filter1"
-				},
-				{
-					"name": "split1"
+					"name": "quantityless10"
 				}
 			],
 			"scriptLines": [
@@ -148,7 +145,7 @@
 				"          Region),",
 				"     TotalQuantity = sum(Quantity),",
 				"          TotalPrice = sum(Price),",
-				"          avg_sales_price = avg(Price)) ~> aggregate1",
+				"          avg_sales_price = sum(Price)/sum(Quantity)) ~> aggregate1",
 				"selectSales1 cast(output(",
 				"          OrderID as integer,",
 				"          CustomerID as integer,",
@@ -174,9 +171,7 @@
 				"     ),",
 				"     errors: true) ~> castAddress",
 				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"castSales filter(Quantity>10) ~> filter1",
-				"castSales split(Price>10.0,",
-				"     disjoint: true) ~> split1@(PriceMoreThan10, PriceLessThan10)"
+				"aggregate1 filter(quantity<10) ~> quantityless10"
 			]
 		}
 	}
