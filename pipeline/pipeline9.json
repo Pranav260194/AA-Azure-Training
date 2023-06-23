@@ -19,8 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*.csv",
+							"fileListPath": "pk255066/stage/files.txt",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
