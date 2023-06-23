@@ -33,11 +33,23 @@
 				}
 			},
 			{
-				"name": "UseCase2",
+				"name": "UseCase2_Notebook",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
 						"activity": "CustomerJson_Check",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LoanJson_Check",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LoanRepaymentJson_check",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -57,6 +69,66 @@
 				"linkedServiceName": {
 					"referenceName": "ADB_mp255107",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "LoanJson_Check",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "JG186076_LoanUC2_check",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "LoanRepaymentJson_check",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "JG186076_LoanRepaymentUC2_Check",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
