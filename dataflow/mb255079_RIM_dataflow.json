@@ -274,9 +274,11 @@
 				"     skipDuplicateMapOutputs: true) ~> RemoveExtras",
 				"RemoveExtras sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     umask: 0022,",
+				"     partitionFileNames:['mb255079rimoutput'],",
+				"     umask: 0000,",
 				"     preCommands: [],",
-				"     postCommands: []) ~> OutputDS"
+				"     postCommands: [],",
+				"     partitionBy('hash', 1)) ~> OutputDS"
 			]
 		}
 	}
