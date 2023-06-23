@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"fileListPath": {
-								"value": "[\n    \"/stage/file1.csv\",\n    \"/stage/file2.csv\"\n]",
+								"value": "[\n    \"/stage/customers.csv\",\n    \"/stage/sales.csv\"\n]",
 								"type": "Expression"
 							},
 							"enablePartitionDiscovery": false
