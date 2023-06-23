@@ -293,14 +293,7 @@
 			{
 				"name": "Check if Customers file exists",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Copy Customer Data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -323,10 +316,7 @@
 					},
 					"dataset": {
 						"referenceName": "pk255066_Customer_lookup",
-						"type": "DatasetReference",
-						"parameters": {
-							"Cust_FileName": "customer.csv"
-						}
+						"type": "DatasetReference"
 					}
 				}
 			},
