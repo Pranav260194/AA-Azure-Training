@@ -18,9 +18,9 @@
 					"source": {
 						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
+							"type": "AzureBlobStorageReadSettings",
 							"fileListPath": {
-								"value": "[\n    \"/customers.csv\",\n    \"/sales.csv\"\n]",
+								"value": "[\n    \"/stage/customers.csv\",\n    \"/stage/sales.csv\"\n]",
 								"type": "Expression"
 							},
 							"enablePartitionDiscovery": false
@@ -30,7 +30,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "pk255066_Sale_stage",
+						"referenceName": "DelimitedText62",
 						"type": "DatasetReference"
 					}
 				}
