@@ -5,11 +5,6 @@
 			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"Cust_FileName": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "PK255066"
 		},
@@ -18,10 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().Cust_FileName",
-					"type": "Expression"
-				},
+				"fileName": "customer.csv",
 				"folderPath": "stage",
 				"fileSystem": "pk255066"
 			},
