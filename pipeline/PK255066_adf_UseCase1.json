@@ -367,20 +367,7 @@
 			{
 				"name": "Use Case 1",
 				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Check if Customers file exists ",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Check if Sales file exists ",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
