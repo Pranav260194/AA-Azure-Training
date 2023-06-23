@@ -1,0 +1,20 @@
+{
+	"name": "JG186076_LoanRepaymentUC2_Check",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "LoanRepayment.json",
+				"folderPath": "input/UC2",
+				"fileSystem": "jg186076"
+			}
+		},
+		"schema": {}
+	}
+}
