@@ -393,7 +393,7 @@
 					"notebookPath": "/pk255066/pk255066_UseCase1"
 				},
 				"linkedServiceName": {
-					"referenceName": "vf186006_Db_Connection",
+					"referenceName": "ADB_mp255107",
 					"type": "LinkedServiceReference"
 				}
 			}
