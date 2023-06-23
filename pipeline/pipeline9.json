@@ -18,7 +18,7 @@
 					"source": {
 						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"fileListPath": "pk255066/stage/files.txt",
 							"enablePartitionDiscovery": false
 						},
@@ -27,7 +27,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "DelimitedText62",
+						"referenceName": "pk255066_Sale_stage",
 						"type": "DatasetReference"
 					}
 				}
