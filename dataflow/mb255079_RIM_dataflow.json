@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "Sales"
+				},
+				{
+					"dataset": {
+						"referenceName": "mb255079_statelist",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [],
@@ -55,13 +62,34 @@
 					"name": "castCustomer"
 				},
 				{
-					"name": "castAddress"
-				},
-				{
-					"name": "derivedColumn1"
-				},
-				{
 					"name": "quantityless10"
+				},
+				{
+					"name": "orderfilter"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "cast1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "Stateabb"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -89,6 +117,13 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Sales",
+				"source(output(",
+				"          State as string,",
+				"          {abbreviations } as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
 				"customer select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
@@ -113,7 +148,8 @@
 				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          Email = trim(Email),",
-				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName))) ~> DataCleaning",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+				"          Address = replace(Address,'$','')) ~> DataCleaning",
 				"Sales select(mapColumn(",
 				"          OrderID,",
 				"          CustomerID,",
@@ -166,12 +202,64 @@
 				"          Country as string",
 				"     ),",
 				"     errors: true) ~> castCustomer",
-				"DataCleaning cast(output(",
-				"          Address as string",
+				"aggregate1 filter(TotalQuantity<10) ~> quantityless10",
+				"quantityless10 filter(TotalPrice>10.0) ~> orderfilter",
+				"cast1 derive(difference = round((currentTimestamp()-OrderDate)/86400000),",
+				"          year = year(OrderDate)) ~> derivedColumn2",
+				"selectNonDupes cast(output(",
+				"          OrderDate as timestamp 'MM/dd/yyyy'",
 				"     ),",
-				"     errors: true) ~> castAddress",
-				"castAddress derive(Address = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"aggregate1 filter(quantity<10) ~> quantityless10"
+				"     errors: true) ~> cast1",
+				"DataCleaning select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          FullName",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"derivedColumn2, source1 lookup(Region == State,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> Stateabb",
+				"select1, Stateabb join(select1@CustomerID == selectNonDupes@CustomerID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate(groupBy(Customerid = select1@CustomerID),",
+				"     TotalQuantity = sum(Quantity),",
+				"          TotalPrice = sum(Price)) ~> aggregate2",
+				"aggregate2, join1 join(aggregate2@Customerid == select1@CustomerID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          Customerid = aggregate2@Customerid,",
+				"          FullName,",
+				"          TotalQuantity,",
+				"          TotalPrice,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          OrderID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region,",
+				"          difference,",
+				"          year,",
+				"          {abbreviations }",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2"
 			]
 		}
 	}
