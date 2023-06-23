@@ -62,7 +62,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "pk255065_input",
+						"referenceName": "pk255066_UC1_input",
 						"type": "DatasetReference"
 					}
 				],
