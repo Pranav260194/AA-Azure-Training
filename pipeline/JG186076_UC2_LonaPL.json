@@ -1,0 +1,68 @@
+{
+	"name": "JG186076_UC2_LonaPL",
+	"properties": {
+		"activities": [
+			{
+				"name": "CustomerJson_Check",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "JG186076_CustomerUC2_check",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "UseCase2",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "CustomerJson_Check",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/jg186076/UseCase2"
+				},
+				"linkedServiceName": {
+					"referenceName": "ADB_mp255107",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "JG186076"
+		},
+		"annotations": []
+	}
+}
