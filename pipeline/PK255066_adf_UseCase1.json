@@ -385,20 +385,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"Cust_file": {
-				"type": "string"
-			},
-			"Sale_File": {
-				"type": "string"
-			},
-			"Container_dir": {
-				"type": "string"
-			},
-			"Stage_dir": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "pk255066"
 		},
