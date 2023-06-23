@@ -24,7 +24,11 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"dataset": {
+						"referenceName": "kv255007_customer_source",
+						"type": "DatasetReference"
+					},
+					"name": "Output"
 				}
 			],
 			"transformations": [
@@ -66,7 +70,20 @@
 					"description": "Aggregating data by 'ProductID, Region' producing columns 'TotalQuantity, TotalPrice, avg_sales_price'"
 				},
 				{
-					"name": "quantity"
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "aggregateCustomerID",
+					"description": "Aggregating data by 'Customerid' producing columns 'TotalQuantity, TotalPrice'"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -163,11 +180,51 @@
 				"     skipDuplicateMapOutputs: true) ~> selectNonduplicate",
 				"selectNonduplicate aggregate(groupBy(ProductID,",
 				"          Region)) ~> aggregate1",
-				"aggregate1 filter(quantity<10) ~> quantity",
-				"Address sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
+				"select1 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"Address select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          rownum,",
+				"          FullName",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"join1 aggregate(groupBy({} = ERROR_FUNCTION(''))) ~> aggregateCustomerID",
+				"aggregateCustomerID join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          {}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Output"
 			]
 		}
 	}
