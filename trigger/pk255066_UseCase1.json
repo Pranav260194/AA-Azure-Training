@@ -3,7 +3,21 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PK255066_adf_UseCase1",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"EmailTo": "Prathmesh.Kasar@teradata.com",
+					"Activity": "Lookup",
+					"ErrorMessage": "The above mentioned input files are missing. ",
+					"FileName2": "sales.csv",
+					"FileName1": "customer.csv"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
