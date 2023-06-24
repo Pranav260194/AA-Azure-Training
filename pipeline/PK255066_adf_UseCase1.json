@@ -471,7 +471,7 @@
 			},
 			"ErrorMessage": {
 				"type": "string",
-				"defaultValue": "The above mentioned input files are missing."
+				"defaultValue": "The above mentioned input file is missing."
 			},
 			"FileName2": {
 				"type": "string",
