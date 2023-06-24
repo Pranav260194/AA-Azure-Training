@@ -26,7 +26,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"fileListPath": "pk255066/input/files.txt",
+							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
