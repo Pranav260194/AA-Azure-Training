@@ -446,10 +446,11 @@
 			},
 			"ErrorMessage": {
 				"type": "string",
-				"defaultValue": "Input file doesn't exist."
+				"defaultValue": "The above mentioned input files are missing."
 			},
 			"File_Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "\"customer.csv\" or \"sales.csv\""
 			}
 		},
 		"folder": {
