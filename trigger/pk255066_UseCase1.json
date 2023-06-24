@@ -1,0 +1,17 @@
+{
+	"name": "pk255066_UseCase1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 5,
+				"startTime": "2023-06-24T14:20:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
