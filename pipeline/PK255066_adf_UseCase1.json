@@ -423,7 +423,7 @@
 						"content-type": "application/json"
 					},
 					"body": {
-						"value": "{\n    \"Activity\" : \"@{pipeline().parameters.Activity}\",\n    \"DataFactory\" : \"@{pipeline().DataFactory}\",\n    \"EmailTo\" : \"@{pipeline().parameters.EmailTo}\",\n    \"ErrorMessage\" : \"@{pipeline().parameters.ErrorMessage}\",\n    \"FileName\" : \"@{pipeline().parameters.File_Name}\",\n    \"PipelineName\" : \"@{pipeline().Pipeline}\",\n    \"Subject\" : \"Error occured while running pipeline @{pipeline().Pipeline}\"\n}",
+						"value": "{\n    \"Activity\" : \"@{pipeline().parameters.Activity}\",\n    \"DataFactory\" : \"@{pipeline().DataFactory}\",\n    \"EmailTo\" : \"@{pipeline().parameters.EmailTo}\",\n    \"ErrorMessage\" : \"@{pipeline().parameters.ErrorMessage}\",\n    \"FileName\" : \"@{pipeline().parameters.FileName}\",\n    \"PipelineName\" : \"@{pipeline().Pipeline}\",\n    \"Subject\" : \"Error occured while running pipeline @{pipeline().Pipeline}\"\n}",
 						"type": "Expression"
 					}
 				}
@@ -442,13 +442,9 @@
 				"type": "string",
 				"defaultValue": "The above mentioned input files are missing."
 			},
-			"File_Name": {
+			"FileName": {
 				"type": "string",
 				"defaultValue": "\"customer.csv\" or \"sales.csv\""
-			},
-			"Pipe_line_name": {
-				"type": "string",
-				"defaultValue": "PK255066_adf_UseCase1"
 			}
 		},
 		"folder": {
