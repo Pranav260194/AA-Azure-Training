@@ -402,12 +402,6 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Checking Customers file exists",
-						"dependencyConditions": [
-							"Failed"
-						]
-					},
-					{
 						"activity": "Checking Sales file exists",
 						"dependencyConditions": [
 							"Failed"
