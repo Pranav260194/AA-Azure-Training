@@ -444,7 +444,7 @@
 			},
 			"FileName": {
 				"type": "string",
-				"defaultValue": "\"customer.csv\" or \"sales.csv\""
+				"defaultValue": "sales.csv"
 			}
 		},
 		"folder": {
