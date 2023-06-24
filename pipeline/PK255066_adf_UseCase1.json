@@ -423,7 +423,7 @@
 						"content-type": "application/json"
 					},
 					"body": {
-						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.EmailTo,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().Pipeline,'-pipeline for file-',pipeline().parameters.FileName2,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.FileName2,'\"\n}')",
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.EmailTo,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().Pipeline,'-pipeline for file-',pipeline().parameters.FileName2,'\",\n    \"DataFactoryName\":\"td-aa-trng-adf\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.FileName2,'\"\n}')",
 						"type": "Expression"
 					}
 				}
