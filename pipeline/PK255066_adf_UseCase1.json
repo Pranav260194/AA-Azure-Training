@@ -423,14 +423,14 @@
 						"Content-type": "application/json"
 					},
 					"body": {
-						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\": \"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'\",\n    \"DataFactory\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
+						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.EmailTo,'\",\n    \"Subject\": \"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'\",\n    \"DataFactory\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
 						"type": "Expression"
 					}
 				}
 			}
 		],
 		"parameters": {
-			"Email_To": {
+			"EmailTo": {
 				"type": "string",
 				"defaultValue": "Prathmesh.Kasar@teradata.com"
 			},
