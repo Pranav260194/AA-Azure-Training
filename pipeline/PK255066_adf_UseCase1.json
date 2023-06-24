@@ -423,7 +423,7 @@
 						"Content-type": "application/json"
 					},
 					"body": {
-						"value": "@concat('{\n    \"Email_To\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().parameters.Pipe_line_Name,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
+						"value": "@concat('{\n    \"Email_To\":\"',pipeline().parameters.Email_To,'\",\n    \"Subject\":\"An error has occured in the ',pipeline().parameters.Pipe_line_Name,' -pipeline for file- ',pipeline().parameters.File_Name,'\",\n    \"DataFactoryName\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().parameters.Pipe_line_Name,'\",\n    \"Activity\":\"',pipeline().parameters.Activity,'\",\n    \"ErrorMessage\":\"',pipeline().parameters.ErrorMessage,'\",\n    \"FileName\":\"',pipeline().parameters.File_Name,'\"}')",
 						"type": "Expression"
 					}
 				}
