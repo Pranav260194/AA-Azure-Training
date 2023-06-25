@@ -9,6 +9,11 @@
 				"pipelineReference": {
 					"referenceName": "pa186030_UseCase1",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "pranav.ayare@teradata.com",
+					"Subject": "Email Notification for Data Factory Pipeline",
+					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure"
 				}
 			}
 		],
