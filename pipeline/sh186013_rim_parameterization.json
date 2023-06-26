@@ -128,7 +128,7 @@
 			"name": "sh186013"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-06-24T04:44:07Z"
+		"lastPublishTime": "2023-06-26T09:54:09Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

@@ -540,7 +540,7 @@
 			"name": "Audit Control Framework Pipelines"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-01-14T12:01:29Z"
+		"lastPublishTime": "2023-06-26T09:54:08Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

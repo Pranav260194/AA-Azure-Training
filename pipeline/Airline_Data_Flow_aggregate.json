@@ -31,7 +31,7 @@
 			"name": "DN255032"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-02-06T11:57:03Z"
+		"lastPublishTime": "2023-06-26T09:54:13Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

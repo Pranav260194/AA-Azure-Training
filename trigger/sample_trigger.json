@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "TO unzip the file and load on target source",
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
