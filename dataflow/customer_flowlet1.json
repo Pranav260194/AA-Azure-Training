@@ -7,9 +7,6 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "UniqueorderId"
-				},
-				{
 					"name": "Customer"
 				},
 				{
@@ -42,7 +39,6 @@
 				"     ),",
 				"     order: 1,",
 				"     allowSchemaDrift: true) ~> Sales",
-				"Sales filter(rownum==1) ~> UniqueorderId",
 				"Customer output() ~> output1"
 			]
 		}
