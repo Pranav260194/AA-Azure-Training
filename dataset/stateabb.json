@@ -1,0 +1,22 @@
+{
+	"name": "stateabb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Statelist.xlsx",
+				"folderPath": "input",
+				"fileSystem": "kv255007"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
