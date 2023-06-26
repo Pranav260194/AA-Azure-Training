@@ -1,0 +1,2167 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "td-aa-trng-adf"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_adf_td_training_demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "FullParquetCopy",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Flight#",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightNo",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Origin",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Origin",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Dest",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Dest",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FlightDate",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightDate",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NoSalesReason",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NoSalesReason",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TransmittingFlightAttd",
+											"type": "String"
+										},
+										"sink": {
+											"name": "TransmittingFlightAttd",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "hg250013_flat_par_sink1_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "flatToJsonCopy3",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "partialflatfile2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Flight#",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['FlightNo']"
+										}
+									},
+									{
+										"source": {
+											"name": "Origin",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Origin']"
+										}
+									},
+									{
+										"source": {
+											"name": "Dest",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Dest']"
+										}
+									},
+									{
+										"source": {
+											"name": "FlightDate",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['FlightDate']"
+										}
+									},
+									{
+										"source": {
+											"name": "NoSalesReason",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['noSalesReason']"
+										}
+									},
+									{
+										"source": {
+											"name": "TransmittingFlightAttd",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['TransmittingFlightAttd']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "hg250013_json_file_sink3_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "partialflatfile2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "FullParquetCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Flight#",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Flight"
+										}
+									},
+									{
+										"source": {
+											"name": "Origin",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Origin"
+										}
+									},
+									{
+										"source": {
+											"name": "Dest",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Dest"
+										}
+									},
+									{
+										"source": {
+											"name": "FlightDate",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightDate"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "hg250013_flat_csv_sink2_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "makeDataPartitioned",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "flatToJsonCopy3",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "hg250013_makeDataPartitioned",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"FlatSource": {},
+									"sink4": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ADF_Demo"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_adf_td_training_demo_Run_par')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "FullParquetCopy",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Flight#",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightNo",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Origin",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Origin",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Dest",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Dest",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FlightDate",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightDate",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NoSalesReason",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NoSalesReason",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TransmittingFlightAttd",
+											"type": "String"
+										},
+										"sink": {
+											"name": "TransmittingFlightAttd",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "hg250013_flat_par_sink1_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "partialflatfile",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "If Condition1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Flight#",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Flight"
+										}
+									},
+									{
+										"source": {
+											"name": "Origin",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Origin"
+										}
+									},
+									{
+										"source": {
+											"name": "Dest",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Dest"
+										}
+									},
+									{
+										"source": {
+											"name": "FlightDate",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlightDate"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "hg250013_flat_csv_sink2_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "makeDataPartitioned",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "hg250013_makeDataPartitioned",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"FlatSource": {},
+									"sink4": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Set variable FullParCopy",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "FullParquetCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "FullParCopy",
+							"value": true
+						}
+					},
+					{
+						"name": "Set variable partialflatFile check",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "makeDataPartitioned",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "PartialFlatFile",
+							"value": true
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Set variable FullParCopy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Set variable partialflatFile check",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@and(equals(variables('FullParCopy'),true),equals(variables('PartialFlatFile'),true))",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "flatToJsonCopy3",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "Flight#",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['FlightNo']"
+													}
+												},
+												{
+													"source": {
+														"name": "Origin",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['Origin']"
+													}
+												},
+												{
+													"source": {
+														"name": "Dest",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['Dest']"
+													}
+												},
+												{
+													"source": {
+														"name": "FlightDate",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['FlightDate']"
+													}
+												},
+												{
+													"source": {
+														"name": "NoSalesReason",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['noSalesReason']"
+													}
+												},
+												{
+													"source": {
+														"name": "TransmittingFlightAttd",
+														"type": "String"
+													},
+													"sink": {
+														"path": "$['TransmittingFlightAttd']"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "hg250013_flat_file_source_ds",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "hg250013_json_file_sink3_ds",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"FullParCopy": {
+						"type": "Boolean"
+					},
+					"PartialFlatFile": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "ADF_Demo"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/is255014_adf_trnsfrm_1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "testFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "is255014_xfm_1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"RIMsource": {},
+									"dataflowoutput": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "is255014"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ku255007Nothersalesflag')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "flag",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ku255007Data flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"RIMSourceData": {},
+									"Outputdata": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ku255007dataflow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ku255007Data flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"RIMSourceData": {},
+									"Outputdata": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ku255007dataflowpipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ku255007adfrimdata",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcerim": {},
+									"sinkoutputdata": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/kv255007RimPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "kv255007RimData flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "kv255007_RIM_dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Customer": {},
+									"Sales": {},
+									"State": {},
+									"Output": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "kv255007"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mb255079_pipeline_RIM')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "mb255079_dataflow_rim1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 5,
+							"retryIntervalInSeconds": 300,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "mb255079_RIM_dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"customer": {},
+									"Sales": {},
+									"source1": {},
+									"OutputDS": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "mb255079"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mm255199_Dataflow_Transform')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "mm255199Dataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "mm255199_rim_hist_aggr",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Riminput": {},
+									"mm255199rimoutput": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/nj255009_adf_DataFlow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "nj255009_adf_DataFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DataFlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"RIMsource1": {
+										"nj255009_demo": "Name"
+									},
+									"RIMsourceOutput": {
+										"nj255009_demo": "Name"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "nj255009"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/nt255028_usecase_demo_datafactory')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "nt255028_usecase_demo",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "nt255028_usecase_demo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"EmpSource": {},
+									"EmpNewSource": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pb255086_cargo1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "cargo1F",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "lookup_parameter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pb255086_cargo_prj",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"File_Name": "cargoF1.csv"
+							}
+						}
+					},
+					{
+						"name": "lookup_parameter",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "pb255086_cargoF1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PB255086"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:30Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pb255086_data_flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "pb255086_data_flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "pb255086_data_flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PB255086"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pi_255050')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow8",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "bg255026_datadlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "bg255026_datadlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Delete from Inbound",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "inbound csv to input parquet",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "pb255086_delete",
+								"type": "DatasetReference",
+								"parameters": {
+									"sourceContainer": "@activity('lookup_parameter').output.firstRow.sourceContainer",
+									"sourceDirectory": "@activity('lookup_parameter').output.firstRow.sourceDirectory",
+									"sourceFileName": "@activity('lookup_parameter').output.firstRow.sourceFileName"
+								}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "adls_ls",
+									"type": "LinkedServiceReference"
+								},
+								"path": "pb255086/stage"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "lookup_parameter",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "pb255086_cargoF",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "inbound csv to input parquet",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "lookup_parameter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "cargoId",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cargoId",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "shipmentDate",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "shipmentDate",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "catagry",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "catagry",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "filghtNo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "filghtNo",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "pb255086_flat_file_sourse_ds_for_parameter",
+								"type": "DatasetReference",
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@activity('lookup_parameter').output.firstRow.sourceDirectory",
+										"type": "Expression"
+									},
+									"sourceContainer": {
+										"value": "@activity('lookup_parameter').output.firstRow.sourceContainer\n",
+										"type": "Expression"
+									},
+									"sourceFileName": {
+										"value": "@activity('lookup_parameter').output.firstRow.sourceFileName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "pb255086_Parquet2",
+								"type": "DatasetReference",
+								"parameters": {
+									"destContainer": {
+										"value": "@activity('lookup_parameter').output.firstRow.destContainer",
+										"type": "Expression"
+									},
+									"destDirectory": {
+										"value": "@activity('lookup_parameter').output.firstRow.destDirectory   ",
+										"type": "Expression"
+									},
+									"destFileName": {
+										"value": "@activity('lookup_parameter').output.firstRow.destFileName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Execute move and delete",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Delete from Inbound",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pb255086_moveanddelete",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Execute move and delete",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/pb255086/pb255086"
+						},
+						"linkedServiceName": {
+							"referenceName": "adb_ls",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:30Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline4')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "file_list",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "To check inbound dir empty or not",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@empty(activity('Get Metadata1').output.childItems)",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Fail1",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": "Inbound Dir is Empty",
+										"errorCode": "404"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "To check inbound have para files or not",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "To check inbound dir empty or not",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@if(\ncontains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name2),'\"',',','\"type\":\"File\"}'))),\nif(\ncontains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name1),'\"',',','\"type\":\"File\"}'))),1,0),0)\n",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Fail2",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": {
+											"value": "@concat(if(\ncontains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name2),'\"',',','\"type\":\"File\"}'))),\npipeline().parameters.file_name1,\nif(contains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name1),'\"',',','\"type\":\"File\"}'))),pipeline().parameters.file_name2,'Both the files')),\n' is not present in inbound dir')",
+											"type": "Expression"
+										},
+										"errorCode": "404"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "subppl_of_ppl4",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "To check inbound have para files or not",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/vu255001/Demo",
+							"baseParameters": {
+								"file_name1": {
+									"value": "@pipeline().parameters.file_name1",
+									"type": "Expression"
+								},
+								"file_name2": {
+									"value": "@pipeline().parameters.file_name2",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "adb_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Para files faliure",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "To check inbound have para files or not",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://prod-03.eastus.logic.azure.com:443/workflows/a7b63c7c6bc8404e988f8e59f85eec3b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-sh46Sz2oePKsX8FuGSRUhD9Q_cs5AXvS2JfrSNBfc",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\n    \"Subject\":\"Faluire of inbound to input transfer activity\",\n    \"DataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"PipelineName\" : \"@{pipeline().Pipeline}\", \n    \"EmailTo\" : \"@{pipeline().parameters.email_id}\",\n    \"ErrorMessage\" : \"404\",\n    \"Activity\" : \"@{concat(if(\ncontains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name2),'\"',',','\"type\":\"File\"}'))),\npipeline().parameters.file_name1,\nif(contains(activity('Get Metadata1').output.childitems,\njson(concat('{\"name\":','\"',string(pipeline().parameters.file_name1),'\"',',','\"type\":\"File\"}'))),pipeline().parameters.file_name2,'Both the files')),\n' is not present in inbound dir')}\",\n    \"FileName\":\"Check-in and Inflight service\"\n    \n   }",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Pipeline success",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Notebook1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-20.eastus.logic.azure.com:443/workflows/144ac395e1c34d1cb5fd524e6e239575/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=o-2Wx_7w9CoOX5RTkJEZhaLrC8e5IsKBx0pOdX-lWV8",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\n    \"Subject\":\"Success\",\n    \"FileName\":\"Check-in and Inflight service\",\n    \"DataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"PipelineName\" : \"@{pipeline().Pipeline}\", \n    \"EmailTo\" : \"@{pipeline().parameters.email_id}\",\n    \n    \n   }",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"file_name1": {
+						"type": "string",
+						"defaultValue": "Table1.csv"
+					},
+					"file_name2": {
+						"type": "string",
+						"defaultValue": "Table2.csv"
+					},
+					"email_id": {
+						"type": "string",
+						"defaultValue": "visu.utkarsh@teradata.com"
+					}
+				},
+				"folder": {
+					"name": "vu255001"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ru255006_data_flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DataTransform",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ru255006_dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"output1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sh186013_adf_DataXfrom1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1_copy1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow3",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"DataFlowSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "sh186013"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sm255207_rim_hist_aggr')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "RIM_source",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"genreasoninput": {},
+									"genreasonoutput": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "sm255207"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		}
+	]
+}

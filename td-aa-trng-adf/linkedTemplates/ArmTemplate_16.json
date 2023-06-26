@@ -1,0 +1,928 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "td-aa-trng-adf"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ha255041_CopyInput_Demo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "input",
+						"fileSystem": "ha255041"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight_ID",
+						"type": "String"
+					},
+					{
+						"name": "Route",
+						"type": "String"
+					},
+					{
+						"name": "Rtng",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ha255041_rim_DelimitedText19')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ha255041"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "RIM_V1.2_HistoryData.csv",
+						"folderPath": "input",
+						"fileSystem": "ha255041"
+					},
+					"columnDelimiter": "^",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight#",
+						"type": "String"
+					},
+					{
+						"name": "Origin",
+						"type": "String"
+					},
+					{
+						"name": "Dest",
+						"type": "String"
+					},
+					{
+						"name": "FlightDate",
+						"type": "String"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "String"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_Rest_api_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "rest_api_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_csv_partitioned_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "output4",
+						"fileSystem": "hg250013"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_flat_csv_sink2_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "output2",
+						"fileSystem": "hg250013"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight",
+						"type": "String"
+					},
+					{
+						"name": "Origin",
+						"type": "String"
+					},
+					{
+						"name": "Dest",
+						"type": "String"
+					},
+					{
+						"name": "FlightDate",
+						"type": "String"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "String"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_flat_file_source_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "nosales.txt",
+						"folderPath": "input",
+						"fileSystem": "hg250013"
+					},
+					"columnDelimiter": "^",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight#",
+						"type": "String"
+					},
+					{
+						"name": "Origin",
+						"type": "String"
+					},
+					{
+						"name": "Dest",
+						"type": "String"
+					},
+					{
+						"name": "FlightDate",
+						"type": "String"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "String"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_flat_file_source_ds_for_parameter_demo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"containerName": {
+						"type": "string"
+					},
+					"directoryName": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directoryName",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().containerName",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": "^",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight#",
+						"type": "String"
+					},
+					{
+						"name": "Origin",
+						"type": "String"
+					},
+					{
+						"name": "Dest",
+						"type": "String"
+					},
+					{
+						"name": "FlightDate",
+						"type": "String"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "String"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_flat_par_sink1_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "testfilename",
+						"folderPath": "output1",
+						"fileSystem": "hg250013"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "FlightNo",
+						"type": "UTF8"
+					},
+					{
+						"name": "Origin",
+						"type": "UTF8"
+					},
+					{
+						"name": "Dest",
+						"type": "UTF8"
+					},
+					{
+						"name": "FlightDate",
+						"type": "UTF8"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "UTF8"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_flat_par_sink1_ds_for_parameter_demo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"destContainer": {
+						"type": "string"
+					},
+					"destDirectory": {
+						"type": "string"
+					},
+					"destFileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().destFileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().destDirectory",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().destContainer",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "FlightNo",
+						"type": "UTF8"
+					},
+					{
+						"name": "Origin",
+						"type": "UTF8"
+					},
+					{
+						"name": "Dest",
+						"type": "UTF8"
+					},
+					{
+						"name": "FlightDate",
+						"type": "UTF8"
+					},
+					{
+						"name": "NoSalesReason",
+						"type": "UTF8"
+					},
+					{
+						"name": "TransmittingFlightAttd",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_json_file_sink3_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "output3",
+						"fileSystem": "hg250013"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_parameter_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ADF_parameters_2.json",
+						"folderPath": "config",
+						"fileSystem": "hg250013"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"sourceDataBase": {
+							"type": "string"
+						},
+						"sourceTable": {
+							"type": "string"
+						},
+						"targetDataBase": {
+							"type": "string"
+						},
+						"targetTable": {
+							"type": "string"
+						},
+						"partitionCol": {
+							"type": "string"
+						},
+						"columns": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_parameter_sink_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"destFileName": {
+						"type": "string"
+					},
+					"destDirectory": {
+						"type": "string"
+					},
+					"destContainer": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "ADF_Demo_DS"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().destFileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().destDirectory",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().destContainer",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_raw_json_rest_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "raw",
+						"fileSystem": "hg250013"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hosp_file_name')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_name",
+							"type": "Expression"
+						},
+						"folderPath": "input2",
+						"fileSystem": "sk255196"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/inb_dir')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_inbound": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_inbound",
+							"type": "Expression"
+						},
+						"folderPath": "inbound",
+						"fileSystem": "vu255001"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/inbound')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Container_Name": {
+						"type": "string"
+					},
+					"Folder_Name": {
+						"type": "string"
+					},
+					"File_Name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().File_Name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Folder_Name\n",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().Container_Name",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "RIM_V1.2_HistoryData.csv",
+						"folderPath": "input",
+						"fileSystem": "np255046"
+					},
+					"columnDelimiter": "^",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input_copy_add_col')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "input_copy_add_col",
+						"folderPath": "output",
+						"fileSystem": "np255046"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input_dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"inputFileName": {
+						"type": "string"
+					},
+					"delimeter": {
+						"type": "string",
+						"defaultValue": ","
+					}
+				},
+				"folder": {
+					"name": "dn255032"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().inputFileName",
+							"type": "Expression"
+						},
+						"folderPath": "input",
+						"container": "dn255032"
+					},
+					"columnDelimiter": {
+						"value": "@dataset().delimeter",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input_dataset_pipeline_param')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"inputFileName": {
+						"type": "string"
+					},
+					"delimeter": {
+						"type": "string",
+						"defaultValue": ","
+					}
+				},
+				"folder": {
+					"name": "dn255032"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().inputFileName",
+							"type": "Expression"
+						},
+						"folderPath": "input",
+						"container": "dn255032"
+					},
+					"columnDelimiter": {
+						"value": "@dataset().delimeter",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		}
+	]
+}

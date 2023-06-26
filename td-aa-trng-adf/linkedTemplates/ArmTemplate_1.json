@@ -1,0 +1,440 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "td-aa-trng-adf"
+		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
+		"FileServer2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer2'"
+		},
+		"MA186006_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MA186006_blob'"
+		},
+		"Teradata_MP255107_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Teradata_MP255107'"
+		},
+		"adb_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'adb_ls'"
+		},
+		"batch_adls_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'batch_adls_ls'"
+		},
+		"batch_blob_ln_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'batch_blob_ln'"
+		},
+		"blob_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'blob_ls'"
+		},
+		"copycust_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'copycust'"
+		},
+		"vf186006_Db_Connection_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'vf186006_Db_Connection'"
+		},
+		"vf186006_test_accesskey_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'vf186006_test_accesskey'"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\cb255052\\OneDrive - Teradata\\Desktop\\RIM_V1.2_HistoryData"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "cb255052_rim_input"
+		},
+		"FileServer2_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\ru255006\\OneDrive - Teradata\\Documents\\American_Airlines"
+		},
+		"FileServer2_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "RU255006"
+		},
+		"OpenOrg_API_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.github.com/users/hadley/orgs"
+		},
+		"adb_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0617-064534-freed831"
+		},
+		"adls_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://tdaastrgdls.dfs.core.windows.net/"
+		},
+		"copycust_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://tdaastrgdls.dfs.core.windows.net/"
+		},
+		"http_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().sourceBaseURL}"
+		},
+		"key_vault_ls_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://td-aa-trng-kv.vault.azure.net/"
+		},
+		"rest_api_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://quote-garden.herokuapp.com/api/v3/quotes?page=1&limit=100"
+		},
+		"vf186006_Db_Connection_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0617-064534-freed831"
+		},
+		"vf186006_test_accesskey_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://tdaastrgdls.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer1_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer2_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer2_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer2_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MA186006_blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('MA186006_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OpenOrg_API')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('OpenOrg_API_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Teradata_MP255107')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Teradata",
+				"typeProperties": {
+					"connectionString": "[parameters('Teradata_MP255107_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adb_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-4747255312543413.13.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('adb_ls_accessToken')]"
+					},
+					"existingClusterId": "[parameters('adb_ls_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adls_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adls_ls_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/batch_adls_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('batch_adls_ls_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/batch_blob_ln')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('batch_blob_ln_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('blob_ls_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/copycust')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('copycust_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('copycust_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/http_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"sourceBaseURL": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('http_ls_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/key_vault_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('key_vault_ls_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/rest_api_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "https://quote-garden.herokuapp.com/api/v3/quotes",
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('rest_api_ls_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/vf186006_Db_Connection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-4747255312543413.13.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('vf186006_Db_Connection_accessToken')]"
+					},
+					"existingClusterId": "[parameters('vf186006_Db_Connection_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/vf186006_test_accesskey')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('vf186006_test_accesskey_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('vf186006_test_accesskey_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLtoVantage')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RW255009IR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/td-aa-trng-ir')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "td-aa-trng-ir",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/customer_flowlet1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Flowlet",
+				"typeProperties": {
+					"sources": [],
+					"sinks": [],
+					"transformations": [
+						{
+							"name": "Customer"
+						},
+						{
+							"name": "Sales"
+						},
+						{
+							"name": "output1"
+						}
+					],
+					"scriptLines": [
+						"input(output(",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Email as string,",
+						"          Address as string,",
+						"          City as string,",
+						"          Country as string",
+						"     ),",
+						"     order: 0,",
+						"     allowSchemaDrift: true) ~> Customer",
+						"input(output(",
+						"          OrderID as string,",
+						"          CustomerID as string,",
+						"          ProductID as string,",
+						"          Quantity as string,",
+						"          Price as string,",
+						"          OrderDate as string,",
+						"          Region as string",
+						"     ),",
+						"     order: 1,",
+						"     allowSchemaDrift: true) ~> Sales",
+						"Customer output() ~> output1"
+					]
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
