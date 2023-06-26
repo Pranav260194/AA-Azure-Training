@@ -358,7 +358,7 @@
 			"name": "ADF_Demo"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-01-14T12:01:31Z"
+		"lastPublishTime": "2023-06-26T09:54:32Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

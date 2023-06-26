@@ -106,7 +106,7 @@
 			"name": "vu255001"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-11-13T08:37:21Z"
+		"lastPublishTime": "2023-06-26T09:54:30Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
