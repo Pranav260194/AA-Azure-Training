@@ -20,6 +20,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "Sales"
+				},
+				{
+					"dataset": {
+						"referenceName": "stateabb",
+						"type": "DatasetReference"
+					},
+					"name": "State"
 				}
 			],
 			"sinks": [
@@ -48,26 +55,16 @@
 					"name": "DataCleaning"
 				},
 				{
-					"name": "Address"
-				},
-				{
 					"name": "selectsales"
 				},
 				{
 					"name": "cast1"
 				},
 				{
-					"name": "window1"
-				},
-				{
 					"name": "UniqueorderId"
 				},
 				{
 					"name": "selectNonduplicate"
-				},
-				{
-					"name": "aggregate1",
-					"description": "Aggregating data by 'ProductID, Region' producing columns 'TotalQuantity, TotalPrice, avg_sales_price'"
 				},
 				{
 					"name": "join1"
@@ -80,7 +77,28 @@
 					"description": "Aggregating data by 'Customerid' producing columns 'TotalQuantity, TotalPrice'"
 				},
 				{
-					"name": "join2"
+					"name": "CustSalesJoin"
+				},
+				{
+					"name": "cast2"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "Stateabb"
+				},
+				{
+					"name": "window2"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "Quantitylessthan10"
+				},
+				{
+					"name": "orderfilter"
 				},
 				{
 					"name": "select2"
@@ -111,6 +129,13 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Sales",
+				"source(output(",
+				"          State as string,",
+				"          {abbreviations } as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> State",
 				"Customer select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
@@ -139,18 +164,9 @@
 				"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          Email = trim(Email),",
-				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName))) ~> DataCleaning",
-				"DataCleaning derive(Address = replace(Address , '$','')) ~> Address",
-				"Sales select(mapColumn(",
-				"          OrderID,",
-				"          CustomerID,",
-				"          ProductID,",
-				"          Quantity,",
-				"          Price,",
-				"          OrderDate,",
-				"          Region",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+				"          Address = replace(Address , '$','')) ~> DataCleaning",
+				"Sales select(skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectsales",
 				"selectsales cast(output(",
 				"          OrderID as integer,",
@@ -162,10 +178,7 @@
 				"          Region as string",
 				"     ),",
 				"     errors: true) ~> cast1",
-				"cast1 window(over(OrderID,",
-				"          CustomerID),",
-				"     rownum = rowNumber()) ~> window1",
-				"window1 filter(rownum==1) ~> UniqueorderId",
+				"window2 filter(rownum==1) ~> UniqueorderId",
 				"UniqueorderId select(mapColumn(",
 				"          OrderID,",
 				"          CustomerID,",
@@ -173,19 +186,16 @@
 				"          Quantity,",
 				"          Price,",
 				"          OrderDate,",
-				"          Region,",
-				"          rownum",
+				"          Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectNonduplicate",
-				"selectNonduplicate aggregate(groupBy(ProductID,",
-				"          Region)) ~> aggregate1",
-				"select1 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"select1, Stateabb join(select1@CustomerID == selectNonduplicate@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"Address select(mapColumn(",
+				"DataCleaning select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
 				"          LastName,",
@@ -193,19 +203,57 @@
 				"          Address,",
 				"          City,",
 				"          Country,",
-				"          rownum,",
 				"          FullName",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"join1 aggregate(groupBy({} = ERROR_FUNCTION(''))) ~> aggregateCustomerID",
-				"aggregateCustomerID join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"join1 aggregate(groupBy(CustomerId = select1@CustomerID),",
+				"     TotalQuantity = sum(Quantity),",
+				"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
+				"aggregateCustomerID, join1 join(aggregateCustomerID@CustomerId == select1@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join2",
-				"join2 select(mapColumn(",
-				"          {}",
+				"     broadcast: 'auto')~> CustSalesJoin",
+				"selectNonduplicate cast(output(",
+				"          OrderDate as timestamp 'MM/dd/yyyy'",
+				"     ),",
+				"     errors: true) ~> cast2",
+				"cast2 derive(differences = round((currentTimestamp()-OrderDate)/86400000),",
+				"          year = year(OrderDate)) ~> derivedColumn1",
+				"derivedColumn1, State lookup(Region == State,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> Stateabb",
+				"cast1 window(over(OrderID,",
+				"          CustomerID),",
+				"     asc(CustomerID, true),",
+				"     rownum = rowNumber()) ~> window2",
+				"selectNonduplicate aggregate(groupBy(ProductID,",
+				"          Region),",
+				"     TotalQuantity = sum(Quantity),",
+				"          TotalPrice = sum(Price),",
+				"          avg_sales_price = sum(Price)/sum(Quantity)) ~> aggregate1",
+				"aggregate1 filter(TotalQuantity<10) ~> Quantitylessthan10",
+				"Quantitylessthan10 filter(TotalPrice>10.0) ~> orderfilter",
+				"CustSalesJoin select(mapColumn(",
+				"          CustomerId = aggregateCustomerID@CustomerId,",
+				"          FullName,",
+				"          TotalQuantity,",
+				"          TotalPrice,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          OrderID,",
+				"          ProductID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          Region,",
+				"          differences,",
+				"          year,",
+				"          {abbreviations }",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
