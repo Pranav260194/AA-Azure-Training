@@ -32,7 +32,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "kv255007_customer_source",
+						"referenceName": "kv255007RimOutput",
 						"type": "DatasetReference"
 					},
 					"name": "Output"
