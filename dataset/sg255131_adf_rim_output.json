@@ -1,0 +1,19 @@
+{
+	"name": "sg255131_adf_rim_output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Output",
+				"fileSystem": "sg255131"
+			}
+		},
+		"schema": {}
+	}
+}
