@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "pa186030_customer_sink_ds",
+						"referenceName": "pa186030_customer_df_sink_ds",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -33,6 +33,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     fileName as string",
+				"}",
 				"source(output(",
 				"          CustomerID as short,",
 				"          FirstName as string,",
