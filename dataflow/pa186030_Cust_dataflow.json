@@ -1,0 +1,84 @@
+{
+	"name": "pa186030_Cust_dataflow",
+	"properties": {
+		"folder": {
+			"name": "pa186030_dataflow"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "pa186030_customer_source_ds",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "pa186030_customer_sink_ds",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerID as short,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CustomerSource",
+				"CustomerSource derive(FirstName = initCap(lower(FirstName)),",
+				"          LastName = initCap(lower(LastName)),",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+				"          Email = trim(lower(Email)),",
+				"          Address = replace(Address , '$','')) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          FullName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
