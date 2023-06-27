@@ -201,7 +201,19 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "pa186030_Cust_dataflow",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"fileName": "customer.csv"
+							}
+						},
+						"linkedServiceParameters": {
+							"sink1": {
+								"schemaLinkedService": {
+									"fileName": "customer.csv"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -225,7 +237,19 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "pa186030_Sales_dataflow",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"fileName": "sales.csv"
+							}
+						},
+						"linkedServiceParameters": {
+							"sink1": {
+								"schemaLinkedService": {
+									"fileName": "sales.csv"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
