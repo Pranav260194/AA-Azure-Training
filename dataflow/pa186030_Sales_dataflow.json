@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "pa186030_sales_sink_ds",
+						"referenceName": "pa186030_sales_df_sink_ds",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
