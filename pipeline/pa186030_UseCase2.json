@@ -262,37 +262,7 @@
 							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['CustomerData'][0]['CustomerID']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['CustomerData'][0]['CustomerName']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['CustomerData'][0]['CustomerLocation']['City']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['CustomerData'][0]['CustomerLocation']['State']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['CustomerData'][0]['CustomerLocation']['Country']"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -340,67 +310,7 @@
 							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanID']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['BorrowerID']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanAccountNumber']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanAmount']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['InterestRate']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanTerm']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanType']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['LoanStatus']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['OriginationDate']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['MonthlyPaymentDay']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanData'][0]['EMIAmount']"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -448,42 +358,7 @@
 							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['LoanID']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['PaymentDate']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['PaymentAmount']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['PrincipalPayment']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['InterestPayment']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['LoanRepaymentData'][0]['PaymentReferenceNumber']"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
