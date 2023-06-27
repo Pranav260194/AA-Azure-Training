@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "sg255131_ls",
+						"referenceName": "sg255131_Rim_SRC",
 						"type": "DatasetReference"
 					},
 					"name": "source1"

@@ -14,7 +14,7 @@
 				"folderPath": "Input",
 				"fileSystem": "sg255131"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "\u0001",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
