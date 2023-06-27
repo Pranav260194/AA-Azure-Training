@@ -36,7 +36,7 @@
 				"          ProductID as short,",
 				"          Quantity as short,",
 				"          Price as short,",
-				"          OrderDate as date,",
+				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
 				"     allowSchemaDrift: true,",

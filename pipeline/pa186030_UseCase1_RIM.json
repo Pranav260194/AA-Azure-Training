@@ -209,13 +209,6 @@
 							"sink1": {
 								"fileName": "customer.csv"
 							}
-						},
-						"linkedServiceParameters": {
-							"sink1": {
-								"schemaLinkedService": {
-									"fileName": "customer.csv"
-								}
-							}
 						}
 					},
 					"compute": {
