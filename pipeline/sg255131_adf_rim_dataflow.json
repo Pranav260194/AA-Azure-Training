@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "sg255131_RimHistXfm",
+				"name": "SG255131_DataFlow",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
