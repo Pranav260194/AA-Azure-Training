@@ -234,16 +234,12 @@
 					"dataflow": {
 						"referenceName": "pa186030_Sales_dataflow",
 						"type": "DataFlowReference",
+						"parameters": {
+							"fileName": "'sales.csv'"
+						},
 						"datasetParameters": {
 							"sink1": {
 								"fileName": "sales.csv"
-							}
-						},
-						"linkedServiceParameters": {
-							"sink1": {
-								"schemaLinkedService": {
-									"fileName": "sales.csv"
-								}
 							}
 						}
 					},
