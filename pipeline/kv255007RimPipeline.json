@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "kv255007RimData flow1",
+				"name": "kv255007RImdataflow",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
