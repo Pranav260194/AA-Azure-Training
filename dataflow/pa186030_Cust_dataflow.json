@@ -34,7 +34,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string",
+				"     fileName as string ($fileName)",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
@@ -76,7 +76,7 @@
 				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
-				"     partitionFileNames:['$fileName'],",
+				"     partitionFileNames:[($fileName)],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
