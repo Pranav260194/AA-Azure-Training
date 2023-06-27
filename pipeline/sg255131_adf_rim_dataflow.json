@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "SG255131_DataFlow",
+				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
