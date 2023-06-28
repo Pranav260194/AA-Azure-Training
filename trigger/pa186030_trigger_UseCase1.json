@@ -15,6 +15,17 @@
 					"Subject": "Email Notification for Data Factory Pipeline",
 					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "pa186030_UseCase1_RIM",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "pranav.ayare@teradata.com",
+					"Subject": "Email Notification for Data Factory Pipeline",
+					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
