@@ -59,7 +59,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string ('customer.csv')",
+				"     fileName as string ('customer_sales.csv')",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
@@ -141,11 +141,13 @@
 				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
+				"     partitionFileNames:['$fileName'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
