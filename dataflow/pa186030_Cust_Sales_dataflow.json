@@ -141,7 +141,7 @@
 				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
-				"     partitionFileNames:[('customer_sales.csv')],",
+				"     partitionFileNames:[($fileName)],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
