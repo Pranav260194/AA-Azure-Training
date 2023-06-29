@@ -231,11 +231,6 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": "'sales.csv'"
-						},
-						"datasetParameters": {
-							"sink1": {
-								"fileName": "sales.csv"
-							}
 						}
 					},
 					"compute": {
