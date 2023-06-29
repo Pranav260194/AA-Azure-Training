@@ -1,0 +1,121 @@
+{
+	"name": "pk255066_Lookup_stage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "PK255066"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "stage",
+				"fileSystem": "pk255066"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"CustomerData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"CustomerID": {
+								"type": "string"
+							},
+							"CustomerName": {
+								"type": "string"
+							},
+							"CustomerLocation": {
+								"type": "object",
+								"properties": {
+									"City": {
+										"type": "string"
+									},
+									"State": {
+										"type": "string"
+									},
+									"Country": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"LoanData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"LoanID": {
+								"type": "string"
+							},
+							"BorrowerID": {
+								"type": "string"
+							},
+							"LoanAccountNumber": {
+								"type": "string"
+							},
+							"LoanAmount": {
+								"type": "integer"
+							},
+							"InterestRate": {
+								"type": "number"
+							},
+							"LoanTerm": {
+								"type": "integer"
+							},
+							"LoanType": {
+								"type": "string"
+							},
+							"LoanStatus": {
+								"type": "string"
+							},
+							"OriginationDate": {
+								"type": "string"
+							},
+							"MonthlyPaymentDay": {
+								"type": "integer"
+							},
+							"EMIAmount": {
+								"type": "number"
+							}
+						}
+					}
+				},
+				"LoanRepaymentData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"LoanID": {
+								"type": "string"
+							},
+							"PaymentDate": {
+								"type": "string"
+							},
+							"PaymentAmount": {
+								"type": "number"
+							},
+							"PrincipalPayment": {
+								"type": "number"
+							},
+							"InterestPayment": {
+								"type": "number"
+							},
+							"PaymentReferenceNumber": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
