@@ -55,6 +55,9 @@
 				},
 				{
 					"name": "select2"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -130,7 +133,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"join1 sink(allowSchemaDrift: true,",
+				"join1 sort(asc(select1@CustomerID, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          OrderID as string,",
