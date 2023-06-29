@@ -40,7 +40,7 @@
 				}
 			},
 			{
-				"name": "Check if both Metadata exists",
+				"name": "Check if Metadata exists",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
@@ -114,7 +114,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Check if both Metadata exists",
+						"activity": "Check if Metadata exists",
 						"dependencyConditions": [
 							"Failed"
 						]
