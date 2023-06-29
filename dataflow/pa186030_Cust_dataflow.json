@@ -21,7 +21,11 @@
 						"referenceName": "pa186030_customer_df_sink_ds",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "adls_ls",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
@@ -34,7 +38,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string ('customer.csv')",
+				"     fileName as string ($fileName)",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
