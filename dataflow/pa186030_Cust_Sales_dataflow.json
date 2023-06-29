@@ -75,7 +75,7 @@
 				"     ignoreNoFilesFound: false) ~> CustomerSource",
 				"source(output(",
 				"          OrderID as string,",
-				"          CustomerID as string,",
+				"          CustomerID as short,",
 				"          ProductID as string,",
 				"          Quantity as string,",
 				"          Price as string,",
