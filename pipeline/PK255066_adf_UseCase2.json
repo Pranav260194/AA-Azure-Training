@@ -7,15 +7,9 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Checking Customer file exists in stage",
+						"activity": "Delete files from stage",
 						"dependencyConditions": [
-							"Skipped"
-						]
-					},
-					{
-						"activity": "Deleting files from stage",
-						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -63,81 +57,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Checking Customer file exists in stage",
-				"type": "Lookup",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Skipped",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "JsonSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*.json",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "JsonReadSettings"
-						}
-					},
-					"dataset": {
-						"referenceName": "pk255066_Lookup_stage",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "Deleting files from stage",
-				"type": "Delete",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Skipped",
-				"dependsOn": [
-					{
-						"activity": "Checking Customer file exists in stage",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "pk255066_Lookup_stage",
-						"type": "DatasetReference"
-					},
-					"logStorageSettings": {
-						"linkedServiceName": {
-							"referenceName": "adls_ls",
-							"type": "LinkedServiceReference"
-						},
-						"path": "pk255066/log"
-					},
-					"enableLogging": true,
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*.json",
-						"enablePartitionDiscovery": false
-					}
-				}
 			},
 			{
 				"name": "Use Case 2",
@@ -191,6 +110,39 @@
 					"body": {
 						"value": "@concat('{\n    \"EmailTo\":\"',pipeline().parameters.EmailTo,'\",\n    \"Subject\":\"The ',pipeline().Pipeline,'has runned successfully\",\n    \"DataFactory\":\"',pipeline().DataFactory,'\",\n    \"PipelineName\":\"',pipeline().Pipeline,'\",\n    \"Message\":\"The pipeline has runned successfully\"\n}')",
 						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Delete files from stage",
+				"type": "Delete",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "pk255066_Lookup_stage",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "pk255066/log"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.json",
+						"enablePartitionDiscovery": false
 					}
 				}
 			}
