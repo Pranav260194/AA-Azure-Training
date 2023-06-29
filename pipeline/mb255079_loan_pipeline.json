@@ -16,6 +16,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Users/meetu.bhardwaj@qateradatacloud.com/mb255079_loan"
+				},
+				"linkedServiceName": {
+					"referenceName": "ADB_mp255107",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
