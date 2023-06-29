@@ -1,0 +1,22 @@
+{
+	"name": "pk255066_UC2_copy_op",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "PK255066"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "stage",
+				"fileSystem": "pk255066"
+			}
+		},
+		"schema": {}
+	}
+}
