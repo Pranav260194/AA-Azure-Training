@@ -1,0 +1,190 @@
+{
+	"name": "PK255066_adf_UseCase2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy 3 files",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['CustomerData'][0]['CustomerID']"
+								},
+								"sink": {
+									"path": "CustomerID"
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerData'][0]['CustomerName']"
+								},
+								"sink": {
+									"path": "CustomerName"
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerData'][0]['CustomerLocation']['City']"
+								},
+								"sink": {
+									"path": "City"
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerData'][0]['CustomerLocation']['State']"
+								},
+								"sink": {
+									"path": ""
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerData'][0]['CustomerLocation']['Country']"
+								},
+								"sink": {
+									"path": ""
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanID']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['BorrowerID']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanAccountNumber']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanAmount']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['InterestRate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanTerm']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanType']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['LoanStatus']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['OriginationDate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['MonthlyPaymentDay']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanData'][0]['EMIAmount']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['LoanID']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['PaymentDate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['PaymentAmount']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['PrincipalPayment']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['InterestPayment']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['LoanRepaymentData'][0]['PaymentReferenceNumber']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "pk255066_UC2_input",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "pk255066_UC2_copy_op",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "pk255066"
+		},
+		"annotations": []
+	}
+}
