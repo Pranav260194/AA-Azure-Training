@@ -63,7 +63,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string ('customer_sales.csv')",
+				"     fileName as string ($fileName)",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
@@ -102,7 +102,7 @@
 				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(ProductID,",
 				"          Region),",
-				"     each(match(name!='ProductID' && name!='Region'), $$ = first($$))) ~> aggregate2",
+				"     each(match(name!='ProductID'&&name!='Region'), $$ = first($$))) ~> aggregate2",
 				"select1, select2 join(select1@CustomerID == select2@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
