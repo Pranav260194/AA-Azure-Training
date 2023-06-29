@@ -37,7 +37,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string ($fileName)",
+				"     fileName as string ('sales.csv')",
 				"}",
 				"source(output(",
 				"          OrderID as short,",
