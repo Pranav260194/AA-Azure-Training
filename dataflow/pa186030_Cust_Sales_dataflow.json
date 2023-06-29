@@ -1,5 +1,5 @@
 {
-	"name": "pa186030_Cust_dataflow",
+	"name": "pa186030_Cust_Sales_dataflow",
 	"properties": {
 		"folder": {
 			"name": "pa186030_dataflow"
@@ -13,23 +13,40 @@
 						"type": "DatasetReference"
 					},
 					"name": "CustomerSource"
-				}
-			],
-			"sinks": [
+				},
 				{
 					"dataset": {
-						"referenceName": "pa186030_customer_df_sink_ds",
+						"referenceName": "pa186030_sales_source_ds",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "SalesSource"
 				}
 			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -48,17 +65,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> CustomerSource",
-				"CustomerSource derive(FirstName = initCap(lower(FirstName)),",
-				"          LastName = initCap(lower(LastName)),",
-				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
-				"          Email = trim(lower(Email)),",
-				"          Address = replace(Address , '$',''),",
-				"          Country_Abbrevation = substring(Country,0,2)) ~> derivedColumn1",
-				"derivedColumn1 aggregate(groupBy(CustomerID),",
-				"     each(match(name!='CustomerID'), $$ = first($$))) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
+				"source(output(",
 				"          OrderID as string,",
 				"          CustomerID as string,",
 				"          ProductID as string,",
@@ -67,13 +74,54 @@
 				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
-				"     partitionFileNames:[($fileName)],",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SalesSource",
+				"CustomerSource derive(FirstName = initCap(lower(FirstName)),",
+				"          LastName = initCap(lower(LastName)),",
+				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+				"          Email = trim(lower(Email)),",
+				"          Address = replace(Address , '$',''),",
+				"          Country_Abbrevation = substring(Country,0,2)) ~> derivedColumn1",
+				"derivedColumn1 aggregate(groupBy(CustomerID),",
+				"     each(match(name!='CustomerID'), $$ = first($$))) ~> aggregate1",
+				"SalesSource filter(and(Quantity>10, Price>=10)) ~> filter1",
+				"filter1 derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
+				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> derivedColumn2",
+				"derivedColumn2 aggregate(groupBy(ProductID,",
+				"          Region),",
+				"     each(match(name!='ProductID' && name!='Region'), $$ = first($$))) ~> aggregate2",
+				"select1, select2 join(select1@CustomerID == select2@CustomerID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"aggregate1 select(mapColumn(",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Email,",
+				"          Address,",
+				"          City,",
+				"          Country,",
+				"          FullName,",
+				"          Country_Abbrevation",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"aggregate2 select(mapColumn(",
+				"          ProductID,",
+				"          Region,",
+				"          CustomerID,",
+				"          OrderID,",
+				"          Quantity,",
+				"          Price,",
+				"          OrderDate,",
+				"          OrderYear,",
+				"          DateDifference",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2"
 			]
 		}
 	}
