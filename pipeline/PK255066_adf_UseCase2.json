@@ -13,7 +13,7 @@
 						]
 					},
 					{
-						"activity": "Delete ",
+						"activity": "Deleting files from sales",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -96,7 +96,7 @@
 				}
 			},
 			{
-				"name": "Delete",
+				"name": "Deleting files from sales",
 				"type": "Delete",
 				"dependsOn": [
 					{
@@ -115,7 +115,17 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableLogging": true
+					"dataset": {
+						"referenceName": "pk255066_Lookup_stage",
+						"type": "DatasetReference"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.json",
+						"enablePartitionDiscovery": false
+					}
 				}
 			}
 		],
