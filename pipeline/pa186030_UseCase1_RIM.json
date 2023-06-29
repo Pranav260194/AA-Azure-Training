@@ -200,15 +200,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "pa186030_Cust_dataflow",
+						"referenceName": "pa186030_Cust_Sales_dataflow",
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": "'customer.csv'"
-						},
-						"datasetParameters": {
-							"sink1": {
-								"fileName": "customer.csv"
-							}
 						}
 					},
 					"compute": {
