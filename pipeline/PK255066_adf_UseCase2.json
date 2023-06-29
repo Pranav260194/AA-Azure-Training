@@ -45,7 +45,7 @@
 									"path": "$['CustomerData'][0]['CustomerID']"
 								},
 								"sink": {
-									"path": "CustomerID"
+									"path": ""
 								}
 							},
 							{
@@ -53,7 +53,7 @@
 									"path": "$['CustomerData'][0]['CustomerName']"
 								},
 								"sink": {
-									"path": "CustomerName"
+									"path": ""
 								}
 							},
 							{
@@ -61,7 +61,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['City']"
 								},
 								"sink": {
-									"path": "City"
+									"path": ""
 								}
 							},
 							{
@@ -69,7 +69,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['State']"
 								},
 								"sink": {
-									"path": "State"
+									"path": ""
 								}
 							},
 							{
@@ -77,7 +77,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['Country']"
 								},
 								"sink": {
-									"path": "Country"
+									"path": ""
 								}
 							},
 							{
@@ -85,7 +85,7 @@
 									"path": "$['LoanData'][0]['LoanID']"
 								},
 								"sink": {
-									"path": "LoanID"
+									"path": ""
 								}
 							},
 							{
@@ -93,7 +93,7 @@
 									"path": "$['LoanData'][0]['BorrowerID']"
 								},
 								"sink": {
-									"path": "BorrowerID"
+									"path": ""
 								}
 							},
 							{
@@ -101,7 +101,7 @@
 									"path": "$['LoanData'][0]['LoanAccountNumber']"
 								},
 								"sink": {
-									"path": "LoanAccountNumber"
+									"path": ""
 								}
 							},
 							{
@@ -109,7 +109,7 @@
 									"path": "$['LoanData'][0]['LoanAmount']"
 								},
 								"sink": {
-									"path": "LoanAmount"
+									"path": ""
 								}
 							},
 							{
@@ -117,7 +117,7 @@
 									"path": "$['LoanData'][0]['InterestRate']"
 								},
 								"sink": {
-									"path": "InterestRate"
+									"path": ""
 								}
 							},
 							{
@@ -125,7 +125,7 @@
 									"path": "$['LoanData'][0]['LoanTerm']"
 								},
 								"sink": {
-									"path": "LoanTerm"
+									"path": ""
 								}
 							},
 							{
@@ -133,7 +133,7 @@
 									"path": "$['LoanData'][0]['LoanType']"
 								},
 								"sink": {
-									"path": "LoanType"
+									"path": ""
 								}
 							},
 							{
@@ -141,7 +141,7 @@
 									"path": "$['LoanData'][0]['LoanStatus']"
 								},
 								"sink": {
-									"path": "LoanStatus"
+									"path": ""
 								}
 							},
 							{
@@ -149,7 +149,7 @@
 									"path": "$['LoanData'][0]['OriginationDate']"
 								},
 								"sink": {
-									"path": "OriginationDate"
+									"path": ""
 								}
 							},
 							{
@@ -157,7 +157,7 @@
 									"path": "$['LoanData'][0]['MonthlyPaymentDay']"
 								},
 								"sink": {
-									"path": "MonthlyPaymentDay"
+									"path": ""
 								}
 							},
 							{
@@ -165,7 +165,7 @@
 									"path": "$['LoanData'][0]['EMIAmount']"
 								},
 								"sink": {
-									"path": "EMIAmount"
+									"path": ""
 								}
 							},
 							{
@@ -173,7 +173,7 @@
 									"path": "$['LoanRepaymentData'][0]['LoanID']"
 								},
 								"sink": {
-									"path": "LoanID"
+									"path": ""
 								}
 							},
 							{
@@ -181,7 +181,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentDate']"
 								},
 								"sink": {
-									"path": "PaymentDate"
+									"path": ""
 								}
 							},
 							{
@@ -189,7 +189,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentAmount']"
 								},
 								"sink": {
-									"path": "PaymentAmount"
+									"path": ""
 								}
 							},
 							{
@@ -197,7 +197,7 @@
 									"path": "$['LoanRepaymentData'][0]['PrincipalPayment']"
 								},
 								"sink": {
-									"path": "PrincipalPayment"
+									"path": ""
 								}
 							},
 							{
@@ -205,7 +205,7 @@
 									"path": "$['LoanRepaymentData'][0]['InterestPayment']"
 								},
 								"sink": {
-									"path": "InterestPayment"
+									"path": ""
 								}
 							},
 							{
@@ -213,7 +213,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentReferenceNumber']"
 								},
 								"sink": {
-									"path": "PaymentReferenceNumber"
+									"path": ""
 								}
 							}
 						]
