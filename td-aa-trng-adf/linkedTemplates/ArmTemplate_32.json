@@ -13,463 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/RIM_source')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "sm255207_dataset",
-								"type": "DatasetReference"
-							},
-							"name": "genreasoninput"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "genreasonoutput",
-								"type": "DatasetReference"
-							},
-							"name": "genreasonoutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedCol1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> genreasoninput",
-						"genreasoninput derive(genreason = locate(NoSalesReason,'other')) ~> derivedCol1",
-						"derivedCol1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> genreasonoutput"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ar255079_srcdatatxrf')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ar255079_Input_Ds",
-								"type": "DatasetReference"
-							},
-							"name": "SourceData"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ar255079_OutputDs",
-								"type": "DatasetReference"
-							},
-							"name": "OutputData"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedReasonCode"
-						}
-					],
-					"script": "parameters{\n\tFileName as string\n}\nsource(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SourceData\nSourceData derive(DerviedReasonCode = locate(NoSalesReason,'OTHER')) ~> DerivedReasonCode\nDerivedReasonCode sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1) ~> OutputData"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ar255088_adf_dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ar",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ARRR",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/bg255026_datadlow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText10",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText11",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"script": "source(output(\n\t\t{Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('roundRobin', 2)) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tdateFormat:'MM/dd/yyyy',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cb_dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CB255052_demo_dataset",
-								"type": "DatasetReference"
-							},
-							"name": "Source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText19_cb",
-								"type": "DatasetReference"
-							},
-							"name": "RIMoutputcb"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Source\nSource derive(GenericReason = locate(NoSalesReason ,'Others')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RIMoutputcb"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "RIM_SourceDataset",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "RIM_DataFlow_DerviedColumn",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(UnexpectedReason = locate(NoSalesReason, 'Other')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow10')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ss255307_rim_input",
-								"type": "DatasetReference"
-							},
-							"name": "input"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ss255307_rim_output",
-								"type": "DatasetReference"
-							},
-							"name": "output"
-						}
-					],
-					"transformations": [
-						{
-							"name": "addcolumn",
-							"description": "adding a column"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> input",
-						"input derive(othercolumn = locate(NoSalesReason, 'Other')) ~> addcolumn",
-						"addcolumn sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> output"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow2')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "RIM_SourceDataset",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText4",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as date 'dd-MM-yyyy',\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(MonthsSinceFlight = toInteger(round((monthsBetween(currentDate(), FlightDate, true())))),\n\t\tnumberofattendants = 123) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tyear as string,\n\t\tAvgComedyRating as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow3')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText5",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "sh186013_RIM_DF_Output",
-								"type": "DatasetReference"
-							},
-							"name": "DataFlowSink"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(NoSalesindicator = locate(NoSalesReason,'Other')) ~> DerivedColumn\nDerivedColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['sh186013_rim_Dataflow_output'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> DataFlowSink"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow4')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ha255041_rim_DelimitedText19",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "HA255041_out_Delimated",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(Flags = locate(NoSalesReason,'Other')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow5')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText21",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "RIM_DataFlow",
-								"type": "DatasetReference"
-							},
-							"name": "RIMOutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RIMOutput"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow6')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DelimitedText23",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Filter",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 filter(Origin == 'ORD') ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dataflow7')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -834,6 +377,808 @@
 						}
 					],
 					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(NotAcceptableReason = locate(NoSalesReason, 'Other')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hg250013_makeDataPartitioned')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ADF_Demo_DF"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "hg250013_flat_file_source_ds",
+								"type": "DatasetReference"
+							},
+							"name": "FlatSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "hg250013_csv_partitioned_ds",
+								"type": "DatasetReference"
+							},
+							"name": "sink4"
+						}
+					],
+					"transformations": [],
+					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['input/*']) ~> FlatSource\nFlatSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('key',\n\t\t0,\n\t\tFlightDate\n\t)) ~> sink4"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/is255014_xfm_1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "input_testFile",
+								"type": "DatasetReference"
+							},
+							"name": "RIMsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "output_testFile",
+								"type": "DatasetReference"
+							},
+							"name": "dataflowoutput"
+						}
+					],
+					"transformations": [
+						{
+							"name": "GenericReason"
+						}
+					],
+					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> RIMsource\nRIMsource derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd^addedcol} as string\n\t),\n\tpartitionFileNames:['RIM'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> dataflowoutput"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ku255007Data flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "kufinal",
+								"type": "DatasetReference"
+							},
+							"name": "RIMSourceData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ku255007output",
+								"type": "DatasetReference"
+							},
+							"name": "Outputdata"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Flag"
+						}
+					],
+					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> RIMSourceData\nRIMSourceData derive(Flag = locate(NoSalesReason,'Other')) ~> Flag\nFlag sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string,\n\t\t{Flag for No sales } as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Outputdata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ku255007adfrimdata')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ku255007source",
+								"type": "DatasetReference"
+							},
+							"name": "sourcerim"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ku255007output",
+								"type": "DatasetReference"
+							},
+							"name": "sinkoutputdata"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Flag"
+						}
+					],
+					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> sourcerim\nsourcerim derive(Flagfornosales = locate(NoSalesReason,'Other')) ~> Flag\nFlag sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string,\n\t\t{Flag for No sales } as string\n\t),\n\tpartitionFileNames:['output_rim_dataflow.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\t{Flight#},\n\t\tOrigin,\n\t\tDest,\n\t\tFlightDate,\n\t\tNoSalesReason,\n\t\tTransmittingFlightAttd,\n\t\t{Flag for No sales } = Flagfornosales\n\t),\n\tpartitionBy('hash', 1)) ~> sinkoutputdata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mb255079_RIM_dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "mb255079_src_customer",
+								"type": "DatasetReference"
+							},
+							"name": "customer"
+						},
+						{
+							"dataset": {
+								"referenceName": "mb255079_src_sales",
+								"type": "DatasetReference"
+							},
+							"name": "Sales"
+						},
+						{
+							"dataset": {
+								"referenceName": "mb255079_statelist",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "mb255079rimoutput",
+								"type": "DatasetReference"
+							},
+							"name": "OutputDS",
+							"rejectedDataLinkedService": {
+								"referenceName": "adls_ls",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectcust1"
+						},
+						{
+							"name": "windowRowNum"
+						},
+						{
+							"name": "filterDistinct"
+						},
+						{
+							"name": "DataCleaning"
+						},
+						{
+							"name": "selectSales1"
+						},
+						{
+							"name": "window1"
+						},
+						{
+							"name": "UniqueOrderID"
+						},
+						{
+							"name": "selectNonDupes"
+						},
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "castSales"
+						},
+						{
+							"name": "castCustomer"
+						},
+						{
+							"name": "quantityless10"
+						},
+						{
+							"name": "orderfilter"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "Stateabb"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "aggregateCustomerID"
+						},
+						{
+							"name": "joinCustSales"
+						},
+						{
+							"name": "RemoveExtras"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Email as string,",
+						"          Address as string,",
+						"          City as string,",
+						"          Country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> customer",
+						"source(output(",
+						"          OrderID as string,",
+						"          CustomerID as string,",
+						"          ProductID as string,",
+						"          Quantity as string,",
+						"          Price as string,",
+						"          OrderDate as string,",
+						"          Region as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Sales",
+						"source(output(",
+						"          State as string,",
+						"          {abbreviations } as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"customer select(mapColumn(",
+						"          CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Email,",
+						"          Address,",
+						"          City,",
+						"          Country",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectcust1",
+						"castCustomer window(over(CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Email,",
+						"          Address,",
+						"          City,",
+						"          Country),",
+						"     asc(CustomerID, true),",
+						"     rownum = rowNumber()) ~> windowRowNum",
+						"windowRowNum filter(rownum==1) ~> filterDistinct",
+						"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
+						"          LastName = initCap(lower(LastName)),",
+						"          Email = trim(Email),",
+						"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
+						"          Address = replace(Address,'$','')) ~> DataCleaning",
+						"Sales select(mapColumn(",
+						"          OrderID,",
+						"          CustomerID,",
+						"          ProductID,",
+						"          Quantity,",
+						"          Price,",
+						"          OrderDate,",
+						"          Region",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectSales1",
+						"castSales window(over(OrderID,",
+						"          CustomerID),",
+						"     asc(CustomerID, true),",
+						"     rownum = rowNumber()) ~> window1",
+						"window1 filter(rownum==1) ~> UniqueOrderID",
+						"UniqueOrderID select(mapColumn(",
+						"          OrderID,",
+						"          CustomerID,",
+						"          ProductID,",
+						"          Quantity,",
+						"          Price,",
+						"          OrderDate,",
+						"          Region",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectNonDupes",
+						"selectNonDupes aggregate(groupBy(ProductID,",
+						"          Region),",
+						"     TotalQuantity = sum(Quantity),",
+						"          TotalPrice = sum(Price),",
+						"          avg_sales_price = sum(Price)/sum(Quantity)) ~> aggregate1",
+						"selectSales1 cast(output(",
+						"          OrderID as integer,",
+						"          CustomerID as integer,",
+						"          ProductID as integer,",
+						"          Quantity as integer,",
+						"          Price as float,",
+						"          OrderDate as string,",
+						"          Region as string",
+						"     ),",
+						"     errors: true) ~> castSales",
+						"selectcust1 cast(output(",
+						"          CustomerID as integer,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Email as string,",
+						"          Address as string,",
+						"          City as string,",
+						"          Country as string",
+						"     ),",
+						"     errors: true) ~> castCustomer",
+						"aggregate1 filter(TotalQuantity<10) ~> quantityless10",
+						"quantityless10 filter(TotalPrice>10.0) ~> orderfilter",
+						"cast1 derive(difference = round((currentTimestamp()-OrderDate)/86400000),",
+						"          year = year(OrderDate)) ~> derivedColumn2",
+						"selectNonDupes cast(output(",
+						"          OrderDate as timestamp 'MM/dd/yyyy'",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"DataCleaning select(mapColumn(",
+						"          CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Email,",
+						"          Address,",
+						"          City,",
+						"          Country,",
+						"          FullName",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> select1",
+						"derivedColumn2, source1 lookup(Region == State,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> Stateabb",
+						"select1, Stateabb join(select1@CustomerID == selectNonDupes@CustomerID,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 aggregate(groupBy(Customerid = select1@CustomerID),",
+						"     TotalQuantity = sum(Quantity),",
+						"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
+						"aggregateCustomerID, join1 join(aggregateCustomerID@Customerid == select1@CustomerID,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joinCustSales",
+						"joinCustSales select(mapColumn(",
+						"          Customerid = aggregateCustomerID@Customerid,",
+						"          FullName,",
+						"          TotalQuantity,",
+						"          TotalPrice,",
+						"          Email,",
+						"          Address,",
+						"          City,",
+						"          Country,",
+						"          OrderID,",
+						"          ProductID,",
+						"          Quantity,",
+						"          Price,",
+						"          OrderDate,",
+						"          Region,",
+						"          difference,",
+						"          year,",
+						"          {abbreviations }",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> RemoveExtras",
+						"RemoveExtras sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['mb255079rimoutput'],",
+						"     umask: 0000,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     partitionBy('hash', 1)) ~> OutputDS"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mm255199_rim_hist_aggr')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "mm255199_rim_input",
+								"type": "DatasetReference"
+							},
+							"name": "Riminput"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "mm255199_Rim_Output",
+								"type": "DatasetReference"
+							},
+							"name": "mm255199rimoutput"
+						}
+					],
+					"transformations": [
+						{
+							"name": "GenericReason"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Flight#} as string,",
+						"          Origin as string,",
+						"          Dest as string,",
+						"          FlightDate as string,",
+						"          NoSalesReason as string,",
+						"          TransmittingFlightAttd as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Riminput",
+						"Riminput derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason",
+						"GenericReason sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> mm255199rimoutput"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/npdataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Source_File",
+								"type": "DatasetReference"
+							},
+							"name": "InputFile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "generic_reason_new_col",
+								"type": "DatasetReference"
+							},
+							"name": "genericreason"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ReasonGeneric",
+							"description": "derived column"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Flight#} as string,",
+						"          Origin as string,",
+						"          Dest as string,",
+						"          FlightDate as string,",
+						"          NoSalesReason as string,",
+						"          TransmittingFlightAttd as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> InputFile",
+						"InputFile derive({No_Sales_Generic_Reason } = locate(NoSalesReason,'Other')) ~> ReasonGeneric",
+						"ReasonGeneric sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> genericreason"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/nt255028_usecase_demo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "usecase_demo_dataset_ip",
+								"type": "DatasetReference"
+							},
+							"name": "EmpSource"
+						},
+						{
+							"dataset": {
+								"referenceName": "usecase_demo_dataset2",
+								"type": "DatasetReference"
+							},
+							"name": "EmpNewSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "usecase_Demo_op",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Union1"
+						},
+						{
+							"name": "RemoveDuplicates"
+						},
+						{
+							"name": "Sort1"
+						}
+					],
+					"script": "source(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpSource\nsource(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpNewSource\nEmpSource, EmpNewSource union(byName: true)~> Union1\nUnion1 aggregate(groupBy(Emp_ID),\n\teach(match(name!=\"Emp_ID\"), $$ = first($$))) ~> RemoveDuplicates\nRemoveDuplicates sort(asc(Emp_ID, true)) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['usecase_demo_result.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/nt255028dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "nt255028_dataset",
+								"type": "DatasetReference"
+							},
+							"name": "Source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "nt255028dataset",
+								"type": "DatasetReference"
+							},
+							"name": "outputrim"
+						}
+					],
+					"transformations": [
+						{
+							"name": "NewCol"
+						}
+					],
+					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Source\nSource derive(NewCol = locate(NoSalesReason, 'Other')) ~> NewCol\nNewCol sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> outputrim"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pb255086_data_flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "PB255086_demo_dataset",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "PB255086_demo_dataset",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Flight#} as string,",
+						"          Origin as string,",
+						"          Dest as string,",
+						"          FlightDate as string,",
+						"          NoSalesReason as string,",
+						"          TransmittingFlightAttd as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(tag = locate(NoSalesReason,'Other')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FlightNo as string,",
+						"          Origin as string,",
+						"          Dest as string,",
+						"          FlightDate as string,",
+						"          NoSalesReason as string,",
+						"          {TransmittingFlightAttd,,,,,} as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ru255006_dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ru255006_src_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ru255006_New_tgt_data",
+								"type": "DatasetReference"
+							},
+							"name": "output1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SalChk"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          NAME as string,",
+						"          DEPARTMENT as string,",
+						"          DESIGNATION as string,",
+						"          SALARY as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(Valid_Sal = locate(SALARY, '500')) ~> SalChk",
+						"SalChk sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['AA_Test_New_Target1_30May.txt'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          NAME,",
+						"          DEPARTMENT,",
+						"          DESIGNATION,",
+						"          SALARY,",
+						"          Valid_Sal",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> output1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tp186029_df')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "rim_copy",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "tp186029_RIM",
+								"type": "DatasetReference"
+							},
+							"name": "outputstream"
+						}
+					],
+					"transformations": [
+						{
+							"name": "GenericReason"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Flight#} as string,",
+						"          Origin as string,",
+						"          Dest as string,",
+						"          FlightDate as string,",
+						"          NoSalesReason as string,",
+						"          TransmittingFlightAttd as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(derivedcolumn = locate(NoSalesReason,'Other')) ~> GenericReason",
+						"GenericReason sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> outputstream"
+					]
 				}
 			},
 			"dependsOn": []

@@ -13,6 +13,57 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Json2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ADF_parameters.json",
+						"folderPath": "Azure Demo/Config",
+						"fileSystem": "np255046"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"emailURL": {
+							"type": "string"
+						},
+						"EmailId": {
+							"type": "string"
+						},
+						"sourceFileName": {
+							"type": "string"
+						},
+						"sourceDirectory": {
+							"type": "string"
+						},
+						"sourceContainer": {
+							"type": "string"
+						},
+						"destFileName": {
+							"type": "string"
+						},
+						"destDirectory": {
+							"type": "string"
+						},
+						"destContainer": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Json3')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -593,38 +644,6 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"folderPath": "archieves",
-						"fileSystem": "pk255065"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet8')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adls_ls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"folderPath": "input",
 						"fileSystem": "pk255065"
 					},
 					"compressionCodec": "snappy"

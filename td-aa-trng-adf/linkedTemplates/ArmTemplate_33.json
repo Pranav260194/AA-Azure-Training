@@ -13,1090 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/hg250013_makeDataPartitioned')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "ADF_Demo_DF"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "hg250013_flat_file_source_ds",
-								"type": "DatasetReference"
-							},
-							"name": "FlatSource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "hg250013_csv_partitioned_ds",
-								"type": "DatasetReference"
-							},
-							"name": "sink4"
-						}
-					],
-					"transformations": [],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['input/*']) ~> FlatSource\nFlatSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('key',\n\t\t0,\n\t\tFlightDate\n\t)) ~> sink4"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/is255014_xfm_1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "input_testFile",
-								"type": "DatasetReference"
-							},
-							"name": "RIMsource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "output_testFile",
-								"type": "DatasetReference"
-							},
-							"name": "dataflowoutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> RIMsource\nRIMsource derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason\nGenericReason sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd^addedcol} as string\n\t),\n\tpartitionFileNames:['RIM'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> dataflowoutput"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ku255007Data flow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "kufinal",
-								"type": "DatasetReference"
-							},
-							"name": "RIMSourceData"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ku255007output",
-								"type": "DatasetReference"
-							},
-							"name": "Outputdata"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Flag"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> RIMSourceData\nRIMSourceData derive(Flag = locate(NoSalesReason,'Other')) ~> Flag\nFlag sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string,\n\t\t{Flag for No sales } as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Outputdata"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ku255007adfrimdata')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ku255007source",
-								"type": "DatasetReference"
-							},
-							"name": "sourcerim"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ku255007output",
-								"type": "DatasetReference"
-							},
-							"name": "sinkoutputdata"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Flag"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> sourcerim\nsourcerim derive(Flagfornosales = locate(NoSalesReason,'Other')) ~> Flag\nFlag sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string,\n\t\t{Flag for No sales } as string\n\t),\n\tpartitionFileNames:['output_rim_dataflow.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\t{Flight#},\n\t\tOrigin,\n\t\tDest,\n\t\tFlightDate,\n\t\tNoSalesReason,\n\t\tTransmittingFlightAttd,\n\t\t{Flag for No sales } = Flagfornosales\n\t),\n\tpartitionBy('hash', 1)) ~> sinkoutputdata"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/kv255007_RIM_dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "kv255007_dataflow"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "kv255007_customer_source",
-								"type": "DatasetReference"
-							},
-							"name": "Customer"
-						},
-						{
-							"dataset": {
-								"referenceName": "kv255007_sales",
-								"type": "DatasetReference"
-							},
-							"name": "Sales"
-						},
-						{
-							"dataset": {
-								"referenceName": "stateabb",
-								"type": "DatasetReference"
-							},
-							"name": "State"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "kv255007RimOutput",
-								"type": "DatasetReference"
-							},
-							"name": "Output"
-						}
-					],
-					"transformations": [
-						{
-							"name": "selectcust"
-						},
-						{
-							"name": "castcustomer"
-						},
-						{
-							"name": "windowRowNum"
-						},
-						{
-							"name": "filterDistinct"
-						},
-						{
-							"name": "DataCleaning"
-						},
-						{
-							"name": "selectsales"
-						},
-						{
-							"name": "cast1"
-						},
-						{
-							"name": "UniqueorderId"
-						},
-						{
-							"name": "selectNonduplicate"
-						},
-						{
-							"name": "join1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "aggregateCustomerID",
-							"description": "Aggregating data by 'Customerid' producing columns 'TotalQuantity, TotalPrice'"
-						},
-						{
-							"name": "CustSalesJoin"
-						},
-						{
-							"name": "cast2"
-						},
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "Stateabb"
-						},
-						{
-							"name": "window2"
-						},
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "Quantitylessthan10"
-						},
-						{
-							"name": "orderfilter"
-						},
-						{
-							"name": "select2"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Email as string,",
-						"          Address as string,",
-						"          City as string,",
-						"          Country as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Customer",
-						"source(output(",
-						"          OrderID as string,",
-						"          CustomerID as string,",
-						"          ProductID as string,",
-						"          Quantity as string,",
-						"          Price as string,",
-						"          OrderDate as string,",
-						"          Region as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Sales",
-						"source(output(",
-						"          State as string,",
-						"          {abbreviations } as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> State",
-						"Customer select(mapColumn(",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectcust",
-						"selectcust cast(output(",
-						"          CustomerID as integer",
-						"     ),",
-						"     errors: true) ~> castcustomer",
-						"castcustomer window(over(CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country),",
-						"     asc(CustomerID, true),",
-						"     rownum = rowNumber()) ~> windowRowNum",
-						"windowRowNum filter(rownum==1) ~> filterDistinct",
-						"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
-						"          LastName = initCap(lower(LastName)),",
-						"          Email = trim(Email),",
-						"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
-						"          Address = replace(Address , '$','')) ~> DataCleaning",
-						"Sales select(skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectsales",
-						"selectsales cast(output(",
-						"          OrderID as integer,",
-						"          CustomerID as integer,",
-						"          ProductID as integer,",
-						"          Quantity as integer,",
-						"          Price as float,",
-						"          OrderDate as string,",
-						"          Region as string",
-						"     ),",
-						"     errors: true) ~> cast1",
-						"window2 filter(rownum==1) ~> UniqueorderId",
-						"UniqueorderId select(mapColumn(",
-						"          OrderID,",
-						"          CustomerID,",
-						"          ProductID,",
-						"          Quantity,",
-						"          Price,",
-						"          OrderDate,",
-						"          Region",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectNonduplicate",
-						"select1, Stateabb join(select1@CustomerID == selectNonduplicate@CustomerID,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join1",
-						"DataCleaning select(mapColumn(",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country,",
-						"          FullName",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"join1 aggregate(groupBy(CustomerId = select1@CustomerID),",
-						"     TotalQuantity = sum(Quantity),",
-						"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
-						"aggregateCustomerID, join1 join(aggregateCustomerID@CustomerId == select1@CustomerID,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> CustSalesJoin",
-						"selectNonduplicate cast(output(",
-						"          OrderDate as timestamp 'MM/dd/yyyy'",
-						"     ),",
-						"     errors: true) ~> cast2",
-						"cast2 derive(differences = round((currentTimestamp()-OrderDate)/86400000),",
-						"          year = year(OrderDate)) ~> derivedColumn1",
-						"derivedColumn1, State lookup(Region == State,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> Stateabb",
-						"cast1 window(over(OrderID,",
-						"          CustomerID),",
-						"     asc(CustomerID, true),",
-						"     rownum = rowNumber()) ~> window2",
-						"selectNonduplicate aggregate(groupBy(ProductID,",
-						"          Region),",
-						"     TotalQuantity = sum(Quantity),",
-						"          TotalPrice = sum(Price),",
-						"          avg_sales_price = sum(Price)/sum(Quantity)) ~> aggregate1",
-						"aggregate1 filter(TotalQuantity<10) ~> Quantitylessthan10",
-						"Quantitylessthan10 filter(TotalPrice>10.0) ~> orderfilter",
-						"CustSalesJoin select(mapColumn(",
-						"          CustomerId = aggregateCustomerID@CustomerId,",
-						"          FullName,",
-						"          TotalQuantity,",
-						"          TotalPrice,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country,",
-						"          OrderID,",
-						"          ProductID,",
-						"          Quantity,",
-						"          Price,",
-						"          OrderDate,",
-						"          Region,",
-						"          differences,",
-						"          year,",
-						"          {abbreviations }",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select2",
-						"select2 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Email as string,",
-						"          Address as string,",
-						"          City as string,",
-						"          Country as string",
-						"     ),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> Output"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/mb255079_RIM_dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "mb255079_src_customer",
-								"type": "DatasetReference"
-							},
-							"name": "customer"
-						},
-						{
-							"dataset": {
-								"referenceName": "mb255079_src_sales",
-								"type": "DatasetReference"
-							},
-							"name": "Sales"
-						},
-						{
-							"dataset": {
-								"referenceName": "mb255079_statelist",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "mb255079rimoutput",
-								"type": "DatasetReference"
-							},
-							"name": "OutputDS",
-							"rejectedDataLinkedService": {
-								"referenceName": "adls_ls",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "selectcust1"
-						},
-						{
-							"name": "windowRowNum"
-						},
-						{
-							"name": "filterDistinct"
-						},
-						{
-							"name": "DataCleaning"
-						},
-						{
-							"name": "selectSales1"
-						},
-						{
-							"name": "window1"
-						},
-						{
-							"name": "UniqueOrderID"
-						},
-						{
-							"name": "selectNonDupes"
-						},
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "castSales"
-						},
-						{
-							"name": "castCustomer"
-						},
-						{
-							"name": "quantityless10"
-						},
-						{
-							"name": "orderfilter"
-						},
-						{
-							"name": "derivedColumn2"
-						},
-						{
-							"name": "cast1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "Stateabb"
-						},
-						{
-							"name": "join1"
-						},
-						{
-							"name": "aggregateCustomerID"
-						},
-						{
-							"name": "joinCustSales"
-						},
-						{
-							"name": "RemoveExtras"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Email as string,",
-						"          Address as string,",
-						"          City as string,",
-						"          Country as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> customer",
-						"source(output(",
-						"          OrderID as string,",
-						"          CustomerID as string,",
-						"          ProductID as string,",
-						"          Quantity as string,",
-						"          Price as string,",
-						"          OrderDate as string,",
-						"          Region as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Sales",
-						"source(output(",
-						"          State as string,",
-						"          {abbreviations } as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"customer select(mapColumn(",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectcust1",
-						"castCustomer window(over(CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country),",
-						"     asc(CustomerID, true),",
-						"     rownum = rowNumber()) ~> windowRowNum",
-						"windowRowNum filter(rownum==1) ~> filterDistinct",
-						"filterDistinct derive(FirstName = initCap(lower(FirstName)),",
-						"          LastName = initCap(lower(LastName)),",
-						"          Email = trim(Email),",
-						"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
-						"          Address = replace(Address,'$','')) ~> DataCleaning",
-						"Sales select(mapColumn(",
-						"          OrderID,",
-						"          CustomerID,",
-						"          ProductID,",
-						"          Quantity,",
-						"          Price,",
-						"          OrderDate,",
-						"          Region",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectSales1",
-						"castSales window(over(OrderID,",
-						"          CustomerID),",
-						"     asc(CustomerID, true),",
-						"     rownum = rowNumber()) ~> window1",
-						"window1 filter(rownum==1) ~> UniqueOrderID",
-						"UniqueOrderID select(mapColumn(",
-						"          OrderID,",
-						"          CustomerID,",
-						"          ProductID,",
-						"          Quantity,",
-						"          Price,",
-						"          OrderDate,",
-						"          Region",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectNonDupes",
-						"selectNonDupes aggregate(groupBy(ProductID,",
-						"          Region),",
-						"     TotalQuantity = sum(Quantity),",
-						"          TotalPrice = sum(Price),",
-						"          avg_sales_price = sum(Price)/sum(Quantity)) ~> aggregate1",
-						"selectSales1 cast(output(",
-						"          OrderID as integer,",
-						"          CustomerID as integer,",
-						"          ProductID as integer,",
-						"          Quantity as integer,",
-						"          Price as float,",
-						"          OrderDate as string,",
-						"          Region as string",
-						"     ),",
-						"     errors: true) ~> castSales",
-						"selectcust1 cast(output(",
-						"          CustomerID as integer,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Email as string,",
-						"          Address as string,",
-						"          City as string,",
-						"          Country as string",
-						"     ),",
-						"     errors: true) ~> castCustomer",
-						"aggregate1 filter(TotalQuantity<10) ~> quantityless10",
-						"quantityless10 filter(TotalPrice>10.0) ~> orderfilter",
-						"cast1 derive(difference = round((currentTimestamp()-OrderDate)/86400000),",
-						"          year = year(OrderDate)) ~> derivedColumn2",
-						"selectNonDupes cast(output(",
-						"          OrderDate as timestamp 'MM/dd/yyyy'",
-						"     ),",
-						"     errors: true) ~> cast1",
-						"DataCleaning select(mapColumn(",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country,",
-						"          FullName",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> select1",
-						"derivedColumn2, source1 lookup(Region == State,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> Stateabb",
-						"select1, Stateabb join(select1@CustomerID == selectNonDupes@CustomerID,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join1",
-						"join1 aggregate(groupBy(Customerid = select1@CustomerID),",
-						"     TotalQuantity = sum(Quantity),",
-						"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
-						"aggregateCustomerID, join1 join(aggregateCustomerID@Customerid == select1@CustomerID,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joinCustSales",
-						"joinCustSales select(mapColumn(",
-						"          Customerid = aggregateCustomerID@Customerid,",
-						"          FullName,",
-						"          TotalQuantity,",
-						"          TotalPrice,",
-						"          Email,",
-						"          Address,",
-						"          City,",
-						"          Country,",
-						"          OrderID,",
-						"          ProductID,",
-						"          Quantity,",
-						"          Price,",
-						"          OrderDate,",
-						"          Region,",
-						"          difference,",
-						"          year,",
-						"          {abbreviations }",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> RemoveExtras",
-						"RemoveExtras sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['mb255079rimoutput'],",
-						"     umask: 0000,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     partitionBy('hash', 1)) ~> OutputDS"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/mm255199_rim_hist_aggr')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "mm255199_rim_input",
-								"type": "DatasetReference"
-							},
-							"name": "Riminput"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "mm255199_Rim_Output",
-								"type": "DatasetReference"
-							},
-							"name": "mm255199rimoutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Riminput",
-						"Riminput derive(GenericReason = locate(NoSalesReason,'Other')) ~> GenericReason",
-						"GenericReason sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> mm255199rimoutput"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/npdataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Source_File",
-								"type": "DatasetReference"
-							},
-							"name": "InputFile"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "generic_reason_new_col",
-								"type": "DatasetReference"
-							},
-							"name": "genericreason"
-						}
-					],
-					"transformations": [
-						{
-							"name": "ReasonGeneric",
-							"description": "derived column"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> InputFile",
-						"InputFile derive({No_Sales_Generic_Reason } = locate(NoSalesReason,'Other')) ~> ReasonGeneric",
-						"ReasonGeneric sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> genericreason"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/nt255028_usecase_demo')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "usecase_demo_dataset_ip",
-								"type": "DatasetReference"
-							},
-							"name": "EmpSource"
-						},
-						{
-							"dataset": {
-								"referenceName": "usecase_demo_dataset2",
-								"type": "DatasetReference"
-							},
-							"name": "EmpNewSource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "usecase_Demo_op",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Union1"
-						},
-						{
-							"name": "RemoveDuplicates"
-						},
-						{
-							"name": "Sort1"
-						}
-					],
-					"script": "source(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpSource\nsource(output(\n\t\tEmp_ID as string,\n\t\tEmp_Name as string,\n\t\tCountry as string,\n\t\tDept_No as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> EmpNewSource\nEmpSource, EmpNewSource union(byName: true)~> Union1\nUnion1 aggregate(groupBy(Emp_ID),\n\teach(match(name!=\"Emp_ID\"), $$ = first($$))) ~> RemoveDuplicates\nRemoveDuplicates sort(asc(Emp_ID, true)) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['usecase_demo_result.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/nt255028dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "nt255028_dataset",
-								"type": "DatasetReference"
-							},
-							"name": "Source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "nt255028dataset",
-								"type": "DatasetReference"
-							},
-							"name": "outputrim"
-						}
-					],
-					"transformations": [
-						{
-							"name": "NewCol"
-						}
-					],
-					"script": "source(output(\n\t\t{Flight#} as string,\n\t\tOrigin as string,\n\t\tDest as string,\n\t\tFlightDate as string,\n\t\tNoSalesReason as string,\n\t\tTransmittingFlightAttd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Source\nSource derive(NewCol = locate(NoSalesReason, 'Other')) ~> NewCol\nNewCol sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> outputrim"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pb255086_data_flow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "PB255086_demo_dataset",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "PB255086_demo_dataset",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(tag = locate(NoSalesReason,'Other')) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          FlightNo as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          {TransmittingFlightAttd,,,,,} as string",
-						"     ),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ru255006_dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ru255006_src_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ru255006_New_tgt_data",
-								"type": "DatasetReference"
-							},
-							"name": "output1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "SalChk"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          NAME as string,",
-						"          DEPARTMENT as string,",
-						"          DESIGNATION as string,",
-						"          SALARY as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(Valid_Sal = locate(SALARY, '500')) ~> SalChk",
-						"SalChk sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['AA_Test_New_Target1_30May.txt'],",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1,",
-						"     mapColumn(",
-						"          NAME,",
-						"          DEPARTMENT,",
-						"          DESIGNATION,",
-						"          SALARY,",
-						"          Valid_Sal",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> output1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tp186029_df')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "rim_copy",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "tp186029_RIM",
-								"type": "DatasetReference"
-							},
-							"name": "outputstream"
-						}
-					],
-					"transformations": [
-						{
-							"name": "GenericReason"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {Flight#} as string,",
-						"          Origin as string,",
-						"          Dest as string,",
-						"          FlightDate as string,",
-						"          NoSalesReason as string,",
-						"          TransmittingFlightAttd as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(derivedcolumn = locate(NoSalesReason,'Other')) ~> GenericReason",
-						"GenericReason sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> outputstream"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/tp186029_prep1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1475,6 +391,1553 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-06-26T09:54:13Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BLOB2Vantage')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ADLS2Vantage",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "OdbcSink",
+								"writeBatchSize": 0
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 1
+										},
+										"sink": {
+											"name": "L_ORDERKEY",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 2
+										},
+										"sink": {
+											"name": "L_PARTKEY",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 3
+										},
+										"sink": {
+											"name": "L_SUPPKEY",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 4
+										},
+										"sink": {
+											"name": "L_LINENUMBER",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 5
+										},
+										"sink": {
+											"name": "L_QUANTITY",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 6
+										},
+										"sink": {
+											"name": "L_EXTENDEDPRICE",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 7
+										},
+										"sink": {
+											"name": "L_DISCOUNT",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 8
+										},
+										"sink": {
+											"name": "L_TAX",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 9
+										},
+										"sink": {
+											"name": "L_RETURNFLAG",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 10
+										},
+										"sink": {
+											"name": "L_LINESTATUS",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 11
+										},
+										"sink": {
+											"name": "L_SHIPDATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 12
+										},
+										"sink": {
+											"name": "L_COMMITDATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 13
+										},
+										"sink": {
+											"name": "L_RECEIPTDATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 14
+										},
+										"sink": {
+											"name": "L_SHIPINSTRUCT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 15
+										},
+										"sink": {
+											"name": "L_SHIPMODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"type": "String",
+											"ordinal": 16
+										},
+										"sink": {
+											"name": "L_COMMENT",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sRC",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Odbc_Vantage",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "VANTAGE"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:53:06Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HA255041_df_1st')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow4",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ha255041"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JA186007_CustComp_Demo_Old')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Cust Complaint",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "ja186007/input/Movie Ratings.csv"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DataSet_Source_DemoComplaint",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DataSet_Cust_Complaint_Stage",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy Cust Complaint",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "JA186007_dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"SinkInProgress": {},
+									"SinkOthers": {},
+									"SinkAssigned": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "dataflow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/jitendra.ambre@qateradatacloud.com/CreateParquetTable"
+						},
+						"linkedServiceName": {
+							"referenceName": "adb_ls",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Demo"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JA186007_CustomerComplains_Demo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Cust Complaint",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "ja186007/input/Movie Ratings.csv"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DataSet_Source_DemoComplaint",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DataSet_Cust_Complaint_Stage",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy Cust Complaint",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "JA186007_dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"SinkInProgress": {},
+									"SinkOthers": {},
+									"SinkAssigned": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "dataflow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/jitendra.ambre@qateradatacloud.com/Demo/JA186007_Demo1"
+						},
+						"linkedServiceName": {
+							"referenceName": "adb_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Notebook1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Delete Stage Files",
+								"value": "Deleted files from stage"
+							}
+						],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DataSet_Cust_Complaint_Stage",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "adls_ls",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*.csv"
+							}
+						}
+					},
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Delete1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-03.eastus.logic.azure.com:443/workflows/a7b63c7c6bc8404e988f8e59f85eec3b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-sh46Sz2oePKsX8FuGSRUhD9Q_cs5AXvS2JfrSNBfc",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"Pipeline completed successfully ',pipeline().Pipeline,'-pipeline for file-',pipeline().parameters.File_Name,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"',pipeline().parameters.Activity,'\", \n\t\"Message\" : \"',pipeline().parameters.Message,'\",\n\t\"FileName\" : \"',pipeline().parameters.File_Name,'\"\n\t}')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"Email_To": {
+						"type": "string",
+						"defaultValue": "jitendra.ambre@teradata.com"
+					},
+					"Activity": {
+						"type": "string",
+						"defaultValue": "None"
+					},
+					"Message": {
+						"type": "string",
+						"defaultValue": "Pipeline completed successfully and intermediate files were deleted"
+					},
+					"File_Name": {
+						"type": "string",
+						"defaultValue": "Cust Complaints"
+					}
+				},
+				"folder": {
+					"name": "Demo"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JA186007_CustomerComplains_Demo_Bkp')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Cust Complaint",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "ja186007/input/Movie Ratings.csv"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DataSet_Source_DemoComplaint",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DataSet_Cust_Complaint_Stage",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy Cust Complaint",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "dataflow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/jitendra.ambre@qateradatacloud.com/Demo/JA186007_Demo1"
+						},
+						"linkedServiceName": {
+							"referenceName": "adb_ls",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Notebook1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Delete Stage Files",
+								"value": "Deleted files from stage"
+							}
+						],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DataSet_Cust_Complaint_Stage",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "adls_ls",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*.csv"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Demo"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JA186007_DataFlow_Tfm1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "JAdataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "JAdataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RB255068_dataflow_transform')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "RB255068_rim_hist_aggr",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"rimSource": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "RB255068"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Race_Data_Processing')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata of files in folder",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Execute File Unzip",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "AzureBlob_CSV_Get_MetaData",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEach file",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata of files in folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata of files in folder').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Set Source File Name",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Source_File_Name",
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Set Target Table Name",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Set Source File Name",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Target_Table_Name",
+										"value": {
+											"value": "@substring(variables('Source_File_Name'), 0, indexof(variables('Source_File_Name'),'.'))",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Get Metadata Source File Column Count",
+									"type": "GetMetadata",
+									"dependsOn": [
+										{
+											"activity": "Set Target Table Name",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "AzureBlob_CSV",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": "mp255107",
+												"Directory": "Erghast_Data/input/",
+												"FileName": {
+													"value": "@variables('Source_File_Name')",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"size"
+										],
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										},
+										"formatSettings": {
+											"type": "DelimitedTextReadSettings"
+										}
+									}
+								},
+								{
+									"name": "If Condition check column count",
+									"description": "Column count expected to be >1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Get Metadata Source File Column Count",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@greater(activity('Get Metadata Source File Column Count').output.size,0)",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Execute Pipeline CSV_To_adb_Table",
+												"description": "Execute pipeline to load csv data to ADB",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Blob_CSV_To_Azure_Delta_Lake_Table",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"Src_File_Name": {
+															"value": "@variables('Source_File_Name')",
+															"type": "Expression"
+														},
+														"Tgt_Table_Name": {
+															"value": "@variables('Target_Table_Name')",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Notebook to merge data",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "ForEach file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/mp255107/Merge Data from Staging to Target Tables"
+						},
+						"linkedServiceName": {
+							"referenceName": "ADB_mp255107",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Notebook load data from file store and blob",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Notebook to merge data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/mp255107/File_Store_Data_To_Table"
+						},
+						"linkedServiceName": {
+							"referenceName": "ADB_mp255107",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Execute File Unzip",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "unzip_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Source_File_Name": {
+						"type": "String"
+					},
+					"Target_Table_Name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "mp255107"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:30Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Vantage2ADLS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Vantage2ADLS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "TeradataSource",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "BUSINESS_UNIT",
+											"type": "String"
+										},
+										"sink": {
+											"name": "BUSINESS_UNIT",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ASSET_ID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ASSET_ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EFFDT",
+											"type": "String"
+										},
+										"sink": {
+											"name": "EFFDT",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OWNING_BUS_UNIT7",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OWNING_BUS_UNIT7",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TD_Src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TgtCsv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "VANTAGE"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:53:10Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/YP255010_DF_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data_Transfromation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow6",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "yp255010"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/YP255010_DataFlow_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow5",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"RIMOutput": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ar255079_dataflowpl')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DataflowTransf",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ar255079_srcdatatxrf",
+								"type": "DataFlowReference",
+								"parameters": {
+									"FileName": {
+										"value": "'@{pipeline().parameters.InputFileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"SourceData": {
+										"File_Name": {
+											"value": "@pipeline().parameters.InputFileName",
+											"type": "Expression"
+										}
+									},
+									"OutputData": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"InputFileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "ar255079"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:32Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/arr_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ar255088_adf_dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-06-26T09:54:31Z"
 			},
 			"dependsOn": []
 		}
