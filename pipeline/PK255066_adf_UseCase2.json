@@ -45,7 +45,7 @@
 									"path": "$['CustomerData'][0]['CustomerID']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['CustomerData'][0]['CustomerID']"
 								}
 							},
 							{
@@ -53,7 +53,7 @@
 									"path": "$['CustomerData'][0]['CustomerName']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['CustomerData'][0]['CustomerName']"
 								}
 							},
 							{
@@ -61,7 +61,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['City']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['CustomerData'][0]['CustomerLocation']['City']"
 								}
 							},
 							{
@@ -69,7 +69,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['State']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['CustomerData'][0]['CustomerLocation']['State']"
 								}
 							},
 							{
@@ -77,7 +77,7 @@
 									"path": "$['CustomerData'][0]['CustomerLocation']['Country']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['CustomerData'][0]['CustomerLocation']['Country']"
 								}
 							},
 							{
@@ -85,7 +85,7 @@
 									"path": "$['LoanData'][0]['LoanID']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanID']"
 								}
 							},
 							{
@@ -93,7 +93,7 @@
 									"path": "$['LoanData'][0]['BorrowerID']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['BorrowerID']"
 								}
 							},
 							{
@@ -101,7 +101,7 @@
 									"path": "$['LoanData'][0]['LoanAccountNumber']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanAccountNumber']"
 								}
 							},
 							{
@@ -109,7 +109,7 @@
 									"path": "$['LoanData'][0]['LoanAmount']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanAmount']"
 								}
 							},
 							{
@@ -117,7 +117,7 @@
 									"path": "$['LoanData'][0]['InterestRate']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['InterestRate']"
 								}
 							},
 							{
@@ -125,7 +125,7 @@
 									"path": "$['LoanData'][0]['LoanTerm']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanTerm']"
 								}
 							},
 							{
@@ -133,7 +133,7 @@
 									"path": "$['LoanData'][0]['LoanType']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanType']"
 								}
 							},
 							{
@@ -141,7 +141,7 @@
 									"path": "$['LoanData'][0]['LoanStatus']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['LoanStatus']"
 								}
 							},
 							{
@@ -149,7 +149,7 @@
 									"path": "$['LoanData'][0]['OriginationDate']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['OriginationDate']"
 								}
 							},
 							{
@@ -157,7 +157,7 @@
 									"path": "$['LoanData'][0]['MonthlyPaymentDay']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['MonthlyPaymentDay']"
 								}
 							},
 							{
@@ -165,7 +165,7 @@
 									"path": "$['LoanData'][0]['EMIAmount']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanData'][0]['EMIAmount']"
 								}
 							},
 							{
@@ -173,7 +173,7 @@
 									"path": "$['LoanRepaymentData'][0]['LoanID']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['LoanID']"
 								}
 							},
 							{
@@ -181,7 +181,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentDate']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['PaymentDate']"
 								}
 							},
 							{
@@ -189,7 +189,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentAmount']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['PaymentAmount']"
 								}
 							},
 							{
@@ -197,7 +197,7 @@
 									"path": "$['LoanRepaymentData'][0]['PrincipalPayment']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['PrincipalPayment']"
 								}
 							},
 							{
@@ -205,7 +205,7 @@
 									"path": "$['LoanRepaymentData'][0]['InterestPayment']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['InterestPayment']"
 								}
 							},
 							{
@@ -213,7 +213,7 @@
 									"path": "$['LoanRepaymentData'][0]['PaymentReferenceNumber']"
 								},
 								"sink": {
-									"path": ""
+									"path": "$['LoanRepaymentData'][0]['PaymentReferenceNumber']"
 								}
 							}
 						]
