@@ -13,7 +13,7 @@
 						]
 					},
 					{
-						"activity": "Deleting files from sales",
+						"activity": "Deleting files from stage",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -96,7 +96,7 @@
 				}
 			},
 			{
-				"name": "Deleting files from sales",
+				"name": "Deleting files from stage",
 				"type": "Delete",
 				"dependsOn": [
 					{
