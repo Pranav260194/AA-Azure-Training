@@ -164,7 +164,7 @@
 						},
 						"datasetParameters": {
 							"sink1": {
-								"fileName": "'customer_sales.csv'"
+								"fileName": "customer_sales.csv"
 							}
 						}
 					},
