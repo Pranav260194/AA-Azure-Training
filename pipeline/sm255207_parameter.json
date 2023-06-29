@@ -128,7 +128,7 @@
 			"name": "sm255207"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-11-10T11:54:44Z"
+		"lastPublishTime": "2023-06-26T09:54:14Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

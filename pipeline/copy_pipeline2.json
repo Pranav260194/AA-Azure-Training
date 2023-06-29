@@ -65,7 +65,7 @@
 			"name": "rc250081"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-07-07T09:08:29Z"
+		"lastPublishTime": "2023-06-26T09:54:10Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
