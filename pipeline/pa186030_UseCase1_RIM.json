@@ -204,6 +204,11 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": "'customer.csv'"
+						},
+						"datasetParameters": {
+							"sink1": {
+								"fileName": "customer.csv"
+							}
 						}
 					},
 					"compute": {
@@ -231,6 +236,11 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": "'sales.csv'"
+						},
+						"datasetParameters": {
+							"sink1": {
+								"fileName": "sales.csv"
+							}
 						}
 					},
 					"compute": {
