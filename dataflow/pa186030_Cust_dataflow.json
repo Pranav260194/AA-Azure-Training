@@ -21,11 +21,7 @@
 						"referenceName": "pa186030_customer_df_sink_ds",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"rejectedDataLinkedService": {
-						"referenceName": "adls_ls",
-						"type": "LinkedServiceReference"
-					}
+					"name": "sink1"
 				}
 			],
 			"transformations": [
