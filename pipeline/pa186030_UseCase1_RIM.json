@@ -142,7 +142,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"notebookPath": "/pa186030/Use_Case1"
+								"notebookPath": "/pa186030/Use_Case1_RIM"
 							},
 							"linkedServiceName": {
 								"referenceName": "ADB_mp255107",
