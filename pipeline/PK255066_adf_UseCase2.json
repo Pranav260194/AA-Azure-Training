@@ -67,6 +67,8 @@
 			{
 				"name": "Checking Customer file exists in stage",
 				"type": "Lookup",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Skipped",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -98,6 +100,8 @@
 			{
 				"name": "Deleting files from stage",
 				"type": "Delete",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Skipped",
 				"dependsOn": [
 					{
 						"activity": "Checking Customer file exists in stage",
