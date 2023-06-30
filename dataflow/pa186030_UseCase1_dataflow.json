@@ -20,6 +20,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "SalesSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "pa186030_country_ds",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -29,13 +36,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "OutputToSink"
-				},
-				{
-					"dataset": {
-						"referenceName": "pa186030_country_ds",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -98,6 +98,13 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> SalesSource",
+				"source(output(",
+				"          Country as string,",
+				"          {Abbreviations } as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
 				"CustomerSource derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
@@ -117,7 +124,7 @@
 				"          Min_Price = min(Price),",
 				"          Max_Price = max(Price),",
 				"          Total_Sales = sum(Quantity*Price)) ~> GroupByProductIDRegion",
-				"SelectCustomerColumns, SelectSalesColumns join(SelectCustomerColumns@CustomerID == SelectSalesColumns@CustomerID,",
+				"SelectCustomerColumns, lookup1 join(SelectCustomerColumns@CustomerID == SelectSalesColumns@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -157,7 +164,7 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
 				"JoinCustomerSales sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
 				"GroupByProductIDRegion filter(and(Quantity>10, Price>=10)) ~> filter1",
-				"SelectSalesColumns lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"SelectSalesColumns, source1 lookup(Region == Country,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
@@ -178,18 +185,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> OutputToSink",
-				"lookup1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          Country as string,",
-				"          {Abbreviations } as string",
-				"     ),",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     partitionBy('hash', 1)) ~> OutputToSink"
 			]
 		}
 	}
