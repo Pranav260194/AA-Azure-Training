@@ -161,7 +161,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": {
-								"value": "'@{variables('outputFileName')}'",
+								"value": "'@{variables('fileName')}'",
 								"type": "Expression"
 							}
 						},
@@ -197,7 +197,7 @@
 			}
 		},
 		"variables": {
-			"outputFileName": {
+			"fileName": {
 				"type": "String",
 				"defaultValue": "'customer_sales.csv'"
 			}
