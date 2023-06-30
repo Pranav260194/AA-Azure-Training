@@ -5,6 +5,12 @@
 			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"fileName": {
+				"type": "string",
+				"defaultValue": "CountryList.xlsx"
+			}
+		},
 		"folder": {
 			"name": "pa186030"
 		},
