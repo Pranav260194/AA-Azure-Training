@@ -20,7 +20,7 @@
 					"value": "@dataset().fileName",
 					"type": "Expression"
 				},
-				"folderPath": "Input",
+				"folderPath": "Output/UseCase1_Output",
 				"fileSystem": "pa186030"
 			},
 			"columnDelimiter": ",",
