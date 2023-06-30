@@ -55,9 +55,6 @@
 				},
 				{
 					"name": "sort1"
-				},
-				{
-					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -126,7 +123,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"filter1 select(mapColumn(",
+				"aggregate2 select(mapColumn(",
 				"          ProductID,",
 				"          Region,",
 				"          OrderID,",
@@ -147,7 +144,6 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"join1 sort(asc(select1@CustomerID, true)) ~> sort1",
-				"aggregate2 filter(and(Quantity>10, Price>=10)) ~> filter1",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
