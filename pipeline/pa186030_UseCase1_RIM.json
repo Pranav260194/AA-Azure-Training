@@ -203,7 +203,10 @@
 						"referenceName": "pa186030_Cust_dataflow",
 						"type": "DataFlowReference",
 						"parameters": {
-							"fileName": "'customer.csv'"
+							"fileName": {
+								"value": "'@{variables('custFileName')}'",
+								"type": "Expression"
+							}
 						},
 						"datasetParameters": {
 							"sink1": {
@@ -235,7 +238,10 @@
 						"referenceName": "pa186030_Sales_dataflow",
 						"type": "DataFlowReference",
 						"parameters": {
-							"fileName": "'sales.csv'"
+							"fileName": {
+								"value": "'@{variables('salesFileName')}'",
+								"type": "Expression"
+							}
 						},
 						"datasetParameters": {
 							"sink1": {
@@ -263,6 +269,16 @@
 			"Failure_Subject": {
 				"type": "string",
 				"defaultValue": "Email Notification for Data Factory Pipeline Failure"
+			}
+		},
+		"variables": {
+			"custFileName": {
+				"type": "String",
+				"defaultValue": "customer.csv"
+			},
+			"salesFileName": {
+				"type": "String",
+				"defaultValue": "sales.csv"
 			}
 		},
 		"folder": {
