@@ -157,7 +157,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "pa186030_Cust_Sales_dataflow",
+						"referenceName": "pa186030_UseCase1_dataflow",
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": "'customer_sales.csv'"
