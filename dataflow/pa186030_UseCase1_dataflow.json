@@ -62,7 +62,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string",
+				"     fileName as string ($fileName)",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
