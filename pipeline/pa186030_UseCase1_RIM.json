@@ -210,7 +210,7 @@
 						},
 						"datasetParameters": {
 							"sink1": {
-								"fileName": "customer.csv"
+								"fileName": "@variables('custFileName')"
 							}
 						}
 					},
@@ -245,7 +245,10 @@
 						},
 						"datasetParameters": {
 							"sink1": {
-								"fileName": "sales.csv"
+								"fileName": {
+									"value": "@variables('salesFileName')",
+									"type": "Expression"
+								}
 							}
 						}
 					},
