@@ -26,7 +26,7 @@
 						"referenceName": "pa186030_country_ds",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "CountrySource"
 				}
 			],
 			"sinks": [
@@ -67,7 +67,7 @@
 					"name": "filter1"
 				},
 				{
-					"name": "lookup1"
+					"name": "CountryLookup"
 				}
 			],
 			"scriptLines": [
@@ -104,7 +104,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false) ~> CountrySource",
 				"CustomerSource derive(FirstName = initCap(lower(FirstName)),",
 				"          LastName = initCap(lower(LastName)),",
 				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
@@ -124,7 +124,7 @@
 				"          Min_Price = min(Price),",
 				"          Max_Price = max(Price),",
 				"          Total_Sales = sum(Quantity*Price)) ~> GroupByProductIDRegion",
-				"SelectCustomerColumns, lookup1 join(SelectCustomerColumns@CustomerID == SelectSalesColumns@CustomerID,",
+				"SelectCustomerColumns, CountryLookup join(SelectCustomerColumns@CustomerID == SelectSalesColumns@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -164,10 +164,10 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
 				"JoinCustomerSales sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
 				"GroupByProductIDRegion filter(and(Quantity>10, Price>=10)) ~> filter1",
-				"SelectSalesColumns, source1 lookup(Region == Country,",
+				"SelectSalesColumns, CountrySource lookup(Region == Country,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
+				"     broadcast: 'auto')~> CountryLookup",
 				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
