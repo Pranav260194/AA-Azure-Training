@@ -105,7 +105,7 @@
 				"          Min_Price = min(Price),",
 				"          Max_Price = max(Price),",
 				"          Total_Sales = sum(Quantity*Price)) ~> GroupByProductIDRegion",
-				"SelectCustomerColumns, SelectSalesColumns join(Select Customer Columns@CustomerID == Select Sales Columns@CustomerID,",
+				"SelectCustomerColumns, SelectSalesColumns join(SelectCustomerColumns@CustomerID == SelectSalesColumns@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
