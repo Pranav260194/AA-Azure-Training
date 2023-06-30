@@ -34,7 +34,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     fileName as string ('customer.csv')",
+				"     fileName as string",
 				"}",
 				"source(output(",
 				"          CustomerID as short,",
