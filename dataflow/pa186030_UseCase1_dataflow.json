@@ -39,9 +39,6 @@
 					"name": "aggregate1"
 				},
 				{
-					"name": "filter1"
-				},
-				{
 					"name": "derivedColumn2"
 				},
 				{
@@ -58,6 +55,9 @@
 				},
 				{
 					"name": "sort1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -96,8 +96,7 @@
 				"          Country_Abbrevation = substring(Country,0,2)) ~> derivedColumn1",
 				"derivedColumn1 aggregate(groupBy(CustomerID),",
 				"     each(match(name!='CustomerID'), $$ = first($$))) ~> aggregate1",
-				"SalesSource filter(and(Quantity>10, Price>=10)) ~> filter1",
-				"filter1 derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
+				"SalesSource derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
 				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(ProductID,",
 				"          Region),",
@@ -127,7 +126,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"aggregate2 select(mapColumn(",
+				"filter1 select(mapColumn(",
 				"          ProductID,",
 				"          Region,",
 				"          OrderID,",
@@ -148,6 +147,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"join1 sort(asc(select1@CustomerID, true)) ~> sort1",
+				"aggregate2 filter(and(Quantity>10, Price>=10)) ~> filter1",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
