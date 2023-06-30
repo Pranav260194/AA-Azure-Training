@@ -99,7 +99,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"notebookPath": "/pa186030/Use_Case1_RIM"
+								"notebookPath": "/pa186030/Use_Case1_DF"
 							},
 							"linkedServiceName": {
 								"referenceName": "ADB_mp255107",
@@ -163,14 +163,6 @@
 							"fileName": {
 								"value": "'@{variables('fileName')}'",
 								"type": "Expression"
-							}
-						},
-						"datasetParameters": {
-							"sink1": {
-								"fileName": {
-									"value": "@variables('fileName')",
-									"type": "Expression"
-								}
 							}
 						}
 					},
