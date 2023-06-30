@@ -159,9 +159,6 @@
 					"dataflow": {
 						"referenceName": "pa186030_UseCase1_dataflow",
 						"type": "DataFlowReference",
-						"parameters": {
-							"fileName": "'customer_sales.csv'"
-						},
 						"datasetParameters": {
 							"sink1": {
 								"fileName": "customer_sales.csv"
