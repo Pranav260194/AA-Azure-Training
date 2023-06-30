@@ -11,6 +11,9 @@
 				"defaultValue": "customer.csv"
 			}
 		},
+		"folder": {
+			"name": "pa186030"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

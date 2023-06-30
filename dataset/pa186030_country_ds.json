@@ -1,0 +1,24 @@
+{
+	"name": "pa186030_country_ds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "pa186030"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "CountryList.xlsx",
+				"folderPath": "Input",
+				"fileSystem": "pa186030"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}

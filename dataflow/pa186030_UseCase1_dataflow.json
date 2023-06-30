@@ -29,6 +29,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "OutputToSink"
+				},
+				{
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -58,6 +61,9 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "lookup1"
 				}
 			],
 			"scriptLines": [
@@ -92,8 +98,7 @@
 				"          LastName = initCap(lower(LastName)),",
 				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
 				"          Email = trim(lower(Email)),",
-				"          Address = replace(Address , '$',''),",
-				"          Country_Abbrevation = substring(Country,0,2)) ~> CustomerTransformation",
+				"          Address = replace(Address , '$','')) ~> CustomerTransformation",
 				"CustomerTransformation aggregate(groupBy(CustomerID),",
 				"     each(match(name!='CustomerID'), $$ = first($$))) ~> GroupByCustomerID",
 				"SalesSource derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
@@ -148,7 +153,11 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
 				"JoinCustomerSales sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
 				"GroupByProductIDRegion filter(and(Quantity>10, Price>=10)) ~> filter1",
-				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
+				"SortCustomerByCustomerID lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          OrderID as string,",
@@ -165,7 +174,11 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> OutputToSink"
+				"     partitionBy('hash', 1)) ~> OutputToSink",
+				"lookup1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
