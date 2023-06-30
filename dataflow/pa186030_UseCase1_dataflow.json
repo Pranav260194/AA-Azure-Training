@@ -55,6 +55,9 @@
 				},
 				{
 					"name": "SortCustomerByCustomerID"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -123,7 +126,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectCustomerColumns",
-				"GroupByProductIDRegion select(mapColumn(",
+				"filter1 select(mapColumn(",
 				"          ProductID,",
 				"          Region,",
 				"          OrderID,",
@@ -144,6 +147,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
 				"JoinCustomerSales sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
+				"GroupByProductIDRegion filter(and(Quantity>10, Price>=10)) ~> filter1",
 				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
