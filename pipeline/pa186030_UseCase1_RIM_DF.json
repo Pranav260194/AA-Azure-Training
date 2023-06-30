@@ -159,9 +159,18 @@
 					"dataflow": {
 						"referenceName": "pa186030_UseCase1_dataflow",
 						"type": "DataFlowReference",
+						"parameters": {
+							"fileName": {
+								"value": "'@{variables('fileName')}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"sink1": {
-								"fileName": "customer_sales.csv"
+								"fileName": {
+									"value": "@variables('fileName')",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -185,6 +194,12 @@
 			"Failure_Subject": {
 				"type": "string",
 				"defaultValue": "Email Notification for Data Factory Pipeline Failure"
+			}
+		},
+		"variables": {
+			"fileName": {
+				"type": "String",
+				"defaultValue": "'customer_sales.csv'"
 			}
 		},
 		"folder": {
