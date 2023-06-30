@@ -28,33 +28,33 @@
 						"referenceName": "pa186030_customer_sales_df_sink_ds",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "OutputToSink"
 				}
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "CustomerTransformation"
 				},
 				{
-					"name": "aggregate1"
+					"name": "GroupByCustomerID"
 				},
 				{
-					"name": "derivedColumn2"
+					"name": "SalesTransformation"
 				},
 				{
-					"name": "aggregate2"
+					"name": "GroupByProductIDRegion"
 				},
 				{
-					"name": "join1"
+					"name": "JoinCustomerSales"
 				},
 				{
-					"name": "select1"
+					"name": "SelectCustomerColumns"
 				},
 				{
-					"name": "select2"
+					"name": "SelectSalesColumns"
 				},
 				{
-					"name": "sort1"
+					"name": "SortCustomerByCustomerID"
 				}
 			],
 			"scriptLines": [
@@ -90,12 +90,12 @@
 				"          FullName = initCap(lower(FirstName))+\" \"+initCap(lower(LastName)),",
 				"          Email = trim(lower(Email)),",
 				"          Address = replace(Address , '$',''),",
-				"          Country_Abbrevation = substring(Country,0,2)) ~> derivedColumn1",
-				"derivedColumn1 aggregate(groupBy(CustomerID),",
-				"     each(match(name!='CustomerID'), $$ = first($$))) ~> aggregate1",
+				"          Country_Abbrevation = substring(Country,0,2)) ~> CustomerTransformation",
+				"CustomerTransformation aggregate(groupBy(CustomerID),",
+				"     each(match(name!='CustomerID'), $$ = first($$))) ~> GroupByCustomerID",
 				"SalesSource derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
-				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> derivedColumn2",
-				"derivedColumn2 aggregate(groupBy(ProductID,",
+				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> SalesTransformation",
+				"SalesTransformation aggregate(groupBy(ProductID,",
 				"          Region),",
 				"     each(match(name!='ProductID'&&name!='Region'), $$ = first($$)),",
 				"          Avg_Quantity = avg(Quantity),",
@@ -104,13 +104,13 @@
 				"          Avg_Price = avg(Price),",
 				"          Min_Price = min(Price),",
 				"          Max_Price = max(Price),",
-				"          Total_Sales = sum(Quantity*Price)) ~> aggregate2",
-				"select1, select2 join(select1@CustomerID == select2@CustomerID,",
+				"          Total_Sales = sum(Quantity*Price)) ~> GroupByProductIDRegion",
+				"SelectCustomerColumns, SelectSalesColumns join(Select Customer Columns@CustomerID == Select Sales Columns@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"aggregate1 select(mapColumn(",
+				"     broadcast: 'auto')~> JoinCustomerSales",
+				"GroupByCustomerID select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
 				"          LastName,",
@@ -122,8 +122,8 @@
 				"          Country_Abbrevation",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"aggregate2 select(mapColumn(",
+				"     skipDuplicateMapOutputs: true) ~> SelectCustomerColumns",
+				"GroupByProductIDRegion select(mapColumn(",
 				"          ProductID,",
 				"          Region,",
 				"          OrderID,",
@@ -142,9 +142,9 @@
 				"          Total_Sales",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"join1 sort(asc(select1@CustomerID, true)) ~> sort1",
-				"sort1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
+				"JoinCustomerSales sort(asc(Select Customer Columns@CustomerID, true)) ~> SortCustomerByCustomerID",
+				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          OrderID as string,",
@@ -161,7 +161,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     partitionBy('hash', 1)) ~> OutputToSink"
 			]
 		}
 	}
