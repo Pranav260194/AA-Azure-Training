@@ -184,7 +184,7 @@
 				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
-				"     partitionFileNames:['\\'loan_json.csv\\''],",
+				"     partitionFileNames:[('loan_json.csv')],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
