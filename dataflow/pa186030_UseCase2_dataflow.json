@@ -13,6 +13,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "CustomerSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "pa186030_loan_source_ds",
+						"type": "DatasetReference"
+					},
+					"name": "LoanSource"
 				}
 			],
 			"sinks": [
@@ -22,6 +29,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "pa186030_loan_json_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
 				}
 			],
 			"transformations": [
@@ -36,6 +50,15 @@
 				},
 				{
 					"name": "sort1"
+				},
+				{
+					"name": "flatten2"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "sort2"
 				}
 			],
 			"scriptLines": [
@@ -46,6 +69,13 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'arrayOfDocuments') ~> CustomerSource",
+				"source(output(",
+				"          LoanData as (BorrowerID as string, EMIAmount as double, InterestRate as double, LoanAccountNumber as string, LoanAmount as integer, LoanID as string, LoanStatus as string, LoanTerm as short, LoanType as string, MonthlyPaymentDay as short, OriginationDate as date)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> LoanSource",
 				"CustomerSource foldDown(unroll(CustomerData, CustomerData),",
 				"     mapColumn(",
 				"          CustomerID = CustomerData.CustomerID,",
@@ -60,6 +90,27 @@
 				"derivedColumn1 aggregate(groupBy(CustomerID),",
 				"     each(match(name!='CustomerID'), $$ = first($$))) ~> aggregate1",
 				"aggregate1 sort(asc(CustomerID, true)) ~> sort1",
+				"LoanSource foldDown(unroll(LoanData, LoanData),",
+				"     mapColumn(",
+				"          BorrowerID = LoanData.BorrowerID,",
+				"          EMIAmount = LoanData.EMIAmount,",
+				"          InterestRate = LoanData.InterestRate,",
+				"          LoanAccountNumber = LoanData.LoanAccountNumber,",
+				"          LoanAmount = LoanData.LoanAmount,",
+				"          LoanID = LoanData.LoanID,",
+				"          LoanStatus = LoanData.LoanStatus,",
+				"          LoanTerm = LoanData.LoanTerm,",
+				"          LoanType = LoanData.LoanType,",
+				"          MonthlyPaymentDay = LoanData.MonthlyPaymentDay,",
+				"          OriginationDate = LoanData.OriginationDate",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"flatten2 aggregate(groupBy(BorrowerID,",
+				"          LoanID),",
+				"     each(match(name!='BorrowerID'&&name!='LoanID'), $$ = first($$))) ~> aggregate2",
+				"aggregate2 sort(asc(BorrowerID, true),",
+				"     asc(LoanID, true)) ~> sort2",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -77,7 +128,24 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     partitionBy('hash', 1)) ~> sink1",
+				"sort2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     partitionFileNames:['\\'loan_json.csv\\''],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
