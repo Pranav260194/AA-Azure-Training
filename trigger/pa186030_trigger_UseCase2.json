@@ -17,6 +17,19 @@
 					"File_Error": "File Not Found",
 					"Notebook_Error": "Unable to connect to Notebook"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "pa186030_UseCase2_DF",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "pranav.ayare@teradata.com",
+					"Subject": "Email Notification for Data Factory Pipeline",
+					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure",
+					"File_Error": "File Not Found",
+					"Notebook_Error": "Unable to connect to Notebook"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
