@@ -1,0 +1,31 @@
+{
+	"name": "pa186030_UseCase2_dataflow",
+	"properties": {
+		"folder": {
+			"name": "pa186030_dataflow"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "pa186030_customer_json_source_ds",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerSource"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerData as (CustomerID as string, CustomerName as string, CustomerLocation as (City as string, State as string, Country as string))[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> CustomerSource"
+			]
+		}
+	}
+}
