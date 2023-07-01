@@ -159,6 +159,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "@and(and(equals(activity('Get Metadata Customer').output.exists,true),equals(activity('Get Metadata Loan').output.exists,true)),equals(activity('Get Metadata Loan Repayment').output.exists,true))",
+						"type": "Expression"
+					},
 					"ifFalseActivities": [
 						{
 							"name": "Web Mail",
