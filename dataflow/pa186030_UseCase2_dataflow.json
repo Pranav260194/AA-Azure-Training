@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "pa186030_customer_json_check",
+						"referenceName": "pa186030_customer_json_csv",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -27,9 +27,6 @@
 			"transformations": [
 				{
 					"name": "flatten1"
-				},
-				{
-					"name": "flatten2"
 				}
 			],
 			"scriptLines": [
@@ -39,29 +36,27 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> CustomerSource",
+				"     documentForm: 'arrayOfDocuments') ~> CustomerSource",
 				"CustomerSource foldDown(unroll(CustomerData, CustomerData),",
 				"     mapColumn(",
 				"          CustomerID = CustomerData.CustomerID,",
 				"          CustomerName = CustomerData.CustomerName,",
-				"          CustomerLocation = CustomerData.CustomerLocation",
+				"          CustomerCity = CustomerData.CustomerLocation.City,",
+				"          CustomerState = CustomerData.CustomerLocation.State,",
+				"          CustomerCountry = CustomerData.CustomerLocation.Country",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 foldDown(unroll(, CustomerLocation { }),",
-				"     mapColumn(",
-				"          CustomerID,",
-				"          CustomerName,",
-				"          CustomerCity = CustomerLocation.City,",
-				"          CustomerState = CustomerLocation.State,",
-				"          CustomerCountry = CustomerLocation.Country",
-				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten2",
-				"flatten2 sink(allowSchemaDrift: true,",
+				"flatten1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          CustomerData as (CustomerID as string, CustomerName as string, CustomerLocation as (City as string, State as string, Country as string))[]",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
 				"     ),",
 				"     umask: 0022,",
 				"     preCommands: [],",
