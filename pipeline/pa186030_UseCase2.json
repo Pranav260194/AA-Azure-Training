@@ -128,7 +128,7 @@
 									"Content-type": "application/json"
 								},
 								"body": {
-									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.File_Error,'\",\n\t\"FileName\" : \"\"\n\t}')",
 									"type": "Expression"
 								}
 							}
@@ -224,7 +224,7 @@
 						"Content-type": "application/json"
 					},
 					"body": {
-						"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+						"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')",
 						"type": "Expression"
 					}
 				}
@@ -386,6 +386,14 @@
 			"Failure_Subject": {
 				"type": "string",
 				"defaultValue": "Email Notification for Data Factory Pipeline Failure"
+			},
+			"File_Error": {
+				"type": "string",
+				"defaultValue": "File Not Found"
+			},
+			"Notebook_Error": {
+				"type": "string",
+				"defaultValue": "Unable to connect to Notebook"
 			}
 		},
 		"folder": {
