@@ -15,8 +15,20 @@
 					"name": "CustomerSource"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "pa186030_customer_json_check",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          CustomerData as (CustomerID as string, CustomerName as string, CustomerLocation as (City as string, State as string, Country as string))[]",
@@ -24,7 +36,23 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> CustomerSource"
+				"     documentForm: 'documentPerLine') ~> CustomerSource",
+				"CustomerSource foldDown(unroll(CustomerData, CustomerData),",
+				"     mapColumn(",
+				"          CustomerData",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerData as (CustomerID as string, CustomerName as string, CustomerLocation as (City as string, State as string, Country as string))[]",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
