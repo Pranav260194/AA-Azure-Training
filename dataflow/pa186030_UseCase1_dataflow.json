@@ -68,6 +68,9 @@
 				},
 				{
 					"name": "SalesFilter"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -92,7 +95,7 @@
 				"          ProductID as short,",
 				"          Quantity as short,",
 				"          Price as short,",
-				"          OrderDate as date 'dd/MM/yyyy',",
+				"          OrderDate as string,",
 				"          Region as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
@@ -112,8 +115,8 @@
 				"          Address = replace(Address , '$','')) ~> CustomerTransformation",
 				"CustomerTransformation aggregate(groupBy(CustomerID),",
 				"     each(match(name!='CustomerID'), $$ = first($$))) ~> GroupByCustomerID",
-				"SalesFilter derive(OrderYear = year(OrderDate),",
-				"          DateDifference = currentDate()-OrderDate) ~> SalesTransformation",
+				"SalesFilter derive(OrderYear = year(toDate(OrderDate, 'MM/dd/yy', 'en-US')),",
+				"          DateDifference = currentDate()-toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> SalesTransformation",
 				"SalesTransformation aggregate(groupBy(ProductID,",
 				"          Region),",
 				"     each(match(name!='ProductID'&&name!='Region'), $$ = first($$)),",
@@ -161,12 +164,13 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectSalesColumns",
-				"JoinCustomerSales sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
+				"derivedColumn1 sort(asc(SelectCustomerColumns@CustomerID, true)) ~> SortCustomerByCustomerID",
 				"SelectSalesColumns, CountrySource lookup(Region == Country,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> CountryLookup",
 				"SalesSource filter(and(Quantity>10, Price>=10)) ~> SalesFilter",
+				"JoinCustomerSales derive(OrderDate = toDate(OrderDate, 'dd/MM/yy', 'en-US')) ~> derivedColumn1",
 				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
