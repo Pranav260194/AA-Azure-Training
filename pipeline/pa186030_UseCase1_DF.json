@@ -1,5 +1,5 @@
 {
-	"name": "pa186030_UseCase1_RIM_DF",
+	"name": "pa186030_UseCase1_DF",
 	"properties": {
 		"activities": [
 			{
@@ -163,6 +163,11 @@
 							"fileName": {
 								"value": "'@{variables('fileName')}'",
 								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"OutputToSink": {
+								"fileName": "'customer_sales.csv'"
 							}
 						}
 					},
