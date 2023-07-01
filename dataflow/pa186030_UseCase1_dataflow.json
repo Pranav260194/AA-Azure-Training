@@ -92,7 +92,7 @@
 				"          ProductID as short,",
 				"          Quantity as short,",
 				"          Price as short,",
-				"          OrderDate as string,",
+				"          OrderDate as date 'dd/MM/yyyy',",
 				"          Region as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
