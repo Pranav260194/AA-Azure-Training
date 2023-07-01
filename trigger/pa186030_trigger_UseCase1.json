@@ -13,7 +13,8 @@
 				"parameters": {
 					"Email_To": "pranav.ayare@teradata.com",
 					"Subject": "Email Notification for Data Factory Pipeline",
-					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure"
+					"Failure_Subject": "Email Notification for Data Factory Pipeline Failure",
+					"File_Error": "File Not Found"
 				}
 			},
 			{
