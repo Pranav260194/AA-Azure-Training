@@ -170,7 +170,7 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> CountryLookup",
 				"SalesSource filter(and(Quantity>10, Price>=10)) ~> SalesFilter",
-				"JoinCustomerSales derive(OrderDate = toDate(OrderDate, 'MM/dd/yy', 'en-US')) ~> derivedColumn1",
+				"JoinCustomerSales derive(OrderDate = toDate(OrderDate, 'MM/dd/yy')) ~> derivedColumn1",
 				"SortCustomerByCustomerID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
