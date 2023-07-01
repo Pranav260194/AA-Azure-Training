@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "flatten1"
+				},
+				{
+					"name": "flatten2"
 				}
 			],
 			"scriptLines": [
@@ -39,11 +42,23 @@
 				"     documentForm: 'documentPerLine') ~> CustomerSource",
 				"CustomerSource foldDown(unroll(CustomerData, CustomerData),",
 				"     mapColumn(",
-				"          CustomerData",
+				"          CustomerID = CustomerData.CustomerID,",
+				"          CustomerName = CustomerData.CustomerName,",
+				"          CustomerLocation = CustomerData.CustomerLocation",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 sink(allowSchemaDrift: true,",
+				"flatten1 foldDown(unroll(, CustomerLocation { }),",
+				"     mapColumn(",
+				"          CustomerID,",
+				"          CustomerName,",
+				"          CustomerCity = CustomerLocation.City,",
+				"          CustomerState = CustomerLocation.State,",
+				"          CustomerCountry = CustomerLocation.Country",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"flatten2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          CustomerData as (CustomerID as string, CustomerName as string, CustomerLocation as (City as string, State as string, Country as string))[]",
