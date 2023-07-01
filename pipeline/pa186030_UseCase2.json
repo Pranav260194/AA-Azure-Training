@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata Customer Json",
+				"name": "Get Metadata Customer JSON",
 				"type": "GetMetadata",
 				"dependsOn": [
 					{
@@ -81,7 +81,7 @@
 				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata Customer Json",
+						"activity": "Get Metadata Customer JSON",
 						"dependencyConditions": [
 							"Succeeded"
 						]
