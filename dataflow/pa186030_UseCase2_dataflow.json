@@ -78,9 +78,6 @@
 					"name": "flatten3"
 				},
 				{
-					"name": "aggregate3"
-				},
-				{
 					"name": "derivedColumn2"
 				}
 			],
@@ -152,10 +149,6 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten3",
-				"derivedColumn2 aggregate(groupBy(LoanID,",
-				"          PaymentReferenceNumber,",
-				"          InterestPayment),",
-				"     each(match(name!='LoanID'&&name!='PaymentReferenceNumber'&&name!='InterestPayment'), $$ = first($$))) ~> aggregate3",
 				"flatten3 derive(PaymentReferenceNumber = replace(PaymentReferenceNumber,'','null')) ~> derivedColumn2",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -193,7 +186,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink2",
-				"aggregate3 sink(allowSchemaDrift: true,",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          OrderID as string,",
