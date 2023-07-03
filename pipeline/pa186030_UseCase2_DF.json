@@ -269,12 +269,6 @@
 				"defaultValue": "Unable to connect to Notebook"
 			}
 		},
-		"variables": {
-			"fileName": {
-				"type": "String",
-				"defaultValue": "customer_sales.csv"
-			}
-		},
 		"folder": {
 			"name": "pa186030"
 		},
