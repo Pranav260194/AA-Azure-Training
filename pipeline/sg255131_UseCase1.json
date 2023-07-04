@@ -303,7 +303,7 @@
 				],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 0,
+					"retry": 1,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -314,7 +314,9 @@
 						"referenceName": "sg255131_cust_check",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"exists"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
@@ -337,7 +339,7 @@
 				],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 0,
+					"retry": 1,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -348,7 +350,9 @@
 						"referenceName": "sg255131_sales_check",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"exists"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
@@ -356,6 +360,49 @@
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings"
 					}
+				}
+			},
+			{
+				"name": "Validate both Metadata exists",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "GetMetadata_Customer",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "GetMetadata_Sales",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"ifTrueActivities": [
+						{
+							"name": "Databricks_notebook",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/sg255131/sg255131_UseCase1"
+							},
+							"linkedServiceName": {
+								"referenceName": "ADB_mp255107",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
 				}
 			}
 		],
