@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "sales.csv",
-				"folderPath": "Input",
+				"folderPath": "Source_Files",
 				"fileSystem": "sg255131"
 			},
 			"columnDelimiter": ",",
