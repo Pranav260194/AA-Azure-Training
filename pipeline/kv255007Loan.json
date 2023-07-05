@@ -51,6 +51,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -94,7 +95,10 @@
 								"headers": {
 									"content-type": "application-json"
 								},
-								"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
+								"body": {
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')",
+									"type": "Expression"
+								}
 							}
 						}
 					],
@@ -127,7 +131,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Check whether metadata file exist or not ",
+						"activity": "Check whether metadata file exist or not",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -147,7 +151,10 @@
 					"headers": {
 						"content-type": "application-json"
 					},
-					"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
+					"body": {
+						"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
