@@ -43,7 +43,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "loan_output",
+						"referenceName": "Json7",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -52,6 +52,9 @@
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
 					}
 				}
 			},
