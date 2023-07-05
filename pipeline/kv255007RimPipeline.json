@@ -106,6 +106,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "Check whether metadata file exist or not",
+						"type": "Expression"
+					},
 					"ifFalseActivities": [
 						{
 							"name": "Web1",
