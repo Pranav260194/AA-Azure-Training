@@ -21,8 +21,138 @@
 					"referenceName": "ADB_mp255107",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "loan_use",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Check whether metadata file exist or not",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"ifFalseActivities": [
+						{
+							"name": "Web1",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": "https://kv255007-mail-notification.azurewebsites.net",
+								"method": "POST",
+								"headers": {
+									"content-type": "application-json"
+								},
+								"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Notebook1",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/Users/kanika.verma@qateradatacloud.com/kv255007_loan_2"
+							},
+							"linkedServiceName": {
+								"referenceName": "ADB_mp255107",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Send email",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Check whether metadata file exist or not ",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://kv255007-mail-notification.azurewebsites.net",
+					"method": "POST",
+					"headers": {
+						"content-type": "application-json"
+					},
+					"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
+				}
 			}
 		],
+		"parameters": {
+			"EmailTo": {
+				"type": "string",
+				"defaultValue": "kanika.verma@teradata.com"
+			},
+			"Subject": {
+				"type": "string",
+				"defaultValue": "Email Notification for Data Factory Pipeline"
+			},
+			"Failure_Subject": {
+				"type": "string",
+				"defaultValue": "Email Notification for Data Factory Pipeline Failure"
+			},
+			"File_Error": {
+				"type": "string",
+				"defaultValue": "File Not Found"
+			},
+			"Notebook_Error": {
+				"type": "string",
+				"defaultValue": "Unable to connect to Notebook"
+			}
+		},
 		"folder": {
 			"name": "kv255007"
 		},
