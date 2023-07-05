@@ -54,7 +54,7 @@
 					"headers": {
 						"Content-type": "application/json"
 					},
-					"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Notebook_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
+					"body": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Failure_Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.Dataflow_Error,'\",\n\t\"FileName\" : \"\"\n\t}')"
 				}
 			},
 			{
@@ -178,6 +178,10 @@
 			"File_error": {
 				"type": "string",
 				"defaultValue": "File not found"
+			},
+			"Dataflow_Error": {
+				"type": "string",
+				"defaultValue": "unable to connect to dataflow"
 			}
 		},
 		"variables": {
