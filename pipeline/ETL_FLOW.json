@@ -1,0 +1,248 @@
+{
+	"name": "ETL_FLOW",
+	"properties": {
+		"activities": [
+			{
+				"name": "product_csv_file",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "If_size_ge_0",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "productcsv",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "product_csv_Metadata",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "productcsv",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"size"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ctl_product",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "If_size_ge_0",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "product_ctl_am186060",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ctl_output",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ctl_product",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "ctl_file_data",
+					"value": {
+						"value": "@activity('ctl_product').output.firstRow.Prop_0",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "count_of_data",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "product_csv_file",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "record_count",
+					"value": {
+						"value": "@string(activity('product_csv_file').output.count)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "sizeOfFike",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "product_csv_Metadata",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "sizeoffile",
+					"value": {
+						"value": "@string(activity('product_csv_Metadata').output.size)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If_size_ge_0",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "sizeOfFike",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(variables('sizeoffile'),string(0))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "ctl_output",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "count_of_data",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('ctl_file_data'),variables('record_count'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"ctl_file_data": {
+				"type": "String",
+				"defaultValue": "0"
+			},
+			"record_count": {
+				"type": "String",
+				"defaultValue": "0"
+			},
+			"sizeoffile": {
+				"type": "String",
+				"defaultValue": "0"
+			}
+		},
+		"folder": {
+			"name": "am186060"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-09T18:19:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
