@@ -366,7 +366,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "JG186076_customer_lookup",
+						"referenceName": "NoDup_Cust",
 						"type": "DatasetReference"
 					}
 				}
