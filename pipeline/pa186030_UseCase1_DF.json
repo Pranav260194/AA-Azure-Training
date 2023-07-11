@@ -79,7 +79,7 @@
 									"Content-type": "application/json"
 								},
 								"body": {
-									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.File_Error,'\",\n\t\"FileName\" : \"\"\n\t}')",
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"ErrorMessage\" : \"',pipeline().parameters.File_Error,'\"\n\t}')",
 									"type": "Expression"
 								}
 							}
