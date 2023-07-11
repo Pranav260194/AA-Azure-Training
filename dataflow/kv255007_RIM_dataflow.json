@@ -67,7 +67,7 @@
 					"name": "selectNonduplicate"
 				},
 				{
-					"name": "join1"
+					"name": "sales"
 				},
 				{
 					"name": "select1"
@@ -194,7 +194,7 @@
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
+				"     broadcast: 'auto')~> sales",
 				"DataCleaning select(mapColumn(",
 				"          CustomerID,",
 				"          FirstName,",
@@ -207,10 +207,10 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"join1 aggregate(groupBy(CustomerId = select1@CustomerID),",
+				"sales aggregate(groupBy(CustomerId = select1@CustomerID),",
 				"     TotalQuantity = sum(Quantity),",
 				"          TotalPrice = sum(Price)) ~> aggregateCustomerID",
-				"aggregateCustomerID, join1 join(aggregateCustomerID@CustomerId == select1@CustomerID,",
+				"aggregateCustomerID, sales join(aggregateCustomerID@CustomerId == select1@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
