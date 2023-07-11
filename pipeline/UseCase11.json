@@ -393,7 +393,7 @@
 					"notebookPath": "/jg186076/UC1_Jg186076"
 				},
 				"linkedServiceName": {
-					"referenceName": "adb_ls",
+					"referenceName": "vf186006_Db_Connection",
 					"type": "LinkedServiceReference"
 				}
 			}
