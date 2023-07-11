@@ -400,7 +400,7 @@
 					"notebookPath": "/jg186076/UC1_Jg186076"
 				},
 				"linkedServiceName": {
-					"referenceName": "vf186006_Db_Connection",
+					"referenceName": "ADB_mp255107",
 					"type": "LinkedServiceReference"
 				}
 			},
