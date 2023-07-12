@@ -1,9 +1,12 @@
 {
-	"name": "Json7",
+	"name": "Customer_u2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "kv255007_dataset"
 		},
 		"annotations": [],
 		"type": "Json",
