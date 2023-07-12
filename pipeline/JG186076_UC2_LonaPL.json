@@ -64,7 +64,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/jg186076/UseCase2final"
+					"notebookPath": "/jg186076/Final/UseCase2final"
 				},
 				"linkedServiceName": {
 					"referenceName": "ADB_mp255107",
