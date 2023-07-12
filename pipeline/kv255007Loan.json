@@ -73,7 +73,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "Check whether matadata exist or not ",
+						"value": "@activity('Get Metadata1').output.exists",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -159,7 +159,7 @@
 			}
 		],
 		"parameters": {
-			"EmailTo": {
+			"Email_To": {
 				"type": "string",
 				"defaultValue": "kanika.verma@teradata.com"
 			},
