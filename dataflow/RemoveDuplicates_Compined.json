@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "JG186076_RMDupCust",
+						"referenceName": "JG186076_CopycustDataRaw",
 						"type": "DatasetReference"
 					},
 					"name": "RmDupCust"
