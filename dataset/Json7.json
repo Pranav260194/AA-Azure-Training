@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "Output/UseCase2Cust_loan_details ",
+				"fileName": "Customer.json",
+				"folderPath": "input",
 				"fileSystem": "kv255007"
 			}
 		},
