@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "JG186076_CopycustDataRaw",
+						"referenceName": "JG186076_RawCustData",
 						"type": "DatasetReference"
 					},
 					"name": "RmDupCust"
@@ -33,16 +33,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          CustomerID as string,",
-				"          FirstName as string,",
-				"          LastName as string,",
-				"          Email as string,",
-				"          Address as string,",
-				"          City as string,",
-				"          Country as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> RmDupCust",
 				"RmDupCust aggregate(groupBy(CustomerID),",
