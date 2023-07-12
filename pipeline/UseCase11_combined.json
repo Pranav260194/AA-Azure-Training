@@ -186,14 +186,7 @@
 			{
 				"name": "CopyCustData",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "RemoveDuplicate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -323,13 +316,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "NoDup_Cust",
+						"referenceName": "JG186076_CopycustDataRawSrc",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "JG186076_customer_sink_ds",
+						"referenceName": "JG186076_RawCustData",
 						"type": "DatasetReference"
 					}
 				]
@@ -366,7 +359,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "NoDup_Cust",
+						"referenceName": "JG186076_RawCustData",
 						"type": "DatasetReference"
 					}
 				}
@@ -382,7 +375,7 @@
 						]
 					},
 					{
-						"activity": "customerlookup",
+						"activity": "RemoveDuplicates_Compined",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -405,9 +398,16 @@
 				}
 			},
 			{
-				"name": "RemoveDuplicate",
+				"name": "RemoveDuplicates_Compined",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "customerlookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -418,7 +418,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "RemoveDuplicates_bkp",
+						"referenceName": "RemoveDuplicates_Compined",
 						"type": "DataFlowReference"
 					},
 					"compute": {
