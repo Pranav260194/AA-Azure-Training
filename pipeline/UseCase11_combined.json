@@ -375,7 +375,7 @@
 						]
 					},
 					{
-						"activity": "RemoveDuplicates_Compined",
+						"activity": "RemoveDuplicates_bkp_copy1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -398,7 +398,7 @@
 				}
 			},
 			{
-				"name": "RemoveDuplicates_Compined",
+				"name": "RemoveDuplicates_bkp_copy1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -418,7 +418,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "RemoveDuplicates_Compined",
+						"referenceName": "RemoveDuplicates_bkp_copy1",
 						"type": "DataFlowReference"
 					},
 					"compute": {
