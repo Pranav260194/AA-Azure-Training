@@ -121,7 +121,12 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"url": "https://kv255007-mail-notification.azurewebsites.net",
+								"method": "POST",
+								"body": ""
+							}
 						}
 					]
 				}
