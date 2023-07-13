@@ -405,6 +405,10 @@
 								"method": "POST",
 								"headers": {
 									"Content-Type": "application/json"
+								},
+								"body": {
+									"value": "@concat('{ \n\t\"EmailTo\" : \"',pipeline().parameters.Email_To,'\", \n\t\"Subject\" : \"',pipeline().parameters.Subject,'\",\n\t\"DataFactoryName\" : \"',pipeline().DataFactory,'\",\t\n\t\"PipelineName\" : \"',pipeline().Pipeline,'\", \n\t\"Activity\" : \"\", \n\t\"ErrorMessage\" : \"\",\n\t\"FileName\" : \"\"\n\t}')",
+									"type": "Expression"
 								}
 							}
 						}
