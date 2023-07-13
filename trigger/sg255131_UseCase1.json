@@ -1,0 +1,36 @@
+{
+	"name": "sg255131_UseCase1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "sg255131_UseCase1",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "Sandhya.gautam@teradata.com",
+					"Subject": "UseCase1_ExecutionStatus"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-07-13T11:10:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						2
+					]
+				}
+			}
+		}
+	}
+}
