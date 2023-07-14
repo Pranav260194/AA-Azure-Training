@@ -3,11 +3,24 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sg255131_ls",
+						"type": "DatasetReference"
+					},
+					"name": "RimSource"
+				}
+			],
 			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          {Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> RimSource"
 			]
 		}
 	}
