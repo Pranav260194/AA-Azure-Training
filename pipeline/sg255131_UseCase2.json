@@ -114,6 +114,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "@and(and(equals(activity('Customer_File_Check').output.exists,true),equals(activity('Loan_File_Check').output.exists,true)),equals(activity('LoanRepayment_File_Check').output.exists,true))",
+						"type": "Expression"
+					},
 					"ifFalseActivities": [
 						{
 							"name": "Web1",
