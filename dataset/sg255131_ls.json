@@ -10,12 +10,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "RIM_V1.2_HistoryData.csv",
-				"folderPath": "Source_Files",
+				"fileName": "sales.csv",
+				"folderPath": "Input",
 				"fileSystem": "sg255131"
 			},
 			"columnDelimiter": {
-				"value": "^",
+				"value": ",",
 				"type": "Expression"
 			},
 			"escapeChar": "\\",
