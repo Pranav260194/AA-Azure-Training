@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "sg255131_ls",
+						"referenceName": "sg255131_customer_csv",
 						"type": "DatasetReference"
 					},
 					"name": "RimSource"
@@ -16,7 +16,13 @@
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          {Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd} as string",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
