@@ -24,31 +24,27 @@
 		},
 		"schema": [
 			{
-				"name": "CustomerID",
+				"name": "Flight#",
 				"type": "String"
 			},
 			{
-				"name": "FirstName",
+				"name": "Origin",
 				"type": "String"
 			},
 			{
-				"name": "LastName",
+				"name": "Dest",
 				"type": "String"
 			},
 			{
-				"name": "Email",
+				"name": "FlightDate",
 				"type": "String"
 			},
 			{
-				"name": "Address",
+				"name": "NoSalesReason",
 				"type": "String"
 			},
 			{
-				"name": "City",
-				"type": "String"
-			},
-			{
-				"name": "Country",
+				"name": "TransmittingFlightAttd",
 				"type": "String"
 			}
 		]
