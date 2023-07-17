@@ -1,9 +1,9 @@
 {
-	"name": "sg255131_adf_rim_dataflow",
+	"name": "sg255131_Customer_dataflow",
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "sg255131_Copy_Data",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -15,6 +15,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "sg255131-DataFlow",
+						"type": "DataFlowReference"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
