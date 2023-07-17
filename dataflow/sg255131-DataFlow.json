@@ -31,7 +31,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DataFlow",
-				"DataFlow derive() ~> derivedColumn1"
+				"DataFlow derive(Generic_Reason = locate(NoSalesReason,'Other')) ~> derivedColumn1"
 			]
 		}
 	}
