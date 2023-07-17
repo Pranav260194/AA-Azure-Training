@@ -10,12 +10,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "sales.csv",
-				"folderPath": "Input",
+				"fileName": "customer.csv",
+				"folderPath": "Source_Files",
 				"fileSystem": "sg255131"
 			},
 			"columnDelimiter": {
-				"value": "\",",
+				"value": ",",
 				"type": "Expression"
 			},
 			"escapeChar": "\\",
