@@ -137,7 +137,7 @@
 			},
 			"Error_Message": {
 				"type": "string",
-				"defaultValue": "CTL file not recieved"
+				"defaultValue": "File not found"
 			}
 		},
 		"variables": {
