@@ -1,6 +1,20 @@
 {
 	"name": "sg255131_File_Unzip_Email_Notification",
 	"properties": {
+		"parameters": {
+			"File_Name": {
+				"type": "string"
+			},
+			"Container_Name": {
+				"type": "string"
+			},
+			"Input_Directory": {
+				"type": "string"
+			},
+			"Inbound_Directory": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "sg255131"
 		},
