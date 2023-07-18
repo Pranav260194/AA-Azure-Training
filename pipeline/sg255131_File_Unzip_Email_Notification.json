@@ -18,6 +18,20 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Extract Ctl File Name",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CTL_File_Name",
+					"value": ""
+				}
 			}
 		],
 		"parameters": {
@@ -37,6 +51,9 @@
 		},
 		"variables": {
 			"CSV_File_Name": {
+				"type": "String"
+			},
+			"CTL_File_Name": {
 				"type": "String"
 			}
 		},
