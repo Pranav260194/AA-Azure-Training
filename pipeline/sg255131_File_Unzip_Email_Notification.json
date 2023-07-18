@@ -157,10 +157,20 @@
 				"type": "string"
 			},
 			"Email_To": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Sandhya.Gautam@teradata.com"
 			},
 			"Subject": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "CTL File Error"
+			},
+			"Activity": {
+				"type": "string",
+				"defaultValue": "Lookup"
+			},
+			"Error_Message": {
+				"type": "string",
+				"defaultValue": "CTL file not recieved"
 			}
 		},
 		"variables": {
