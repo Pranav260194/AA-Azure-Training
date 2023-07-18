@@ -142,7 +142,21 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "sg255131_Meta_ds",
+						"type": "DatasetReference"
+					},
+					"fieldList": [],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
 			}
 		],
 		"folder": {
