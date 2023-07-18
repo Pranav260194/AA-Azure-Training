@@ -131,7 +131,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": "https://sg255131-email-notification.azurewebsites.net:443/api/sg255131-mail/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=vsADpDq9lbWI0CVj-xNo0nH_WEoaSCdw9gwcgS-TSuA",
-					"method": "POST"
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					}
 				}
 			}
 		],
