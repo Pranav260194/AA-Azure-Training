@@ -29,7 +29,8 @@
 					"dataset": {
 						"referenceName": "sg255131_Parameter_json_ds",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": true
 				}
 			},
 			{
