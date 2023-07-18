@@ -1,5 +1,5 @@
 {
-	"name": "sg255131_Config_json",
+	"name": "sg255131_Parameter_json_ds",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
