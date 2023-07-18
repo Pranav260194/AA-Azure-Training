@@ -87,30 +87,6 @@
 				}
 			},
 			{
-				"name": "Loading data in stage table",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Check CTL File if exists",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "adb_ls",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "Error Mail Notification",
 				"type": "WebActivity",
 				"dependsOn": [
@@ -146,15 +122,6 @@
 			"File_Name": {
 				"type": "string",
 				"defaultValue": "Employee.csv.gz"
-			},
-			"Container_Name": {
-				"type": "string"
-			},
-			"Input_Directory": {
-				"type": "string"
-			},
-			"Inbound_Directory": {
-				"type": "string"
 			},
 			"Email_To": {
 				"type": "string",
