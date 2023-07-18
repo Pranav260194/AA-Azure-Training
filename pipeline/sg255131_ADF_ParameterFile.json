@@ -148,7 +148,10 @@
 						"referenceName": "sg255131_Meta_ds",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"itemName",
+						"columnCount"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
