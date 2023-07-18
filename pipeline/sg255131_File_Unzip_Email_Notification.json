@@ -137,7 +137,7 @@
 			},
 			"Error_Message": {
 				"type": "string",
-				"defaultValue": "File not found"
+				"defaultValue": "FileNotFound"
 			}
 		},
 		"variables": {
