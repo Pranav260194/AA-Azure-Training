@@ -1,0 +1,53 @@
+{
+	"name": "mp250075_LoanRepayUC2_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp250075"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "LoanRepayment.json",
+				"folderPath": "Source_Data",
+				"fileSystem": "mp250075"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"LoanRepaymentData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"LoanID": {
+								"type": "string"
+							},
+							"PaymentDate": {
+								"type": "string"
+							},
+							"PaymentAmount": {
+								"type": "number"
+							},
+							"PrincipalPayment": {
+								"type": "number"
+							},
+							"InterestPayment": {
+								"type": "number"
+							},
+							"PaymentReferenceNumber": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
