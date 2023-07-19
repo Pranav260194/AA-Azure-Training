@@ -1,0 +1,21 @@
+{
+	"name": "sg255131_NoSales_Parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "NoSales_Parq",
+				"folderPath": "Output",
+				"fileSystem": "sg255131"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
