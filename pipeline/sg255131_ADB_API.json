@@ -1,10 +1,10 @@
 {
-	"name": "sg255131_Rim_dataflow",
+	"name": "sg255131_ADB_API",
 	"properties": {
 		"activities": [
 			{
-				"name": "sg255131_Copy_Data",
-				"type": "ExecuteDataFlow",
+				"name": "Get_Data_From_RestAPI",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -15,16 +15,38 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "sg255131-DataFlow",
-						"type": "DataFlowReference"
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
 					},
-					"traceLevel": "Fine"
-				}
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "sg255131_rest_api_ds",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sg255131_RestApi_sink",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
