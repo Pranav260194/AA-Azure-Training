@@ -1,0 +1,54 @@
+{
+	"name": "mp250075_CustUC2_Tar_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp250075"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Input",
+				"fileSystem": "mp250075"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"CustomerData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"CustomerID": {
+								"type": "string"
+							},
+							"CustomerName": {
+								"type": "string"
+							},
+							"CustomerLocation": {
+								"type": "object",
+								"properties": {
+									"City": {
+										"type": "string"
+									},
+									"State": {
+										"type": "string"
+									},
+									"Country": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
