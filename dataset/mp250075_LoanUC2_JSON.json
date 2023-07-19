@@ -1,0 +1,23 @@
+{
+	"name": "mp250075_LoanUC2_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp250075"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Loan.json",
+				"folderPath": "Source_Data",
+				"fileSystem": "mp250075"
+			}
+		},
+		"schema": {}
+	}
+}
