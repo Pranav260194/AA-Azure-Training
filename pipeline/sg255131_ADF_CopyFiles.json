@@ -186,6 +186,290 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Flat_to_JSON_Copy",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "PartialFileCreation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Flight#",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['protocol']['minReaderVersion']"
+								}
+							},
+							{
+								"source": {
+									"name": "Origin",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['protocol']['minWriterVersion']"
+								}
+							},
+							{
+								"source": {
+									"name": "Dest",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['metaData']['id']"
+								}
+							},
+							{
+								"source": {
+									"name": "FlightDate",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['metaData']['format']['provider']"
+								}
+							},
+							{
+								"source": {
+									"name": "NoSalesReason",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['metaData']['format']['options']"
+								}
+							},
+							{
+								"source": {
+									"name": "TransmittingFlightAttd",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['metaData']['schemaString']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['metaData']['configuration']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['metaData']['createdTime']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['metaData']['partitionColumns'][0]"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['path']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['partitionValues']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['size']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['modificationTime']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['dataChange']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['stats']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['tags']['INSERTION_TIME']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['add']['tags']['OPTIMIZE_TARGET_SIZE']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['timestamp']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['userId']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['userName']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operation']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operationParameters']['mode']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operationParameters']['partitionBy']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['notebook']['notebookId']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['clusterId']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['isolationLevel']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['isBlindAppend']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operationMetrics']['numFiles']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operationMetrics']['numOutputRows']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['operationMetrics']['numOutputBytes']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['commitInfo']['engineInfo']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['path']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['deletionTimestamp']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['dataChange']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['extendedFileMetadata']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['partitionValues']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['size']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['tags']['INSERTION_TIME']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['remove']['tags']['OPTIMIZE_TARGET_SIZE']"
+								}
+							},
+							{
+								"sink": {
+									"path": "$['Column_1']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sg255131_NoSales_SRC",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sg255131_Nosales_json_snk_ds",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
