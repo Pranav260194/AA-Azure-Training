@@ -1,0 +1,104 @@
+{
+	"name": "sg255131_nosales_half_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Output",
+				"fileSystem": "sg255131"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CustomerID",
+				"type": "String"
+			},
+			{
+				"name": "FirstName",
+				"type": "String"
+			},
+			{
+				"name": "LastName",
+				"type": "String"
+			},
+			{
+				"name": "Email",
+				"type": "String"
+			},
+			{
+				"name": "Address",
+				"type": "String"
+			},
+			{
+				"name": "City",
+				"type": "String"
+			},
+			{
+				"name": "Countrys",
+				"type": "String"
+			},
+			{
+				"name": "FullName",
+				"type": "String"
+			},
+			{
+				"name": "Country",
+				"type": "String"
+			},
+			{
+				"name": "Abbreviation",
+				"type": "String"
+			},
+			{
+				"name": "orderID",
+				"type": "String"
+			},
+			{
+				"name": "ProductID",
+				"type": "String"
+			},
+			{
+				"name": "Region",
+				"type": "String"
+			},
+			{
+				"name": "Avg_Quantity",
+				"type": "String"
+			},
+			{
+				"name": "Total_Revenue",
+				"type": "String"
+			},
+			{
+				"name": "Average_Sales_Price",
+				"type": "String"
+			},
+			{
+				"name": "Max_Quantity",
+				"type": "String"
+			},
+			{
+				"name": "Min_Sale_Price",
+				"type": "String"
+			},
+			{
+				"name": "OrderYear",
+				"type": "String"
+			},
+			{
+				"name": "Date_Diff",
+				"type": "String"
+			}
+		]
+	}
+}
