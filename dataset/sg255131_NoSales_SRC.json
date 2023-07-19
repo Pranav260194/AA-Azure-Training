@@ -14,7 +14,10 @@
 				"folderPath": "Input",
 				"fileSystem": "sg255131"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": {
+				"value": "^",
+				"type": "Expression"
+			},
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
