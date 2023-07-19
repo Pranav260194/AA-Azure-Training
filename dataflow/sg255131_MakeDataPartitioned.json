@@ -1,0 +1,28 @@
+{
+	"name": "sg255131_MakeDataPartitioned",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sg255131_NoSales_SRC",
+						"type": "DatasetReference"
+					},
+					"name": "FlatSource",
+					"description": "Import data from cvs  Nosales src"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {Flight#^Origin^Dest^FlightDate^NoSalesReason^TransmittingFlightAttd} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> FlatSource"
+			]
+		}
+	}
+}
