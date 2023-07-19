@@ -15,7 +15,7 @@
 				"fileSystem": "sg255131"
 			},
 			"columnDelimiter": {
-				"value": "^",
+				"value": ",^",
 				"type": "Expression"
 			},
 			"escapeChar": "\\",
