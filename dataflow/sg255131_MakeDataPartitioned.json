@@ -9,8 +9,7 @@
 						"referenceName": "sg255131_NoSales_SRC",
 						"type": "DatasetReference"
 					},
-					"name": "FlatSource",
-					"description": "Import data from cvs  Nosales src"
+					"name": "FlatSource"
 				}
 			],
 			"sinks": [],
