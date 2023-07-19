@@ -16,14 +16,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "JsonSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "JsonReadSettings"
 						}
 					},
 					"sink": {
@@ -37,19 +37,11 @@
 							"fileExtension": ".csv"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "mp250075_CustSrc",
+						"referenceName": "mp250075_CustUC2_JSON",
 						"type": "DatasetReference"
 					}
 				],
@@ -61,76 +53,11 @@
 				]
 			},
 			{
-				"name": "Copy data2",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Copy data1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".csv"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "mp250075_SalesSrc",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "mp250075_SalesTar",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
 				"name": "Notebook1",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Copy data2",
+						"activity": "Copy data1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
