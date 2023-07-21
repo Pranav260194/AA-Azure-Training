@@ -1,14 +1,14 @@
 {
 	"name": "rest_api_ls",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "https://quote-garden.herokuapp.com/api/v3/quotes",
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://quote-garden.herokuapp.com/api/v3/quotes?page=1&limit=100",
+			"url": "https://api.publicapis.org/entries",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
