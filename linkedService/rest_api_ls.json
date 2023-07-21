@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://api.publicapis.org/entries",
+			"url": "https://quote-garden.herokuapp.com/api/v3/quotes?page=1&limit=100",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
