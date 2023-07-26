@@ -1,0 +1,28 @@
+{
+	"name": "sg255131_UC2_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "sg255131_UseCase2",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Email_To": "Sandhya.gautam@teradata.com",
+					"Subject": "sg255131_UC2_FileMissing"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-07-26T12:00:00",
+				"timeZone": "UTC-11"
+			}
+		}
+	}
+}
