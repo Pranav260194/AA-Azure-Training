@@ -444,7 +444,7 @@
 					{
 						"activity": "Validate both Metadata exists",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
