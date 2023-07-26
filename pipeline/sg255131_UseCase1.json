@@ -444,10 +444,12 @@
 				"defaultValue": "sandhya.gautam@teradata.com"
 			},
 			"Subject": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sg255131_UseCase1_Execution"
 			},
 			"Failure_Subject": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sg255131_Pipeline_Execution_Failed"
 			}
 		},
 		"folder": {
