@@ -1,0 +1,46 @@
+{
+	"name": "customer_flowlet1",
+	"properties": {
+		"type": "Flowlet",
+		"typeProperties": {
+			"sources": [],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "Customer"
+				},
+				{
+					"name": "Sales"
+				},
+				{
+					"name": "output1"
+				}
+			],
+			"scriptLines": [
+				"input(output(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          Country as string",
+				"     ),",
+				"     order: 0,",
+				"     allowSchemaDrift: true) ~> Customer",
+				"input(output(",
+				"          OrderID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          Price as string,",
+				"          OrderDate as string,",
+				"          Region as string",
+				"     ),",
+				"     order: 1,",
+				"     allowSchemaDrift: true) ~> Sales",
+				"Customer output() ~> output1"
+			]
+		}
+	}
+}

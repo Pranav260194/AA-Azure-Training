@@ -14,8 +14,6 @@
 					}
 				],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -40,8 +38,6 @@
 					}
 				],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -113,8 +109,6 @@
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
 							},
@@ -148,8 +142,6 @@
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
 							},
@@ -251,7 +243,7 @@
 			"name": "RB255068"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-11-29T10:18:49Z"
+		"lastPublishTime": "2023-06-26T09:54:12Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

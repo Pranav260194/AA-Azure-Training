@@ -145,8 +145,6 @@
 								}
 							],
 							"policy": {
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
 							},
@@ -268,7 +266,7 @@
 			"name": "demo_part_255052"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-12-02T14:55:49Z"
+		"lastPublishTime": "2023-06-26T09:54:12Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

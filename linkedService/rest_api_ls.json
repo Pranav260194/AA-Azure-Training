@@ -1,5 +1,6 @@
 {
 	"name": "rest_api_ls",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "https://quote-garden.herokuapp.com/api/v3/quotes",
 		"annotations": [],
@@ -9,6 +10,5 @@
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/linkedservices"
+	}
 }

@@ -1,0 +1,37 @@
+{
+	"name": "my186016_adf_dataflowXform1",
+	"properties": {
+		"activities": [
+			{
+				"name": "UseDerivedColumn",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "my186016_adf_Dataflow1",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "my186016"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-14T12:02:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

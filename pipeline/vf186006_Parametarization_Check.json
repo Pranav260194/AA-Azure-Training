@@ -138,8 +138,6 @@
 					}
 				],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -159,7 +157,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2023-04-03T13:00:58Z"
+		"lastPublishTime": "2023-06-26T09:54:30Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

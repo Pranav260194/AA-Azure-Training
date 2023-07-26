@@ -78,8 +78,6 @@
 					}
 				],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -115,7 +113,7 @@
 			"name": "vu255001"
 		},
 		"annotations": [],
-		"lastPublishTime": "2023-03-07T12:00:47Z"
+		"lastPublishTime": "2023-06-26T09:54:11Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

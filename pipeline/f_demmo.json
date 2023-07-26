@@ -7,8 +7,6 @@
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -176,7 +174,7 @@
 			"name": "sk255196"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-12-14T04:37:36Z"
+		"lastPublishTime": "2023-06-26T09:53:06Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

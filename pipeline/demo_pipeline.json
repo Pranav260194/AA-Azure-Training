@@ -7,8 +7,6 @@
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -26,8 +24,6 @@
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -68,7 +64,7 @@
 			"name": "ss255307"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-11-09T12:51:51Z"
+		"lastPublishTime": "2023-06-26T09:52:55Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

@@ -121,8 +121,6 @@
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -147,8 +145,6 @@
 					}
 				],
 				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -174,7 +170,7 @@
 			"name": "ha255041"
 		},
 		"annotations": [],
-		"lastPublishTime": "2021-11-23T08:06:37Z"
+		"lastPublishTime": "2023-06-26T09:53:05Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
