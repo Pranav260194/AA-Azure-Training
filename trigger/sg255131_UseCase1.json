@@ -1,6 +1,7 @@
 {
 	"name": "sg255131_UseCase1",
 	"properties": {
+		"description": "Use Case 1",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
@@ -21,15 +22,7 @@
 				"frequency": "Day",
 				"interval": 1,
 				"startTime": "2023-07-13T11:10:00Z",
-				"timeZone": "UTC",
-				"schedule": {
-					"minutes": [
-						0
-					],
-					"hours": [
-						2
-					]
-				}
+				"timeZone": "UTC"
 			}
 		}
 	}
