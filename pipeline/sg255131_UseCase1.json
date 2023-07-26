@@ -389,7 +389,7 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Web1",
+							"name": "Web for File not Exist Failure",
 							"type": "WebActivity",
 							"dependsOn": [],
 							"policy": {
