@@ -1,6 +1,7 @@
 {
 	"name": "sg255131_UC2_Trigger",
 	"properties": {
+		"description": "Use Case2 Trigger",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
@@ -20,8 +21,8 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2023-07-26T12:00:00",
-				"timeZone": "UTC-11"
+				"startTime": "2023-07-27T23:59:00",
+				"timeZone": "Central Standard Time"
 			}
 		}
 	}
