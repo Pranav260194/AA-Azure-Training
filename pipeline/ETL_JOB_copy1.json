@@ -1,0 +1,134 @@
+{
+	"name": "ETL_JOB_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "lookup_ctl",
+				"description": "lookup the ctl file",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ctlfilecheck",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "read_csv_count",
+				"description": "Read the csv and check the count",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "productcsv",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "countofRec",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "lookup_ctl",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "ctl_value",
+					"value": {
+						"value": "@activity('lookup_ctl').output.firstRow.Prop_0",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "getcount",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "read_csv_count",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "countofRec",
+					"value": {
+						"value": "@activity('read_csv_count').output.pipelineReturnValue",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"ctl_value": {
+				"type": "String",
+				"defaultValue": "0"
+			},
+			"countofRec": {
+				"type": "String",
+				"defaultValue": "0"
+			}
+		},
+		"folder": {
+			"name": "am86060"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-07T16:02:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
