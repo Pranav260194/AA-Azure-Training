@@ -1,5 +1,5 @@
 {
-	"name": "mp250075_LoanRepayUC2_JSON",
+	"name": "mp250075_LoanrepaySrcUC2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
