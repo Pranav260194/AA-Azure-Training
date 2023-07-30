@@ -1,5 +1,5 @@
 {
-	"name": "mp250075_LoanUC2_JSON",
+	"name": "mp250075_LoanSrcUC2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
@@ -18,6 +18,51 @@
 				"fileSystem": "mp250075"
 			}
 		},
-		"schema": {}
+		"schema": {
+			"type": "object",
+			"properties": {
+				"LoanData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"LoanID": {
+								"type": "string"
+							},
+							"BorrowerID": {
+								"type": "string"
+							},
+							"LoanAccountNumber": {
+								"type": "string"
+							},
+							"LoanAmount": {
+								"type": "integer"
+							},
+							"InterestRate": {
+								"type": "number"
+							},
+							"LoanTerm": {
+								"type": "integer"
+							},
+							"LoanType": {
+								"type": "string"
+							},
+							"LoanStatus": {
+								"type": "string"
+							},
+							"OriginationDate": {
+								"type": "string"
+							},
+							"MonthlyPaymentDay": {
+								"type": "integer"
+							},
+							"EMIAmount": {
+								"type": "number"
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
