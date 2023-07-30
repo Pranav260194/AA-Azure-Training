@@ -1,5 +1,5 @@
 {
-	"name": "mp250075_UC2_Pipeline",
+	"name": "mp250075_PipelineUC2",
 	"properties": {
 		"activities": [
 			{
@@ -39,13 +39,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "mp250075_CustUC2_JSON",
+						"referenceName": "mp250075_CustSrcUC2",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "mp250075_CustUC2_Tar_JSON",
+						"referenceName": "mp250075_CustTarUC2",
 						"type": "DatasetReference"
 					}
 				]
