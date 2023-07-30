@@ -1,0 +1,22 @@
+{
+	"name": "mp250075_LoanTarUC2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mp250075"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Input",
+				"fileSystem": "mp250075"
+			}
+		},
+		"schema": {}
+	}
+}
