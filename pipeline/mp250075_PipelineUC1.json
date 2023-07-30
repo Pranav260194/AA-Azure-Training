@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "CpCustUC1",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -37,15 +37,35 @@
 							"fileExtension": ".csv"
 						}
 					},
-					"enableStaging": false
-				}
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "mp250075_CustSrcUC1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "mp250075_CustTarUC1",
+						"type": "DatasetReference"
+					}
+				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "CpSalesUC1",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "CpCustUC1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -71,17 +91,6 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".csv"
-						}
-					},
 					"enableStaging": false
 				}
 			},
@@ -90,7 +99,7 @@
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Copy data2",
+						"activity": "CpSalesUC1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
