@@ -1,5 +1,5 @@
 {
-	"name": "mp250075_CustUC2_JSON",
+	"name": "mp250075_CustSrcUC2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adls_ls",
