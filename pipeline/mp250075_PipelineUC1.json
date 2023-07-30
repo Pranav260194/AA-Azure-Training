@@ -1,5 +1,5 @@
 {
-	"name": "mp250075_pipeline1",
+	"name": "mp250075_PipelineUC1",
 	"properties": {
 		"activities": [
 			{
@@ -37,28 +37,8 @@
 							"fileExtension": ".csv"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "mp250075_CustSrc",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "mp250075_CustTar",
-						"type": "DatasetReference"
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "Copy data2",
@@ -102,28 +82,8 @@
 							"fileExtension": ".csv"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "mp250075_SalesSrc",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "mp250075_SalesTar",
-						"type": "DatasetReference"
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "Notebook1",
