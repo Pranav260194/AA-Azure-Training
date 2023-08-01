@@ -94,7 +94,7 @@
 									"Content-Type": "application/json"
 								},
 								"body": {
-									"value": "{\n    \"properties\": {\n        \"Activity\": {\n            \"type\": \"'Get File Metadata'\"\n        },\n        \"DataFactoryName\": {\n            \"type\": \"@{pipeline().DataFactory}\"\n        },\n        \"EmailTo\": {\n            \"type\": \"Mounika.Yellu@teradata.com\"\n        },\n        \"ErrorMessage\": {\n            \"type\": \"@{activity('Get File Metadata').output.columnCount}\"\n        },\n        \"FileName\": {\n            \"type\": \"@{activity('Check if file exists').output.exists}\"\n        },\n        \"PipelineName\": {\n            \"type\": \"@{pipeline().Pipeline}\"\n        },\n        \"Subject\": {\n            \"type\": \"File Validation Failure\"\n        }\n    },\n    \"type\": \"object\"\n}",
+									"value": "{\n   \n        \"DataFactoryName\":\"@{pipeline().DataFactory}\",\n               \n        \"PipelineName\":\"@{pipeline().Pipeline}\"\n        \n}",
 									"type": "Expression"
 								}
 							}
@@ -196,7 +196,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2023-07-31T10:16:13Z"
+		"lastPublishTime": "2023-07-31T10:47:05Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
