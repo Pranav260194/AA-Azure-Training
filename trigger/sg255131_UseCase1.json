@@ -4,18 +4,7 @@
 		"description": "Use Case 1",
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "sg255131_UseCase1",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"Email_To": "Sandhya.gautam@teradata.com",
-					"Subject": "UseCase1_ExecutionStatus"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
