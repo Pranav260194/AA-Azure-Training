@@ -1,0 +1,21 @@
+{
+	"name": "my186016_F1_ds_ip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "http_ls",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"sourceBaseURL": "http://ergast.com/api/f1/drivers.json?limit=1000"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

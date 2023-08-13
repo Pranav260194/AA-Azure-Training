@@ -1,0 +1,30 @@
+{
+	"name": "my186016_c19_process_population_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Process Population Data",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/my186016/Covid19/my186016_c19_transform_population_data"
+				},
+				"linkedServiceName": {
+					"referenceName": "adb_ls",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-31T02:03:26Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
